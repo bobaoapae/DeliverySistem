@@ -1,0 +1,55 @@
+li {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.cat {
+    background-color: rgb(220, 220, 220);
+}
+
+span.btn {
+    margin-left: -15px;
+    font-weight: bold !important;
+}
+
+.glyphicon {
+    font-size: 20px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.glyphicon-eye-close {
+    color: #D9534F;
+}
+
+.glyphicon-eye-close:hover {
+    color: black;
+}
+
+.glyphicon-eye-open {
+    color: #5CB85C;
+}
+
+.glyphicon-eye-open:hover {
+    color: black;
+}
+
+
+
+/*DROPMENU*/
+
+ul.dropdown-menu {
+    margin-left: -15px;
+    padding: 0;
+}
+
+ul.dropdown-menu li {
+    cursor: pointer;
+    padding: 5px !important;
+    transition: 0.2s;
+}
+
+ul.dropdown-menu li:hover {
+    padding-left: 15px !important;
+    transition: 0.2s;
+}

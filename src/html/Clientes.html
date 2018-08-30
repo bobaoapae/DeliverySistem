@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <title>Delivery System</title>
+
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/estilo.css">
+        <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+        <style>
+            .modal {
+                text-align: center;
+                padding: 0!important;
+            }
+
+            .modal:before {
+                content: '';
+                display: inline-block;
+                height: 100%;
+                vertical-align: middle;
+                margin-right: -4px;
+            }
+
+            .modal-dialog {
+                display: inline-block;
+                text-align: left;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+
+    <body>
+
+
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Cadastrar Cliente</h1>
+            </div>
+
+            <div class="panel-body">
+                <form id="cadastroCliente">
+                    <div class="row">
+                        <div class="col-xs-8 form-group">
+                            <label class="control-label" for="nome">Nome do Cliente:</label>
+                            <input class="form-control" required id="nome">
+                        </div>
+
+                        <div class="col-xs-4 form-group">
+                            <label class="control-label" for="dataNascimento">Data de Nascimento:</label>
+                            <input class="form-control" type="date" required id="dataNascimento">
+                        </div>
+
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label" for="celular">Celular:</label>
+                            <input class="form-control" data-mask="(00) 00000-0000" required id="celular">
+                        </div>
+
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label" for="fixo">Fixo:</label>
+                            <input class="form-control" data-mask="(00) 0000-0000" value="" id="fixo">
+                        </div>
+
+                        <div class="col-xs-5 form-group">
+                            <label class="control-label" for="rua">Logradouro:</label>
+                            <input class="form-control" required id="rua">
+                        </div>
+
+                        <div class="col-xs-2 form-group">
+                            <label class="control-label" for="numero">Nª:</label>
+                            <input class="form-control" required id="numero">
+                        </div>
+
+                        <div class="col-xs-5 form-group">
+                            <label class="control-label" for="bairro">Bairro:</label>
+                            <input class="form-control" required id="bairro">
+                        </div>
+
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label" for="ref">Ponto de Referência:</label>
+                            <input class="form-control" value="" id="ref">
+                        </div>
+
+                        <div class="col-xs-12 text-center">
+                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                            <button type="button" style="display: none" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger">Cancelar Edição</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-heading text-center">
+                <h1>Clientes Cadastrados</h1>
+            </div>
+
+            <div class="panel-body" style="padding-bottom: 0;">
+                <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome do Cliente</th>
+                        <th>Celular</th>
+                        <th>Fixo</th>
+                        <th>Endereço</th>
+                        <th>Aniversário</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="myTable">
+                    <tr>
+                        <td>William Martins Coelho</td>
+                        <td>
+                            <img width="15" alt="WhatsApp" title="Clique para enviar uma mensagem via WhatsApp" style="margin-right: 5px" src="assets/img/Icon/wpp.png"> 
+                            (44) 9 9924-0444
+                        </td>
+
+                        <td>(44) 3528-3089</td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" data-endereco="Rua Peru">Endereço</button>
+                        </td>
+                        <td>17/06</td>
+                        <td>
+                            <button class="btn btn-success">Créditos</button>
+                            <button class="btn btn-info">Pedidos</button>
+                            <button class="btn btn-warning">Editar</button>
+                            <button class="btn btn-danger">Remover</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Endereço do Cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="assets/js/jquery-3.3.1.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+        <script src="assets/js/search-table.js"></script>
+
+        <script src="assets/js/jquery.mask.js"></script>
+
+        <script src="assets/js/jquery-ui.min.js"></script>
+
+        <script type="text/javascript">
+                                $("#cadastroCliente").submit(function (event) {
+                                    event.preventDefault();
+                                    var cliente = {
+                                        nome: $("#nome").val(),
+                                        celular: $("#celular").val(),
+                                        fixo: $("#fixo").val(),
+                                        bairro: $("#bairro").val(),
+                                        numero: parseInt($("#numero").val()),
+                                        rua: $("#rua").val(),
+                                        ref: $("#ref").val(),
+                                        dataNascimento: $("#dataNascimento").val()
+                                    };
+                                    var resultado = java.atual.realizarCadastro(cliente);
+                                    if (resultado === true) {
+                                        $(this)[0].reset();
+                                    }
+                                });
+
+                                $('#cadastroCliente').on('reset', function (e) {
+                                    $("#nome").focus();
+                                });
+                                $('#exampleModalCenter').on('show.bs.modal', function (event) {
+                                    var button = $(event.relatedTarget); // Button that triggered the modal
+                                    var endereco = button.data('endereco'); // Extract info from data-* attributes
+                                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                                    var modal = $(this);
+                                    console.log(endereco);
+                                    modal.find('.modal-body').text(endereco);
+                                })
+        </script>
+    </body>
+
+</html>

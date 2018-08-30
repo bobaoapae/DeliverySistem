@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Delivery System</title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+    
+    <style>
+        #listaPedidos img {
+            width: 15px;
+            cursor: pointer;
+        }
+
+        #listaPedidos h4,p {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Pedidos da Mesa 00</h1>
+        </div>
+
+        <div class="panel-body" style="padding-bottom: 0;">
+            <div class="row">
+
+                <!-- Itens do Pedido -->
+                <div class="col-xs-12">
+
+                    <span class="text-danger">*Clique no x vermelho para remover um item do pedido.</span>
+                    
+                    <!-- Lista de Pedidos -->
+                    <ul class="list-group" id="listaPedidos">
+
+                        <!-- Itens -->
+                        <li class="list-group-item">
+                            <div class="clearfix">
+                                <h4 class="pull-left">01</h4>
+                                <h4 class="pull-left">X-Calabresa</h4>
+                                <img class="pull-right" src="assets/img/Icon/x.svg" title="Remover item" onclick="">
+                                <h4 class="pull-right">R$15,00</h4>
+                            </div>
+                            <p id="adicionais" class="help-block">+Calabresa, +Cebola</p>
+                            <p id="comentario" class="help-block">Cortado ao meio</p>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="clearfix">
+                                <h4 class="pull-left">01</h4>
+                                <h4 class="pull-left">Pizza Grande</h4>
+                                <img class="pull-right" src="assets/img/Icon/x.svg" title="Remover item" onclick="">
+                                <h4 class="pull-right">R$49,00</h4>
+                            </div>
+                            <p id="adicionais" class="help-block">Calabresa, Frango, Strogonoff, Chato - Borda Mista</p>
+                            <p id="comentario" class="help-block"></p>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="clearfix">
+                                <h4 class="pull-left">03</h4>
+                                <h4 class="pull-left">Coca-Cola 300ml</h4>
+                                <img class="pull-right" src="assets/img/Icon/x.svg" title="Remover item" onclick="">
+                                <h4 class="pull-right">R$12,00</h4>
+                            </div>
+                            <p id="adicionais" class="help-block"></p>
+                            <p id="comentario" class="help-block"></p>
+                        </li>
+
+                    </ul>
+
+                    <h2 class="text-success">Total: R$ 25,00</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+<!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+<script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+</html>

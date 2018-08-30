@@ -1,0 +1,8 @@
+
+.input-error {
+	border-color: red;
+}
+
+form.registration-form fieldset {
+	display: none;
+}

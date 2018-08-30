@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <title>Delivery System</title>
+
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/estilo.css">
+        <link rel="stylesheet" href="assets/css/toggle.css">
+
+        <style>
+        </style>
+    </head>
+
+    <body>
+
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-heading text-center">
+                <h1>Nova Reserva</h1>
+            </div>
+
+
+            <div class="panel-body" style="padding-bottom: 0;">
+                <form id="cadastroReserva">
+                    <div class="row">
+                        <div class="col-xs-6 form-group">
+                            <label for="nomeReserva">Reservar em nome de:</label>
+                            <input type="text" class="form-control" id="nomeReserva" required autofocus>
+                        </div>
+                        <div class="col-xs-6 form-group">
+                            <label for="telefoneContato">Telefone p/ Contato:</label>
+                            <input type="text" class="form-control" data-mask="(00) 0 0000-0000" id="telefoneContato" required>
+                        </div>
+
+                        <div class="col-xs-4 form-group">
+                            <label for="qtdPessoasReserva">Quantidade de Pessoas:</label>
+                            <input type="number" class="form-control" id="qtdPessoasReserva" required min="1" value="1">
+                        </div>
+
+                        <div class="col-xs-4 form-group">
+                            <label for="diaReserva">Dia:</label>
+                            <input type="date" class="form-control" id="diaReserva" required>
+                        </div>
+
+                        <div class="col-xs-4 form-group">
+                            <label for="horaReserva">Horário:</label>
+                            <input type="time" class="form-control" id="horaReserva" required>
+                        </div>
+
+                        <div class="col-xs-12 form-group">
+                            <label for="obs">Observações:</label>
+                            <input type="text" class="form-control" id="obs">
+                        </div>
+
+                        <div class="col-xs-12 form-group text-center">
+                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="assets/js/jquery-3.3.1.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.mask.js"></script>
+        <script>
+            document.getElementById("diaReserva").valueAsDate = new Date();
+            $("#cadastroReserva").submit(function (event) {
+                event.preventDefault();
+                var reserva = {
+                    nomeContato: $("#nomeReserva").val(),
+                    telefoneContato: $("#telefoneContato").val(),
+                    qtdPessoas: parseInt($('#qtdPessoasReserva').val()),
+                    dataReserva: $('#diaReserva').val(),
+                    horaReserva: $("#horaReserva").val(),
+                    obsReserva: $("#obs").val()
+                };
+                var resultado = java.atual.realizarCadastro(reserva);
+                if (resultado === true) {
+                    $(this)[0].reset();
+                }
+            });
+            $('#cadastroReserva').on('reset', function (e) {
+                $("#nomeReserva").focus();
+            });
+        </script>
+    </body>
+
+</html>

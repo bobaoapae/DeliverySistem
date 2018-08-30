@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Delivery System</title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+    <link rel="stylesheet" href="assets/css/toggle.css">
+
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Histórico de Pedidos</h1>
+        </div>
+
+        <div class="panel-body" style="padding-bottom: 0;">
+            <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+        </div>
+
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Valor (R$)</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="myTable">
+                <tr>
+                    <td>#051</td>
+                    <td>William Martins Coelho</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-success">Entregue</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>#052</td>
+                    <td>Nome Cliente 5</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-primary">Ativo</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>#053</td>
+                    <td>William Martins Coelho</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-danger">Cancelado</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>#053</td>
+                    <td>Nome Cliente 12</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-success">Entregue</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>#053</td>
+                    <td>Nome Cliente 1</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-success">Entregue</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>#053</td>
+                    <td>William Martins Coelho</td>
+                    <td>20,00</td>
+                    <td>01/02/2018</td>
+                    <td>
+                        <span class="label label-success">Entregue</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info">Ver pedido</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+    <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+    <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/search-table.js"></script>
+</body>
+
+</html>

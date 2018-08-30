@@ -1,0 +1,37 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #F3F3F3;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+.panel h1 {
+    margin: 0;
+}
+
+.panel-heading {
+    background: linear-gradient(to right, #44C5F9, #3042A1);
+    color: #FFF !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(to right, #44C5F9, #3042A1);
+    color: #FFF !important;
+}
+
+.d-inline-b {
+    display: inline-block;
+}
+
+.close {
+    color: #FFF;
+}
+
+.close:hover {
+    color: #FFF;
+}

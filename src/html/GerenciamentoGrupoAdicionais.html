@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <title>Delivery System</title>
+
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/estilo.css">
+        <link rel="stylesheet" href="assets/css/toggle.css">
+
+        <style>
+            .glyphicon-remove {
+                cursor: pointer;
+                color: red;
+                margin-left: 10px;
+            }
+
+            .glyphicon-plus {
+                cursor: pointer;
+                color: yellowgreen;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Modal Novo Grupo-->
+        <div class="modal fade" id="modalNovoGrupo" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg " role="document">
+                <form action="" class="form-horizontal" id="formGrupo">
+                    <div class="modal-content">
+                        <div class="modal-header text-center bg-gradient">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h1 class="modal-title" id="myModalLabel">Criar novo Grupo</h1>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nomeGrupo" class="col-xs-3 control-label">Nome: </label>
+
+                                <div class="col-xs-9">
+                                    <input type="text" required id="nomeGrupo" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="minQtd" class="col-xs-3 control-label">Quantidade mínima de adicionais selecionáveis: </label>
+
+                                <div class="col-xs-9">
+                                    <input type="number" value="0" min="0" required id="minQtd" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="maxQtd" class="col-xs-3 control-label">Quantidade máxima de adicionais selecionáveis: </label>
+
+                                <div class="col-xs-9">
+                                    <input type="number" value="0" min="0" required id="maxQtd" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="descricaoGrupo" class="col-xs-3 control-label">Descrição: </label>
+
+                                <div class="col-xs-9">
+                                    <textarea class="form-control" id="descricaoGrupo" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Modal Novo Adicional-->
+        <div class="modal fade" id="modalNovoAdicional" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <form action="" class="form-horizontal" id="formAdicional">
+                    <div class="modal-content">
+                        <div class="modal-header text-center bg-gradient">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h1 class="modal-title" id="myModalLabel2">Criar novo Adicional</h1>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nomeAdicional" class="col-xs-3 control-label">Nome: </label>
+
+                                <div class="col-xs-9">
+                                    <input type="text" id="nomeAdicional" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="valorAdicional" class="col-xs-3 control-label">Valor (R$): </label>
+
+                                <div class="col-xs-9">
+                                    <input class="form-control" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," data-select-all-on-focus="true" required type="text" id="valorAdicional">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descricaoAdicional" class="col-xs-3 control-label">Descrição: </label>
+
+                                <div class="col-xs-9">
+                                    <textarea class="form-control" id="descricaoAdicional" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="reset" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Gerenciar Grupo de Adicionais</h1>
+            </div>
+
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <button class="btn btn-success" onclick="java.atual.iniciarRegistro();" data-toggle="modal" data-target="#modalNovoGrupo">Criar novo Grupo</button>
+                </div>
+
+
+                <div id="grupos">
+                    <ul class="list-group col-xs-4">
+                        <li class="list-group-item active">
+                            <strong>Sabores</strong>
+                            <span class="glyphicon glyphicon-pencil pull-left" title="Remover Grupo"></span>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Grupo"></span>
+                            <span class="glyphicon glyphicon-plus pull-right" title="Criar novo Adicional" data-toggle="modal" data-target="#modalNovoAdicional"></span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Sabor 01</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Sabor 02</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Sabor 03</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+                    </ul>
+
+
+
+                    <ul class="list-group col-xs-4">
+                        <li class="list-group-item active">
+                            <strong>Grupo 2</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Grupo"></span>
+                            <span class="glyphicon glyphicon-plus pull-right" title="Criar novo Adicional" data-toggle="modal" data-target="#modalNovoAdicional"></span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Sabor 01</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge"></span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Sabor 02</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge"></span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus volutpat nibh sit amet sagittis mattis.
+                            </small>
+                        </li>
+                    </ul>
+
+
+                    <ul class="list-group col-xs-4">
+                        <li class="list-group-item active">
+                            <strong>Bordas</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Grupo"></span>
+                            <span class="glyphicon glyphicon-plus pull-right" title="Criar novo Adicional" data-toggle="modal" data-target="#modalNovoAdicional"></span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Chedar</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Catupiry</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Mista</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+
+                            </small>
+                        </li>
+
+                        <li class="list-group-item">
+                            <strong>Chocolate</strong>
+                            <span class="glyphicon glyphicon-remove pull-right" title="Remover Adicional"></span>
+                            <span class="badge">R$ 42</span>
+                            <small class="center-block"> <!-- DESCRIÇÃO -->
+
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.maskMoney.js"></script>
+        <script src="assets/js/search-table.js"></script>
+        <script type="text/javascript">
+                        $('#valorAdicional').maskMoney();
+                        $('#valorAdicional').maskMoney('mask', 0);
+                        $("#formGrupo").submit(function (event) {
+                            event.preventDefault();
+                            var grupo = {
+                                nome: $("#nomeGrupo").val(),
+                                desc: $("#descricaoGrupo").val(),
+                                minQtd: parseInt($("#minQtd").val()),
+                                maxQtd: parseInt($("#maxQtd").val())
+                            };
+                            if (java.atual.registroGrupo(grupo) === true) {
+                                $(this)[0].reset();
+                            }
+                        });
+                        $("#formAdicional").submit(function (event) {
+                            event.preventDefault();
+                            var adicional = {
+                                nome: $("#nomeAdicional").val(),
+                                valor: $("#valorAdicional").maskMoney('unmasked')[0],
+                                desc: $("#descricaoAdicional").val()
+                            };
+                            if (java.atual.registroAdicional(adicional) === true) {
+                                $(this)[0].reset();
+                                $('#valorAdicional').maskMoney();
+                                $('#valorAdicional').maskMoney('mask', 0);
+                            }
+                        });
+        </script>
+    </body>
+
+</html>

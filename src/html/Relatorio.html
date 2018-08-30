@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Delivery System</title>
+
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+
+    <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="assets/js/jquery-ui.min.js"></script>
+    <script>
+        $(function() {
+            $("#tabs").tabs();
+        });
+    </script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Relatório</h1>
+        </div>
+
+
+        <div class="panel-body" style="padding-bottom: 0;" id="tabs">
+            <!-- Barra de Navegação -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="hide"><a href="#tabs-0">R1</a></li>
+                            <li><a href="#tabs-1">Vendas por Produto</a></li>
+                            <li><a href="#tabs-2">Receita por Período</a></li>
+                            <li><a href="#tabs-3">Entregas por Semana</a></li>
+                            <li><a href="#tabs-4">Entregas por Hora</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="tabs-0">
+            </div>
+
+            <div id="tabs-1">
+                <form id="form-graf-01">
+                    <div class="form-group form-inline">
+                        <label for="">Período:</label>
+                        <input type="date" class="form-control">
+                        <label for="">até</label>
+                        <input type="date" class="form-control">
+                        <button class="btn btn-primary">Gerar Relatório</button>
+                    </div>
+                </form>
+
+                <div id="graf-01"></div>
+
+                <script>
+                    Highcharts.chart('graf-01', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Vendas por Produto'
+                        },
+                        subtitle: {
+                            text: '01/05/2018 - 30/06/2018' //data do periodo
+                        },
+                        xAxis: {
+                            categories: [
+                                ''
+                            ],
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Quantidade'
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            },
+                            series: {
+                                animation: true,
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+
+                        },
+                        series: [{
+                            name: 'Produto 1', //Produto
+                            data: [10] // Quantidade de vendas
+
+                        }, {
+                            name: 'Produto 2',
+                            data: [15]
+
+                        }, {
+                            name: 'Produto 3',
+                            data: [5]
+
+                        }, {
+                            name: 'Produto 4',
+                            data: [20]
+
+                        }]
+
+                    });
+                </script>
+            </div>
+
+
+            <div id="tabs-2">
+                <form id="form-graf-02">
+                    <div class="form-group form-inline">
+                        <label for="">Período:</label>
+                        <input type="date" class="form-control">
+                        <label for="">até</label>
+                        <input type="date" class="form-control">
+                        <button class="btn btn-primary">Gerar Relatório</button>
+                    </div>
+                </form>
+
+                <div id="graf-02"></div>
+
+                <script>
+                    Highcharts.chart('graf-02', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Receita por Período de Venda'
+                        },
+                        subtitle: {
+                            text: '01/05/2018 - 30/07/2018' //Periodo
+                        },
+                        xAxis: {
+                            categories: ['Maio', 'Junho', 'Julho'] //Meses do Periodo
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Receita (R$)'
+                            }
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: true
+                            }
+                        },
+                        series: [{
+                            name: 'Delivery',
+                            data: [70.0, 60.9, 90.5]
+                        }, {
+                            name: 'Local',
+                            data: [30.9, 40.2, 50.7]
+                        }, {
+                            name: 'Total',
+                            data: [100.9, 100.1, 150.2]
+                        }]
+                    });
+                </script>
+            </div>
+
+
+            <div id="tabs-3">
+                <form id="form-graf-03">
+                    <div class="form-group form-inline">
+                        <label for="">Período:</label>
+                        <input type="date" class="form-control">
+                        <label for="">até</label>
+                        <input type="date" class="form-control">
+                        <button class="btn btn-primary">Gerar Relatório</button>
+                    </div>
+                </form>
+
+                <div id="graf-03"></div>
+
+                <script>
+                    Highcharts.chart('graf-03', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Entregas por Semana'
+                        },
+                        subtitle: {
+                            text: '01/05/2018 - 30/06/2018' //data do periodo
+                        },
+                        xAxis: {
+                            categories: [
+                                ''
+                            ],
+                            crosshair: true
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Quantidade'
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                            footerFormat: '</table>',
+                            shared: true,
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            column: {
+                                pointPadding: 0.2,
+                                borderWidth: 0
+                            },
+                            series: {
+                                animation: true,
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+
+                        },
+                        series: [{
+                            name: 'Domingo', //Dia
+                            data: [10] // Quantidade de entregas
+
+                        }, {
+                            name: 'Segunda',
+                            data: [15]
+
+                        }, {
+                            name: 'Terça',
+                            data: [5]
+
+                        }, {
+                            name: 'Quarta',
+                            data: [3]
+
+                        }, {
+                            name: 'Quinta',
+                            data: [6]
+
+                        }, {
+                            name: 'Sexta',
+                            data: [20]
+
+                        }, {
+                            name: 'Sabado',
+                            data: [30]
+
+                        }]
+                    });
+                </script>
+            </div>
+
+
+            <div id="tabs-4">
+                <form id="form-graf-04">
+                    <div class="form-group form-inline">
+                        <label for="">Período:</label>
+                        <input type="date" class="form-control">
+                        <button class="btn btn-primary">Gerar Relatório</button>
+                    </div>
+                </form>
+
+                <div id="graf-04"></div>
+
+                <script>
+                    Highcharts.chart('graf-04', {
+                        chart: {
+                            type: 'areaspline'
+                        },
+                        title: {
+                            text: 'Entregas por Hora do Dia'
+                        },
+                        subtitle: {
+                            text: '01/05/2018' //data do periodo
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 150,
+                            y: 100,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                        },
+                        xAxis: {
+                            categories: [
+                                '00:00',
+                                '01:00',
+                                '02:00',
+                                '03:00',
+                                '04:00',
+                                '05:00',
+                                '06:00',
+                                '07:00',
+                                '08:00',
+                                '09:00',
+                                '10:00',
+                                '11:00',
+                                '12:00',
+                                '13:00',
+                                '14:00',
+                                '15:00',
+                                '16:00',
+                                '17:00',
+                                '18:00',
+                                '19:00',
+                                '20:00',
+                                '21:00',
+                                '22:00',
+                                '23:00'
+                            ]
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Quantidade'
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            valueSuffix: ''
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            areaspline: {
+                                fillOpacity: 0.5
+                            },
+                            series: {
+                                animation: true,
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Entregas',
+                            data: [1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 4, 6, 4, 8] //Quant Entregas
+                        }]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+    <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>

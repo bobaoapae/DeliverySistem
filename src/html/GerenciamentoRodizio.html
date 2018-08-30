@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css">
+        <link rel="stylesheet" href="assets/css/estilo.css"> 
+        <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+    </head>
+
+
+    <body>
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Cadastrar Rodízio</h1> 
+
+            </div>
+            <div class="panel-body">
+                <form id="cadastroRodizio">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="row">
+                                <div class="col-xs-8 form-group">
+                                    <label class="control-label" for="nome">Nome:</label>
+                                    <input class="form-control" autofocus required id="nome"> 
+                                </div>
+
+                                <div class="col-xs-4 form-group">
+                                    <label class="control-label" for="valor">Valor (R$):</label>
+                                    <input class="form-control" value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valor"> 
+                                </div>
+
+                                <div class="col-xs-8 form-group">
+                                    <label for="dias-rodizio">Dia(s):</label>
+                                    <br>
+                                    <select class="form-control" id="dias-rodizio" multiple="multiple" required>
+                                        <option value="Segunda">Segunda</option>
+                                        <option value="Terça">Terça</option>
+                                        <option value="Quarta">Quarta</option>
+                                        <option value="Quinta">Quinta</option>
+                                        <option value="Sexta">Sexta</option>
+                                        <option value="Sabado">Sábado</option>
+                                        <option value="Domingo">Domingo</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-xs-4 form-group">
+                                    <label for="horaInicio">Horário de Início:</label>
+                                    <input type="time" id="horaInicio" class="form-control"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-4">
+                            <div class="row">
+                                <div class="col-xs-12 form-group">
+                                    <label class="control-label" for="desc">Descrição:</label>
+
+                                    <textarea class="form-control" name="desc" id="desc" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 text-center">
+                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                            <button type="button" style="display: none" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger">Cancelar Edição</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Lista de Rodízios Cadastrados</h1> 
+            </div>
+            <div class="panel-body" style="padding-bottom: 0;">
+                <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa..."> 
+            </div>
+
+            <table id="tabelaProdutos" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Dia</th>
+                        <th>Horário</th>
+                        <th>Valor (R$)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+                    <tr>
+                        <td>Rodízio de Coca-Cola</td>
+                        <td>Terça</td>
+                        <td>19:50</td>
+                        <td>400,00</td>
+                        <td>
+                            <button class="btn btn-info">Descrição</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">Editar</button>
+                            <button class="btn btn-danger">Remover</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="assets/js/jquery-3.3.1.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+        <script src="assets/js/bootstrap-multiselect.js"></script>
+        <script src="assets/js/jquery-ui.min.js"></script>
+        <!-- Initialize the plugin: -->
+        <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#dias-rodizio').multiselect();
+                                });
+        </script>
+
+
+        <script src="assets/js/search-table.js"></script>
+        <script src="assets/js/jquery.maskMoney.js"></script>
+        <script type="text/javascript">
+                                $('#valor').maskMoney();
+
+                                $('#valor').maskMoney('mask');
+
+                                $("#cadastroRodizio").submit(function (event) {
+                                    event.preventDefault();
+                                    var rodizio = {
+                                        nome: $("#nome").val(),
+                                        desc: $("#desc").val(),
+                                        valor: parseFloat($("#valor").maskMoney('unmasked')[0]),
+                                        horaInicio: $("#horaInicio").val(),
+                                        domingo: $("#dias-rodizio").val().includes("Domingo"),
+                                        segunda: $("#dias-rodizio").val().includes("Segunda"),
+                                        terca: $("#dias-rodizio").val().includes("Terça"),
+                                        quarta: $("#dias-rodizio").val().includes("Quarta"),
+                                        quinta: $("#dias-rodizio").val().includes("Quinta"),
+                                        sexta: $("#dias-rodizio").val().includes("Sexta"),
+                                        sabado: $("#dias-rodizio").val().includes("Sabado")
+                                    };
+                                    var resultado = java.atual.realizarCadastro(rodizio);
+                                    if (resultado === true) {
+                                        $(this)[0].reset();
+                                    }
+                                });
+
+                                $('#cadastroRodizio').on('reset', function (e) {
+                                    $("#nome").focus();
+                                    $("#dias-rodizio").val([]);
+                                    $("#dias-rodizio").multiselect("refresh");
+                                });
+        </script>
+
+        <script>
+            $(function () {
+                $('.btn-group').addClass("btn-block");
+                $('.multiselect').addClass("btn-block");
+                $('.multiselect-container').addClass("btn-block");
+            });
+        </script>
+    </body>
+
+</html>

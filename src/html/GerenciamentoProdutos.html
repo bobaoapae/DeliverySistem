@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="assets/css/estilo.css">
+        <link rel="stylesheet" href="assets/css/toggle.css">
+    </head>
+
+    <body>
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Cadastrar <span class="nomePagina">Produto</span></h1>
+            </div>
+
+            <div class="panel-body">
+                <form id="cadastroProduto">
+                    <div class="row">
+                        <div class="col-xs-9 form-group">
+                            <label class="control-label" for="nome">Nome: </label>
+                            <input class="form-control" autofocus required id="nome">
+                        </div>
+
+                        <div class="col-xs-3 form-group">
+                            <label class="control-label" for="valor">Valor (R$):</label>.
+                            <input class="form-control" value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valor">
+                        </div>
+
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label" for="desc">Descrição:</label>.
+                            <input class="form-control" id="desc">
+                        </div>
+
+                        <div class="col-xs-6 form-group">
+                            <label for="inputFile">Selecione uma foto para o produto</label>
+                            <input class="btn btn-primary" type="file" id="inputFile">
+                        </div>
+
+                        <div class="col-xs-3 form-group">
+                            <label for="checkConsumoNoLocal"> Consumo somente no local?</label><br>
+
+                            <label class="custom-check">
+                                <input type="checkbox" name="onOff" id="checkConsumoNoLocal"/>
+                                <i></i> 
+                                <span></span>
+                            </label>
+                        </div>
+
+                        <div class="col-xs-3">
+                            <label for="checkRegrasVisibilidade">Regras de Visibilidade?</label><br>
+
+                            <label class="custom-check">
+                                <input type="checkbox" name="onOff" id="checkRegrasVisibilidade"/>
+                                <i></i> 
+                                <span></span>
+                            </label>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div id="regrasVisibilidade" style="display: none;">
+                                <h3>Restrição de Visibilidade</h3>
+
+                                <div class="row">
+                                    <div class="col-xs-4 form-group">
+                                        <label for="checkVisibilidadeHorario">Por Horário: </label><br>
+
+                                        <label class="custom-check">
+                                            <input type="checkbox" name="onOff" id="checkVisibilidadeHorario">
+                                            <i></i> 
+                                            <span></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-4 form-group">
+                                        <label for="horarioDe">De:</label>
+                                        <input type="time" disabled required class="form-control" id="horarioDe" name="horarioDe">
+                                    </div>
+
+                                    <div class="col-xs-4 form-group">
+                                        <label for="horarioAte">Até:</label>
+                                        <input type="time" disabled required class="form-control" id="horarioAte" name="horarioAte">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-4 form-group">
+                                        <label for="checkVisibilidadeDia">Dia(s) da Semana:</label><br>
+
+                                        <label class="custom-check">
+                                            <input type="checkbox" name="onOff" id="checkVisibilidadeDia">
+                                            <i></i> 
+                                            <span></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-8 form-group">
+                                        <label for="diasDaSemana">Dias: </label>
+                                        <select class="form-control" disabled required multiple id="diasDaSemana">
+                                            <option value="0">Domingo</option>
+                                            <option value="1">Segunda</option>
+                                            <option value="2">Terça</option>
+                                            <option value="3">Quarta</option>
+                                            <option value="4">Quinta</option>
+                                            <option value="5">Sexta</option>
+                                            <option value="6">Sábado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 text-center">
+                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                            <button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger hide">Cancelar Edição</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+        <!-- Cada panel, uma subcategoria -->
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Lista de <span class="nomePagina">Produtos</span></h1>
+            </div>
+
+            <div class="panel-body">
+                <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+            </div>
+
+            <table id="tabelaProdutos" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Valor (R$)</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="myTable">
+                    <tr>
+                        <td>
+                            <img width="70" class="img-responsive img-circle" src="assets/img/fotos/bebidas/coca-300.jpg">
+                        </td>
+
+                        <td>Produto</td>
+
+                        <td>4,00</td>
+
+                        <td class="text-center">
+                            <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Tornar Invisível">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </button>
+
+                            <button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Descrição">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                            </button>
+
+                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Gerenciar Adicionais">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+
+                            <button class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Editar Produto">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+
+                            <button class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Remover Produto">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+
+
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+        <script src="assets/js/search-table.js"></script>
+
+        <script src="assets/js/jquery.maskMoney.js"></script>
+
+        <script type="text/javascript">
+            $('#valor').maskMoney();
+            $('#valor').maskMoney('mask');
+            $("#cadastroProduto").submit(function (event) {
+                event.preventDefault();
+                var produto = {
+                    nome: $("#nome").val(),
+                    desc: $("#desc").val(),
+                    valor: $("#valor").maskMoney('unmasked')[0],
+                    soLocal: $('#checkConsumoNoLocal').is(':checked')
+                };
+                var resultado = java.atual.realizarCadastro(produto);
+                if (resultado === true) {
+                    $(this)[0].reset();
+                }
+            });
+            $('#cadastroProduto').on('reset', function (e) {
+                $("#nome").focus();
+            });
+
+
+            //-----------------//
+            //(Regra de Visibilidade) (Cadastro)
+
+            //Mostra/Esconde campos de regras de visibilidade (Regra de Visibilidade) (Cadastro)
+            $("#checkRegrasVisibilidade").change(e => {
+                if ($("#checkRegrasVisibilidade").is(":checked")) {
+                    $("#regrasVisibilidade").slideDown();
+                } else {
+                    $("#regrasVisibilidade").slideUp();
+                }
+            });
+
+            //Habilida/Desabilita campos de horario (Regra de Visibilidade) (Cadastro)
+            $('#checkVisibilidadeHorario').change(function (event) {
+                $('#horarioDe').prop("disabled", !$(this).is(":checked"));
+                $('#horarioAte').prop("disabled", !$(this).is(":checked"));
+            });
+
+            //Habilida/Desabilita campo de dias (Regra de Visibilidade) (Cadastro)
+            $('#checkVisibilidadeDia').change(function (event) {
+                $('#diasDaSemana').prop("disabled", !$(this).is(":checked"));
+            });
+
+        </script>
+
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();   
+            });
+        </script>
+    </body>
+
+</html>

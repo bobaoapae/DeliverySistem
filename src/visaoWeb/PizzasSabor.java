@@ -1,0 +1,213 @@
+/*
+ To change this license header, choose License Headers in Project Properties.
+ To change this template file, choose Tools | Templates
+ and open the template in the editor.
+ */
+package visaoWeb;
+
+import com.br.joao.Db4oGenerico;
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.Callback;
+import com.teamdev.jxbrowser.chromium.JSObject;
+import com.teamdev.jxbrowser.chromium.JSValue;
+import com.teamdev.jxbrowser.chromium.dom.By;
+import com.teamdev.jxbrowser.chromium.dom.DOMElement;
+import com.teamdev.jxbrowser.chromium.dom.DOMInputElement;
+import com.teamdev.jxbrowser.chromium.dom.DOMNode;
+import com.teamdev.jxbrowser.chromium.dom.events.DOMEvent;
+import com.teamdev.jxbrowser.chromium.dom.events.DOMEventListener;
+import com.teamdev.jxbrowser.chromium.dom.events.DOMEventType;
+import com.teamdev.jxbrowser.chromium.swing.BrowserView;
+import controle.ControleSaboresPizza;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import modelo.Configuracao;
+import modelo.SaborPizza;
+import utils.JXBrowserCrack;
+import utils.Utilitarios;
+
+/**
+
+ @author jvbor
+ */
+public class PizzasSabor extends JDialog {
+
+    private Browser browser;
+    private BrowserView view;
+    private SaborPizza pizzaAlterando;
+
+    public PizzasSabor() {
+        init();
+        this.setModal(true);
+        this.setLocationRelativeTo(null);
+        new JXBrowserCrack();
+        browser = new Browser(ContextManager.getInstance().getContext());
+        view = new BrowserView(browser);
+        this.add(view);
+        this.setLocationRelativeTo(null);
+    }
+
+    private void init() {
+        if (Configuracao.getInstance().getImg() != null && !Configuracao.getInstance().getImg().isEmpty()) {
+            byte[] btDataFile = java.util.Base64.getDecoder().decode(Configuracao.getInstance().getImg().split(",")[1]);
+            BufferedImage image;
+            try {
+                image = ImageIO.read(new ByteArrayInputStream(btDataFile));
+                this.setIconImage(image.getScaledInstance(300, 300, Image.SCALE_DEFAULT));
+            } catch (IOException ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setMinimumSize(new Dimension(((int) (screenSize.getWidth() * 0.8)), ((int) (screenSize.getHeight() * 0.8))));
+        pack();
+    }
+
+    public void abrir() {
+        Browser.invokeAndWaitFinishLoadingMainFrame(browser, new Callback<Browser>() {
+            @Override
+            public void invoke(Browser arg0) {
+                browser.loadURL(this.getClass().getClassLoader().getResource("html/PizzaSabor.html").toString());
+            }
+        });
+        this.setTitle(browser.getDocument().findElement(By.tagName("title")).getInnerText());
+        recriarTable();
+        browser.executeJavaScript("window.java = {};");
+        JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
+        window.asObject().setProperty("atual", this);
+                pizzaAlterando = null;
+
+        this.setVisible(true);
+    }
+
+    private void recriarTable() {
+        DOMElement table = browser.getDocument().findElement(By.id("myTable"));
+        for (DOMNode node : table.getChildren()) {
+            table.removeChild(node);
+        }
+        for (SaborPizza l : ControleSaboresPizza.getInstance(Db4oGenerico.getInstance("banco")).carregarTodos()) {
+            addSaborPizza(table, l);
+        }
+    }
+
+    private void alterarSaborPizza(SaborPizza l) {
+        this.pizzaAlterando = l;
+        DOMInputElement nomeSaborPizza = (DOMInputElement) browser.getDocument().findElement(By.id("nome"));
+        DOMInputElement desc = (DOMInputElement) browser.getDocument().findElement(By.id("desc"));
+        DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
+        botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class").replaceAll("hide", ""));
+        nomeSaborPizza.setValue(l.getNome());
+        desc.setValue(l.getDescricao());
+        browser.executeJavaScript("$(\"#nome\").focus()");
+    }
+
+    public void cancelarAlteracao() {
+        this.pizzaAlterando = null;
+        DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
+        botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class") + "hide");
+    }
+
+    private void addSaborPizza(DOMElement table, SaborPizza l) {
+        DOMElement tr = browser.getDocument().createElement("tr");
+        tr.setAttribute("cod-produto", l.getCod() + "");
+        DOMElement tdImage = browser.getDocument().createElement("td");
+        DOMElement tdNome = browser.getDocument().createElement("td");
+        DOMElement tdDescricao = browser.getDocument().createElement("td");
+        DOMElement tdBotoes = browser.getDocument().createElement("td");
+        DOMElement btAlterar = browser.getDocument().createElement("button");
+        btAlterar.setAttribute("class", "btn btn-warning");
+        btAlterar.setInnerText("Alterar");
+        DOMElement btExcluir = browser.getDocument().createElement("button");
+        btExcluir.setAttribute("class", "btn btn-danger");
+        btExcluir.setInnerText("Excluir");
+        tdBotoes.appendChild(btAlterar);
+        tdBotoes.appendChild(btExcluir);
+        btExcluir.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+            @Override
+            public void handleEvent(DOMEvent dome) {
+                int result = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    try {
+                        if (ControleSaboresPizza.getInstance(Db4oGenerico.getInstance("banco")).excluir(l)) {
+                            JOptionPane.showMessageDialog(null, "Excluido com Sucesso!");
+                            table.removeChild(tr);
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(PizzasSabor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }, true);
+        btAlterar.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+            @Override
+            public void handleEvent(DOMEvent dome) {
+                alterarSaborPizza(l);
+            }
+        }, true);
+        tdNome.setInnerText(l.getNome());
+        tdDescricao.setInnerText(l.getDescricao());
+        if (l.getImage() != null && !l.getImage().isEmpty()) {
+            tdImage.setInnerHTML("<img width=\"70\" class=\"img-responsive img-circle\" src=\"" + l.getImage() + "\">");
+        } else {
+            tdImage.setInnerHTML("<img width=\"70\" class=\"img-responsive img-circle\" src=\"assets/img/fotos/pizzas/pizza-pedaco-cor.svg\">");
+        }
+        tr.appendChild(tdImage);
+        tr.appendChild(tdNome);
+        tr.appendChild(tdDescricao);
+        tr.appendChild(tdBotoes);
+        table.appendChild(tr);
+    }
+
+    private void updateSaborPizza(SaborPizza l) {
+        DOMElement trSaborPizza = browser.getDocument().findElement(By.cssSelector("tr[cod-produto='" + l.getCod() + "']"));
+        List<DOMElement> childs = trSaborPizza.findElements(By.tagName("td"));
+        if (l.getImage() != null && !l.getImage().isEmpty()) {
+            childs.get(0).setInnerHTML("<img width=\"70\" class=\"img-responsive img-circle\" src=\"" + l.getImage() + "\">");
+        } else {
+            childs.get(0).setInnerHTML("<img width=\"70\" class=\"img-responsive img-circle\" src=\"assets/img/fotos/pizzas/pizza-pedaco-cor.svg\">");
+        }
+        childs.get(1).setInnerText(l.getNome());
+        childs.get(2).setInnerText(l.getDescricao());
+    }
+
+    public boolean realizarCadastro(JSObject object) {
+        try {
+            SaborPizza l = new SaborPizza();
+            if (pizzaAlterando != null) {
+                l = pizzaAlterando;
+            }
+            l.setNome(object.getProperty("nome").asString().getStringValue());
+            l.setDescricao(object.getProperty("desc").asString().getStringValue());
+            String src = ((DOMInputElement) browser.getDocument().findElement(By.id("inputFile"))).getFile();
+            if (!src.isEmpty()) {
+                File file = new File(src);
+                l.setImage(Utilitarios.fileToBase64(file));
+            }
+            if (ControleSaboresPizza.getInstance(Db4oGenerico.getInstance("banco")).salvar(l)) {
+                if (pizzaAlterando == null) {
+                    addSaborPizza(browser.getDocument().findElement(By.id("myTable")), l);
+                } else {
+                    updateSaborPizza(l);
+                }
+                pizzaAlterando = null;
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}

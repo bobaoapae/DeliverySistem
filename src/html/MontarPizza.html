@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <title>Delivery System</title>
+
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="assets/css/estilo.css">
+        <link rel="stylesheet" href="assets/css/toggle.css">
+
+        <link rel="stylesheet" href="assets/css/style-multiselect.css">
+
+        <script src="assets/highcharts/highcharts.js"></script>
+        <script src="assets/highcharts/exporting.js"></script>
+        <script src="assets/highcharts/export-data.js"></script>
+
+
+    </head>
+
+    <body>
+
+        <div class="panel" style="margin-bottom: 0;">
+            <div class="panel-heading text-center">
+                <h1>Montar Pizza</h1>
+            </div>
+
+
+            <div class="panel-body" style="padding-bottom: 0;">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <form>
+                            <div class="form-group">
+                                <label for="">Selecione o Tamanho da Pizza:</label>
+                                <select name="" id="" class="form-control">
+                                    <option disabled selected>Tamanho</option>
+                                    <option value="">Pequena (R$ 29,00)</option>
+                                    <option value="">Media (R$ 35,00)</option>
+                                    <option value="">Grande (R$ 50,00)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Selecione o(s) sabor(es)</label>
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <select name="from[]" id="customSort" class="form-control" size="8" multiple="multiple">
+                                            <option value="1">Item 1</option> 
+                                            <option value="5">Item 5</option>
+                                            <option value="2">Item 2</option>
+                                            <option value="4">Item 4</option>
+                                            <option value="3">Item 3</option>
+                                            <option value="1">Item 1</option> 
+                                            <option value="5">Item 5</option>
+                                            <option value="2">Item 2</option>
+                                            <option value="4">Item 4</option>
+                                            <option value="3">Item 3</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xs-2">
+                                        <button type="button" id="customSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                                        <button type="button" id="customSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                        <button type="button" id="customSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                        <button type="button" id="customSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                                    </div>
+
+                                    <div class="col-xs-5">
+                                        <select name="to[]" id="customSort_to" class="form-control" size="8" multiple="multiple"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label for="checkB">Pizza com borda?</label><br>
+
+                                        <label class="custom-check">
+                                            <input type="checkbox" name="onOff" id="checkBorda"/>
+                                            <i></i> 
+                                            <span></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-6">
+                                        <label for="borda">Selecione o sabor da borda:</label>
+
+                                        <select id="borda" class="form-control">
+                                            <option value="1">Cheddar</option> 
+                                            <option value="2">Catupiry</option>
+                                            <option value="3">Mista</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <button class="btn btn-da" type="button" onclick="java.atual.cancelar();">
+                                        <img width="70" src="assets/img/Icon/cancel.svg"><br>
+                                        Cancelar
+                                    </button>
+
+                                    <button class="btn btn-i" type="submit">
+                                        <img width="70" src="assets/img/Icon/check.svg"><br>
+                                        Concluir
+                                    </button>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <div class="form-group text-right">
+                                        <h4>Sub-total: R$ 00,00</h4>
+                                        <h4>Borda: R$ 00,00</h4>
+                                        <h1 class="text-success">Total: R$ 00,00</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                    <!-- Grafico -->
+                    <div class="col-xs-6">
+                        <div id="container" style="min-width: 310px; margin: 0 auto;"></div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+
+        <script src="assets/js/multiselect.min.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('#customSort').multiselect({
+                    sort: {
+                        left: function(a, b) {
+                            return a.value > b.value ? 1 : -1;
+                        },
+                        right: function(a, b) {
+                            return a.value > b.value ? -1 : 1;
+                        }
+                    }
+                });
+            });
+        </script>
+
+
+        <script>
+            // Radialize the colors
+            Highcharts.setOptions({
+                colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+                    return {
+                        radialGradient: {
+                            cx: 0.5,
+                            cy: 0.3,
+                            r: 0.7
+                        },
+                        stops: [
+                            [0, color],
+                            [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                        ]
+                    };
+                })
+            });
+
+            // Build the chart
+            Highcharts.chart('container', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    enabled: false,
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            },
+                            connectorColor: 'black'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Pizza',
+
+                    data: [
+                        { name: 'Chatô', y: 100 , color: '#D9534F', dataLabels: true },
+                        { name: 'Chatô', y: 100 , color: '#D9534F' , dataLabels: false },
+                        { name: 'Chatô', y: 100 , color: '#D9534F' , dataLabels: false },
+                        { name: 'Chatô', y: 100 , color: '#D9534F', dataLabels: false  },
+                        { name: 'Strogonoff', y: 100 , color: '#F0AD4E', dataLabels: true },
+                        { name: 'Strogonoff', y: 100 , color: '#F0AD4E', dataLabels: false },
+                        { name: 'Strogonoff', y: 100 , color: '#F0AD4E', dataLabels: false },
+                        { name: 'Strogonoff', y: 100 , color: '#F0AD4E', dataLabels: false },
+                        { name: 'Nostra', y: 100 , color: '#5CB85C', dataLabels: true },
+                        { name: 'Nostra', y: 100 , color: '#5CB85C', dataLabels: false },
+                        { name: 'Nostra', y: 100 , color: '#5CB85C', dataLabels: false },
+                        { name: 'Nostra', y: 100 , color: '#5CB85C', dataLabels: false },
+                        { name: 'Frango', y: 100 , color: '#7798BF', dataLabels: true },
+                        { name: 'Frango', y: 100 , color: '#7798BF', dataLabels: false },
+                        { name: 'Frango', y: 100 , color: '#7798BF', dataLabels: false },
+                        { name: 'Frango', y: 100 , color: '#7798BF', dataLabels: false },
+                    ]
+                }]
+            });
+        </script>
+
+
+    </body>
+
+</html>

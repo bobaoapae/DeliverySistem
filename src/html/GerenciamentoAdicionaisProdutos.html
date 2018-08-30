@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Delivery System</title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+    <link rel="stylesheet" href="assets/css/toggle.css">
+</head>
+
+<body>
+
+    <div class="panel">
+        <div class="panel-heading text-center">
+            <h1>Novo Adicional - <span class="nomePagina"></span></h1>
+        </div>
+
+        <div class="panel-body">
+            <form id="cadastroAdicional">
+                <div class="row">
+                    <div class="col-xs-8 form-group">
+                        <label class="control-label" for="nome">Nome: </label>
+                        <input class="form-control" autofocus id="nome" required>
+                    </div>
+
+
+                    <div class="col-xs-4 form-group">
+                        <label class="control-label" for="valor">Valor (R$):</label>.
+                        <input class="form-control" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," data-select-all-on-focus="true" required type="text" id="valor">
+                    </div>
+
+
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label" for="desc">Descrição: </label>.
+                        <input class="form-control" type="text" id="desc">
+                    </div>
+
+                    <div class="col-xs-8 form-group">
+                        <label for="inputFile">Selecione uma foto para o adicional</label>
+                        <input class="btn btn-primary" type="file" id="inputFile">
+                    </div>
+
+                    <div class="col-xs-12 text-center">
+                        <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                        <button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger hide">Cancelar Edição</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Lista de Adicionais - <span class="nomePagina"></span></h1>
+        </div>
+
+        <div class="panel-body" style="padding-bottom: 0;">
+            <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Valor (R$)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="myTable">
+                <tr>
+                    <td>
+                        <img width="70" class="img-responsive img-circle" src="assets/img/fotos/adicionais/plus.svg">
+                    </td>
+                    <td>Bacon</td>
+                    <td>...</td>
+                    <td>2,00</td>
+                    <td>
+                        <button class="btn btn-warning">Editar</button>
+                        <button class="btn btn-danger">Remover</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+    <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/search-table.js"></script>
+    <script src="assets/js/jquery.maskMoney.js"></script>
+    <script type="text/javascript">
+        $('#valor').maskMoney();
+        $('#valor').maskMoney('mask', 0);
+        $("#cadastroAdicional").submit(function(event) {
+            event.preventDefault();
+            var produto = {
+                nome: $("#nome").val(),
+                desc: $("#desc").val(),
+                valor: $("#valor").maskMoney('unmasked')[0],
+                soLocal: $('#checkB').prop('checked')
+            };
+            var resultado = java.atual.realizarCadastro(produto);
+            if (resultado === true) {
+                $(this)[0].reset();
+            }
+        });
+        $('#cadastroAdicional').on('reset', function(e) {
+            $("#nome").focus();
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Delivery System</title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+    <link rel="stylesheet" href="assets/css/toggle.css">
+
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Adicionais</h1>
+        </div>
+
+        <form id="formAdicionarPedido">
+            <div class="panel-body" style="padding-bottom: 0;">
+                <div class="row">
+                    <div class="form-group col-xs-3">
+                        <label for="qtd">Quantidade:</label>
+                        <input class="form-control" autofocus required min="1" value="1" id="qtd" type="number">
+                    </div>
+
+                    <div class="form-group col-xs-9">
+                        <label for="obs">Observações:</label>
+                        <input class="form-control" id="obs">
+                    </div>
+
+
+                </div>
+
+                <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+
+                <div class="row">
+                    <div class="col-xs-6" style="border-right: 1px solid grey;">
+                        <h3>Disponiveis</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Valor (R$)</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="myTable">
+                                <tr>
+                                    <td><img class="img-responsive img-circle" width="70" src="assets/img/fotos/adicionais/plus.svg"></td>
+                                    <td>Adicional</td>
+                                    <td>2,00</td>
+                                    <td>
+                                        <button class="btn btn-success">Adicionar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-xs-6">
+                        <h3>Adicionados</h3>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Valor (R$)</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td><img class="img-responsive img-circle" width="70" src="assets/img/fotos/adicionais/plus.svg"></td>
+                                    <td>Adicional</td>
+                                    <td>2,00</td>
+                                    <td>
+                                        <button class="btn btn-danger">Remover</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-da" type="button" onclick="java.atual.cancelar();">
+                    <img width="70" src="assets/img/Icon/cancel.svg"><br>
+                    Cancelar
+                </button>
+
+                <button class="btn btn-i" type="submit">
+                    <img width="70" src="assets/img/Icon/check.svg"><br>
+                    Concluir
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+    <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/search-table.js"></script>
+    <script type="text/javascript">
+        $("#formAdicionarPedido").submit(function(event) {
+            event.preventDefault();
+            var itemPedido = {
+                qtd: parseInt($("#qtd").val()),
+                obs: $("#obs").val()
+            };
+            java.atual.concluir(itemPedido);
+        });
+    </script>
+</body>
+
+</html>

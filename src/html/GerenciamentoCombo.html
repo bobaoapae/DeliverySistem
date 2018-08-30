@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+        <!-- Bootstrap -->
+        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css">
+        <link rel="stylesheet" href="assets/css/estilo.css"> 
+
+        <style>
+            #produtos-disponiveis {
+                border-right: 1px solid grey;
+            }
+
+            #table-prod {
+                max-height: 150px; 
+                overflow: auto;
+            }
+
+            #addCategoria, #myInput2 {
+                margin-bottom: 15px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Cadastrar Combo</h1>
+            </div>
+            <div class="panel-body">
+                <form id="cadastroCombo">
+                    <div class="row">
+                        <div class="col-xs-10 form-group">
+                            <label class="control-label" for="nome">Nome:</label>
+                            <input class="form-control" autofocus required id="nome"> 
+                        </div>
+
+                        <div class="col-xs-2 form-group">
+                            <label class="control-label" for="valor">Valor (R$):</label>
+                            <input class="form-control" value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valor"> 
+                        </div>
+
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label" for="desc">Descrição:</label>
+                            <input class="form-control" id="desc"> 
+                        </div>
+
+                        <div class="col-xs-12 form-group">
+                            <label class="control-label" for="img">Selecione uma Imagem para o Combo:</label>
+                            <input  type="file" class="form-control btn-primary" id="inputFile"> 
+                        </div>
+
+                        <div class="col-xs-6" id="produtos-disponiveis">
+                            <h3>Produtos Disponiveis</h3>
+
+                            <!-- Button trigger modal -->
+                            <button id="addCategoria" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddCat">
+                                Adicinar Categoria
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="modalAddCat" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title" id="myModalLabel">Adicinar Categoria ao Combo</h4>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="">Escolha a categoria: </label>
+                                                <select name="" id="" class="form-control">
+                                                    <option value="">Bebidas</option>
+                                                    <option value="">Cervejas</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="qtdProdCat">Quantos produtos podem ser escolhidos desta categoria?</label>
+                                                <input type="number" id="qtdProdCat" class="form-control" step="1" min="1">
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-success">Adicionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input id="myInput2" class="form-control" placeholder="Digite aqui para fazer uma pesquisa...">
+
+                            <div id="table-prod">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Valor (R$)</th>
+                                            <th>Adicionar</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="myTable2">
+                                        <tr>
+                                            <td>Lanche</td>
+                                            <td>20,00</td>
+                                            <td>
+                                                <button type="button" class="btn btn-default">
+                                                    <img src="assets/img/Icon/plus.svg" width="20">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coca-Cola</td>
+                                            <td>5,00</td>
+                                            <td>
+                                                <button type="button" class="btn btn-default">
+                                                    <img src="assets/img/Icon/plus.svg" width="20">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <h3>Produtos no Combo</h3>
+                            <div id="table-prod">
+                                <table  class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Remover</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="myTable3">
+                                        <tr>
+                                            <td>Lanche</td>
+                                            <td>
+                                                <button type="button" class="btn btn-default">
+                                                    <img src="assets/img/Icon/x.svg" width="20">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 text-center">
+                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                            <button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger hide">Cancelar Edição</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1>Lista de Combos Cadastrados</h1> 
+            </div>
+            <div class="panel-body" style="padding-bottom: 0;">
+                <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa..."> 
+            </div>
+
+            <table id="tabelaCombos" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Produtos</th>
+                        <th>Valor (R$)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+                    <tr>
+                        <td>
+                            <img width="70" class="img-responsive img-circle" src="assets/img/Icon/combo.svg">
+                        </td>
+                        <td>Combo Kids</td>
+                        <td>Lanche, Bebida, Batata P</td>
+                        <td>40,00</td>
+                        <td>
+                            <button class="btn btn-warning" type="button">Editar</button>
+                            <button class="btn btn-danger" type="button">Remover</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+        <script src="assets/js/jquery-3.3.1.min.js"></script>
+        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+        <script src="assets/js/search-table.js"></script>
+
+        <script src="assets/js/jquery.maskMoney.js"></script>
+
+        <script type="text/javascript">
+            $('#valor').maskMoney();
+
+            $('#valor').maskMoney('mask');
+            $("#cadastroCombo").submit(function (event) {
+                event.preventDefault();
+                var produto = {
+                    nome: $("#nome").val(),
+                    desc: $("#desc").val(),
+                    valor: $("#valor").maskMoney('unmasked')[0]
+                };
+                var resultado = java.atual.realizarCadastro(produto);
+                if (resultado === true) {
+                    $(this)[0].reset();
+                }
+            });
+            $('#cadastroCombo').on('reset', function (e) {
+                $("#nome").focus();
+                java.atual.limparProdutosCombo();
+            });
+        </script>
+    </body>
+
+</html>

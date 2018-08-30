@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+    <title>Gerenciar Sabores das Pizza's</title>
+
+    <!-- Bootstrap -->
+    <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/estilo.css">
+</head>
+
+<body>
+
+    <div class="panel">
+        <div class="panel-heading text-center">
+            <h1>Cadastrar Sabor de Pizza</h1>
+        </div>
+
+        <div class="panel-body">
+            <form id="cadastroProduto">
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label" for="nome">Nome: </label>
+                        <input class="form-control" autofocus required id="nome">
+                    </div>
+
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label" for="desc">Descrição:</label>.
+                        <input class="form-control" required id="desc">
+                    </div>
+
+                    <div class="col-xs-12 form-group">
+                        <label for="inputFile">Selecione uma foto para o Sabor da Pizza</label>
+                        <input class="btn btn-primary" type="file" id="inputFile">
+                    </div>
+
+                    <div class="col-xs-12 text-center">
+                        <button type="reset" class="btn btn-primary">Limpar Campos</button>
+                        <button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" class="btn btn-danger hide">Cancelar Edição</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+    <div class="panel" style="margin-bottom: 0;">
+        <div class="panel-heading text-center">
+            <h1>Lista de Sabores das Pizza's</h1>
+        </div>
+
+        <div class="panel-body" style="padding-bottom: 0;">
+            <input class="form-control" id="myInput" placeholder="Digite aqui para fazer uma pesquisa...">
+        </div>
+
+        <table id="tabelaProdutos" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="myTable">
+                <tr>
+                    <td>
+                        <img width="70" class="img-responsive img-circle" src="assets/img/fotos/pizzas/pizza-pedaco-cor.svg">
+                    </td>
+                    <td>Sabor 01</td>
+                    <td>
+                        <button class="btn btn-info">Descrição</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning">Editar</button>
+                        <button class="btn btn-danger">Remover</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+    <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/search-table.js"></script>
+    <script type="text/javascript">
+        $("#cadastroProduto").submit(function(event) {
+            event.preventDefault();
+            var produto = {
+                nome: $("#nome").val(),
+                desc: $("#desc").val()
+            };
+            var resultado = java.atual.realizarCadastro(produto);
+            if (resultado === true) {
+                $(this)[0].reset();
+            }
+        });
+        $('#cadastroProduto').on('reset', function(e) {
+            $("#nome").focus();
+        });
+
+    </script>
+</body>
+
+</html>
