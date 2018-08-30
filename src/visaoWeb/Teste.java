@@ -37,5 +37,9 @@ public class Teste {
         configClient.common().objectClass(Collections.synchronizedList(new ArrayList<>()).getClass()).translate(new TTransient());
         configClient.common().objectClass(FXCollections.synchronizedObservableList(FXCollections.observableList(new ArrayList())).getClass()).translate(new TTransient());
         Db4oGenerico.getInstance("banco", configClient);
+        String categoriasDisponiveis  ="Pizzas, Saladas, Sorvetes, Hamburguers, ";
+        categoriasDisponiveis = categoriasDisponiveis.trim().substring(0, categoriasDisponiveis.lastIndexOf(","));
+        String catWithOut = categoriasDisponiveis.substring(0, categoriasDisponiveis.lastIndexOf(",")) + " ou"+categoriasDisponiveis.substring(categoriasDisponiveis.lastIndexOf(",")+1);
+        System.out.println(catWithOut);
     }
 }

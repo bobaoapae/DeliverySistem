@@ -151,14 +151,14 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
                 codigosMenu.add(new HandlerVerificaEscolhaCorreta(l, chat, this, new HandlerSaboresPizza(chat)));
             }
             if (l.getValor() > 0) {
-                builder.textNewLine("*" + (codigosMenu.size()) + "* - " + l.getNome() + " - R$" + moneyFormat.format(l.getValor()));
+                builder.textNewLine("*" + (codigosMenu.size()) + " - " + l.getNome() + " - R$" + moneyFormat.format(l.getValor())+"*");
             } else {
-
-                builder.textNewLine("*" + (codigosMenu.size()) + "* - " + l.getNome());
+                builder.textNewLine("*" + (codigosMenu.size()) + " - " + l.getNome() + "*");
             }
             if (!l.getDescricao().trim().isEmpty()) {
                 builder.textNewLine("       _" + l.getDescricao() + "_");
             }
+            builder.newLine();
         }
     }
 

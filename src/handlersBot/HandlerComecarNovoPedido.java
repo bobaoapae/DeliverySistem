@@ -31,7 +31,7 @@ public class HandlerComecarNovoPedido extends HandlerBotDelivery {
             chat.getChat().sendMessage(agradecimentos[new Random().nextInt(agradecimentos.length - 1)]);
             return true;
         }
-        chat.getChat().sendMessage("Olá, " + ((ChatBotDelivery)chat).getNome() + " 😄");
+        chat.getChat().sendMessage("Olá, " + ((ChatBotDelivery) chat).getNome() + " 😄");
         chat.getChat().sendMessage("Gostaria de iniciar um novo pedido?");
         chat.getChat().sendMessage("1 - Sim");
         chat.getChat().sendMessage("2 - Não");
@@ -42,7 +42,7 @@ public class HandlerComecarNovoPedido extends HandlerBotDelivery {
     @Override
     protected boolean runSecondTime(Message msg) {
         if (msg.getContent().trim().equals("1") || msg.getContent().toLowerCase().trim().equals("sim") || msg.getContent().toLowerCase().trim().equals("s")) {
-            ((ChatBotDelivery)chat).setPedidoAtual(new Pedido());
+            ((ChatBotDelivery) chat).setPedidoAtual(new Pedido());
             if (!Configuracao.getInstance().isOpenPedidos()) {
                 if (!Configuracao.getInstance().isAgendamentoDePedidos()) {
                     if (!Configuracao.getInstance().isAbrirFecharPedidosAutomatico()) {
@@ -67,7 +67,7 @@ public class HandlerComecarNovoPedido extends HandlerBotDelivery {
                     chat.setHandler(new HandlerMenuPrincipal(chat), true);
                 }
             } else {
-                chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de 30 à 45 minutos. Já para retirada cerca de 10 à 15 minutos_");
+                chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de " + Configuracao.getInstance().getTempoMedioEntrega() + " à " + (Configuracao.getInstance().getTempoMedioEntrega() + 15) + " minutos. Já para retirada cerca de " + (Configuracao.getInstance().getTempoMedioRetirada()) + " à " + (Configuracao.getInstance().getTempoMedioRetirada() + 5) + " minutos_", 3000);
                 chat.setHandler(new HandlerMenuPrincipal(chat), true);
             }
         } else if (msg.getContent().trim().equals("2") || msg.getContent().toLowerCase().trim().equals("não") || msg.getContent().toLowerCase().trim().equals("nao") || msg.getContent().toLowerCase().trim().equals("n")) {
@@ -77,7 +77,7 @@ public class HandlerComecarNovoPedido extends HandlerBotDelivery {
         }
         return true;
     }
-    
+
     @Override
     public boolean notificaPedidosFechados() {
         return false;
