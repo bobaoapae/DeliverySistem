@@ -608,6 +608,7 @@
 
             $('#cadastrarCategoria').on('reset', function (e) {
                 $("#nome").focus();
+                $("#cadastrarCategoria").find("input").trigger('change');
             });
 
             //Editar Categoria
@@ -635,6 +636,7 @@
 
             $('#form-editar-cat').on('reset', function (e) {
                 $("#nomeAlterarCategoria").focus();
+                $("#form-editar-cat").find("input").trigger('change');
             });
 
             //Cadastrar Subcategoria

@@ -9,6 +9,8 @@ import com.br.joao.Db4oGenerico;
 import controle.ControleCategorias;
 import controle.ControleClientes;
 import controle.ControlePedidos;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.ChatBot;
 import modelo.ChatBotDelivery;
 import modelo.Message;
@@ -49,7 +51,7 @@ public class HandlerConcluirPedido extends HandlerBotDelivery {
             chat.setHandler(this, false);
             chat.getChat().sendMessage("Ouve um erro ao salvar seu pedido!");
             chat.getChat().sendMessage("Tente novamente em alguns minutos ou aguarde nosso Atendente ler suas mensagens.");
-            chat.getChat().getDriver().onError(ex);
+             Logger.getLogger("LogDelivery").log(Level.SEVERE, null, ex);
         }
         return true;
     }

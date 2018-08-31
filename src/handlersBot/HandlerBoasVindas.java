@@ -5,6 +5,7 @@
  */
 package handlersBot;
 
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,11 +28,20 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
 
     @Override
     protected boolean runFirstTime(Message m) {
+        int horaAtual = LocalTime.now().getHour();
+        String msg = "";
+        if (horaAtual >= 2 && horaAtual < 12) {
+            msg = "Bom Dia";
+        } else if (horaAtual >= 12 && horaAtual < 18) {
+            msg = "Boa Tarde";
+        } else {
+            msg = "Boa Noite";
+        }
         MessageBuilder builder = new MessageBuilder();
-        builder.text("Olá, ").text(((ChatBotDelivery)chat).getNome()).newLine();
+        builder.text(msg).text(" ").text(((ChatBotDelivery) chat).getNome()).text(".").newLine();
         builder.textNewLine("Eu sou o " + Configuracao.getInstance().getNomeBot() + ", atendende virtual da " + Configuracao.getInstance().getNomeEstabelecimento() + ", e irei te ajudar a completar seu pedido").
                 textNewLine("*_Lembre-se de ler as instruções com atenção_*");
-        ((ChatBotDelivery)chat).setPedidoAtual(new Pedido());
+        ((ChatBotDelivery) chat).setPedidoAtual(new Pedido());
         chat.getChat().sendMessage(builder.build());
         try {
             Thread.sleep(3000);
@@ -42,27 +52,27 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
             if (!Configuracao.getInstance().isAgendamentoDePedidos()) {
                 if (!Configuracao.getInstance().isAbrirFecharPedidosAutomatico()) {
                     if (!Configuracao.getInstance().isReservasComPedidosFechados()) {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porfavor retorne mais tarde_",2000);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porfavor retorne mais tarde_", 2000);
                         chat.setHandler(new HandlerAdeus(chat), true);
                     } else {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você já pode realizar sua reserva de mesa_",2000);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você já pode realizar sua reserva de mesa_", 2000);
                         chat.setHandler(new HandlerDesejaFazerUmaReserva(chat), true);
                     }
                 } else {
                     if (!Configuracao.getInstance().isReservasComPedidosFechados()) {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + "_",3500);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + "_", 3500);
                         chat.setHandler(new HandlerAdeus(chat), true);
                     } else {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + ", porém você já pode realizar sua reserva de mesa_",3500);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + ", porém você já pode realizar sua reserva de mesa_", 3500);
                         chat.setHandler(new HandlerDesejaFazerUmaReserva(chat), true);
                     }
                 }
             } else {
-                chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você pode deixar seu pedido agendado_",3000);
+                chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você pode deixar seu pedido agendado_", 3000);
                 chat.setHandler(new HandlerMenuPrincipal(chat), true);
             }
         } else {
-            chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de "+Configuracao.getInstance().getTempoMedioEntrega()+" à "+(Configuracao.getInstance().getTempoMedioEntrega()+15)+" minutos. Já para retirada cerca de "+(Configuracao.getInstance().getTempoMedioRetirada())+" à "+(Configuracao.getInstance().getTempoMedioRetirada()+5)+" minutos_",3000);
+            chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de " + Configuracao.getInstance().getTempoMedioEntrega() + " à " + (Configuracao.getInstance().getTempoMedioEntrega() + 15) + " minutos. Já para retirada cerca de " + (Configuracao.getInstance().getTempoMedioRetirada()) + " à " + (Configuracao.getInstance().getTempoMedioRetirada() + 5) + " minutos_", 3000);
             chat.setHandler(new HandlerMenuPrincipal(chat), true);
         }
         return true;
@@ -72,7 +82,7 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
     protected boolean runSecondTime(Message m) {
         return runFirstTime(m);
     }
-    
+
     @Override
     public boolean notificaPedidosFechados() {
         return false;

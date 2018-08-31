@@ -356,6 +356,9 @@ public class GerenciadorCategorias extends JDialog {
                         diasDaSemanaEdit.getOptions().get(x).setSelected(p.getRestricaoVisibilidade().getDiasSemana()[x]);
                     }
                 } else {
+                    for (int x = 0; x < 7; x++) {
+                        diasDaSemanaEdit.getOptions().get(x).setSelected(false);
+                    }
                     checkVisibilidadeDia.setChecked(false);
                 }
                 if (p.getRestricaoVisibilidade().isRestricaoHorario()) {
@@ -363,6 +366,8 @@ public class GerenciadorCategorias extends JDialog {
                     horarioAteEdit.setValue(p.getRestricaoVisibilidade().getHorarioAte().format(DateTimeFormatter.ofPattern("HH:mm")));
                     horarioDeEdit.setValue(p.getRestricaoVisibilidade().getHorarioDe().format(DateTimeFormatter.ofPattern("HH:mm")));
                 } else {
+                    horarioAteEdit.setValue("");
+                    horarioDeEdit.setValue("");
                     checkVisibilidadeHorario.setChecked(false);
                 }
             } else {
@@ -370,6 +375,15 @@ public class GerenciadorCategorias extends JDialog {
                 checkVisibilidadeDia.setChecked(false);
                 checkVisibilidadeHorario.setChecked(false);
             }
+        } else {
+            for (int x = 0; x < 7; x++) {
+                diasDaSemanaEdit.getOptions().get(x).setSelected(false);
+            }
+            horarioAteEdit.setValue("");
+            horarioDeEdit.setValue("");
+            checkRegrasVisibilidade.setChecked(false);
+            checkVisibilidadeDia.setChecked(false);
+            checkVisibilidadeHorario.setChecked(false);
         }
         DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
         botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class").replaceAll("hide", ""));
@@ -389,7 +403,7 @@ public class GerenciadorCategorias extends JDialog {
 
     public void cancelarAlteracao() {
         this.categoriaAtual = null;
-          browser.executeJavaScript("$(\"#modalEditar\").modal('hide')");
+        browser.executeJavaScript("$(\"#modalEditar\").modal('hide')");
     }
 
     public boolean realizarCadastro(JSObject object) {

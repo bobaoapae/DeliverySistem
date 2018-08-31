@@ -5,7 +5,9 @@
  */
 package handlersBot;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import modelo.Categoria;
@@ -62,9 +64,9 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
             if (c.getQtdMinEntrega() > 1 && !c.isPrecisaPedirOutraCategoria() && msg) {
                 chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens_*", 3000);
             } else if (c.getQtdMinEntrega() > 1 && c.isPrecisaPedirOutraCategoria() && msg) {
-                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens ou pedir junto algum produto de outro cardapio*", 3000);
+                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens ou pedir junto algum produto de outro cardapio_*", 3000);
             } else if (c.isPrecisaPedirOutraCategoria() && msg) {
-                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir junto algum produto de outro cardapio*", 3000);
+                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir junto algum produto de outro cardapio_*", 3000);
             }
         }
         gerarMenu(c, builder);
@@ -96,8 +98,10 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
     }
 
     private void gerarMenu(Categoria c, MessageBuilder builder) {
+        Calendar dataAtual = Calendar.getInstance();
+        int diaSemana = dataAtual.get(Calendar.DAY_OF_WEEK) - 1;
+        LocalTime horaAtual = LocalTime.now();
         if (!c.equals(this.c)) {
-            builder.newLine();
             builder.text(".          *-" + c.getNomeCategoria() + "-*");
             builder.newLine();
             if (c.getRootCategoria().isFazEntrega()) {
@@ -133,7 +137,6 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
                     }
                 }
             }
-            builder.newLine();
         }
         for (Categoria cF : c.getCategoriaFilhas()) {
             if (!cF.isVisivel()) {
@@ -141,9 +144,25 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
             }
             gerarMenu(cF, builder);
         }
+        builder.newLine();
         for (Produto l : c.getProdutosCategoria()) {
             if (l.isOnlyLocal()) {
                 continue;
+            }
+            if (!l.isVisivel()) {
+                continue;
+            }
+            if (l.getRestricaoVisibilidade() != null) {
+                if (l.getRestricaoVisibilidade().isRestricaoDia()) {
+                    if (!l.getRestricaoVisibilidade().getDiasSemana()[diaSemana]) {
+                        continue;
+                    }
+                }
+                if (l.getRestricaoVisibilidade().isRestricaoHorario()) {
+                    if (!(horaAtual.isAfter(l.getRestricaoVisibilidade().getHorarioDe()) && horaAtual.isBefore(l.getRestricaoVisibilidade().getHorarioAte()))) {
+                        continue;
+                    }
+                }
             }
             if (l.getCategoria().getRootCategoria().getCod() != -2) {
                 codigosMenu.add(new HandlerVerificaEscolhaCorreta(l, chat, this, new HandlerAdicionaisProduto(l, chat)));
@@ -151,7 +170,7 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
                 codigosMenu.add(new HandlerVerificaEscolhaCorreta(l, chat, this, new HandlerSaboresPizza(chat)));
             }
             if (l.getValor() > 0) {
-                builder.textNewLine("*" + (codigosMenu.size()) + " - " + l.getNome() + " - R$" + moneyFormat.format(l.getValor())+"*");
+                builder.textNewLine("*" + (codigosMenu.size()) + " - " + l.getNome() + " - R$" + moneyFormat.format(l.getValor()) + "*");
             } else {
                 builder.textNewLine("*" + (codigosMenu.size()) + " - " + l.getNome() + "*");
             }

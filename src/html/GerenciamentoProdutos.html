@@ -206,7 +206,12 @@
                     nome: $("#nome").val(),
                     desc: $("#desc").val(),
                     valor: $("#valor").maskMoney('unmasked')[0],
-                    soLocal: $('#checkConsumoNoLocal').is(':checked')
+                    soLocal: $('#checkConsumoNoLocal').is(':checked'),
+                    temRegrasVisibilidade: $("#checkRegrasVisibilidade").is(":checked"),
+                    temRegraVisibilidadeHorario: $("#checkVisibilidadeHorario").is(":checked"),
+                    temRegraVisibilidadeDia: $("#checkVisibilidadeDia").is(":checked"),
+                    horariosRegraVisibilidade: $("#checkRegrasVisibilidade").is(":checked") ? {horarioDe:$("#horarioDe").val(),horarioAte:$("#horarioAte").val()}:{} ,
+                    diasRegraVisibilidade: $("#checkVisibilidadeDia").is(":checked") ? $("#diasDaSemana").val(): []
                 };
                 var resultado = java.atual.realizarCadastro(produto);
                 if (resultado === true) {
@@ -215,6 +220,7 @@
             });
             $('#cadastroProduto').on('reset', function (e) {
                 $("#nome").focus();
+                $("#cadastroProduto").find("input").trigger('change');
             });
 
 
