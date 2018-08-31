@@ -51,12 +51,12 @@ import utils.Utilitarios;
  @author jvbor
  */
 public class GerenciadorProdutosCategoria extends JDialog {
-
+    
     private Browser browser;
     private BrowserView view;
     private Produto produtoAlterando;
     private Categoria categoriaAtual;
-
+    
     public GerenciadorProdutosCategoria(Categoria categoriaAtual) {
         this.categoriaAtual = categoriaAtual;
         init();
@@ -68,7 +68,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.add(view);
         this.setLocationRelativeTo(null);
     }
-
+    
     private void init() {
         if (Configuracao.getInstance().getImg() != null && !Configuracao.getInstance().getImg().isEmpty()) {
             byte[] btDataFile = java.util.Base64.getDecoder().decode(Configuracao.getInstance().getImg().split(",")[1]);
@@ -85,7 +85,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.setMinimumSize(new Dimension(((int) (screenSize.getWidth() * 0.7)), ((int) (screenSize.getHeight() * 0.7))));
         pack();
     }
-
+    
     public void abrir() {
         Browser.invokeAndWaitFinishLoadingMainFrame(browser, new Callback<Browser>() {
             @Override
@@ -105,7 +105,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.setVisible(true);
         produtoAlterando = null;
     }
-
+    
     private void recriarTable() {
         DOMElement table = browser.getDocument().findElement(By.id("myTable"));
         for (DOMNode node : table.getChildren()) {
@@ -114,8 +114,9 @@ public class GerenciadorProdutosCategoria extends JDialog {
         for (Produto p : categoriaAtual.getProdutosCategoria()) {
             addProduto(table, p);
         }
+        browser.executeJavaScript("$('[data-toggle=\"tooltip\"]').tooltip();");
     }
-
+    
     private void alterarProduto(Produto p) {
         this.produtoAlterando = p;
         DOMInputElement nomeProduto = (DOMInputElement) browser.getDocument().findElement(By.id("nome"));
@@ -164,13 +165,13 @@ public class GerenciadorProdutosCategoria extends JDialog {
         browser.executeJavaScript("$(\"#nome\").focus()");
         browser.executeJavaScript("$(\"#cadastroProduto\").find(\"input\").trigger('change');");
     }
-
+    
     public void cancelarAlteracao() {
         this.produtoAlterando = null;
         DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
         botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class") + "hide");
     }
-
+    
     private void addProduto(DOMElement table, Produto p) {
         DOMElement tr = browser.getDocument().createElement("tr");
         tr.setAttribute("cod-produto", p.getCod() + "");
@@ -293,7 +294,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         tr.appendChild(tdBotoes);
         table.appendChild(tr);
     }
-
+    
     public boolean realizarCadastro(JSObject object) {
         try {
             Produto l = new Produto();
