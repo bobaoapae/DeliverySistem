@@ -39,7 +39,7 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
         }
         MessageBuilder builder = new MessageBuilder();
         builder.text(msg).text(" ").text(((ChatBotDelivery) chat).getNome()).text(".").newLine();
-        builder.textNewLine("Eu sou o " + Configuracao.getInstance().getNomeBot() + ", atendende virtual da " + Configuracao.getInstance().getNomeEstabelecimento() + ", e irei te ajudar a completar seu pedido").
+        builder.textNewLine("Eu sou o " + Configuracao.getInstance().getNomeBot() + ", atendende virtual da " + Configuracao.getInstance().getNomeEstabelecimento() + ", e irei te ajudar a completar seu pedido.").
                 textNewLine("*_Lembre-se de ler as instruções com atenção_*");
         ((ChatBotDelivery) chat).setPedidoAtual(new Pedido());
         chat.getChat().sendMessage(builder.build());
@@ -52,15 +52,15 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
             if (!Configuracao.getInstance().isAgendamentoDePedidos()) {
                 if (!Configuracao.getInstance().isAbrirFecharPedidosAutomatico()) {
                     if (!Configuracao.getInstance().isReservasComPedidosFechados()) {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porfavor retorne mais tarde_", 2000);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, por favor retorne mais tarde._", 2000);
                         chat.setHandler(new HandlerAdeus(chat), true);
                     } else {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você já pode realizar sua reserva de mesa_", 2000);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você já pode realizar sua reserva de mesa._", 2000);
                         chat.setHandler(new HandlerDesejaFazerUmaReserva(chat), true);
                     }
                 } else {
                     if (!Configuracao.getInstance().isReservasComPedidosFechados()) {
-                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + "_", 3500);
+                        chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + "._", 3500);
                         chat.setHandler(new HandlerAdeus(chat), true);
                     } else {
                         chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, nosso atendimento iniciasse às " + Configuracao.getInstance().getHoraAutomaticaAbrirPedidos().format(DateTimeFormatter.ofPattern("HH:mm")) + ", porém você já pode realizar sua reserva de mesa_", 3500);
@@ -68,11 +68,11 @@ public class HandlerBoasVindas extends HandlerBotDelivery {
                     }
                 }
             } else {
-                chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você pode deixar seu pedido agendado_", 3000);
+                chat.getChat().sendMessage("_Obs: Não iniciamos nosso atendimento ainda, porém você pode deixar seu pedido agendado._", 3000);
                 chat.setHandler(new HandlerMenuPrincipal(chat), true);
             }
         } else {
-            chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de " + Configuracao.getInstance().getTempoMedioEntrega() + " à " + (Configuracao.getInstance().getTempoMedioEntrega() + 15) + " minutos. Já para retirada cerca de " + (Configuracao.getInstance().getTempoMedioRetirada()) + " à " + (Configuracao.getInstance().getTempoMedioRetirada() + 5) + " minutos_", 3000);
+            chat.getChat().sendMessage("_Obs: Nosso prazo médio para entregas é de " + Configuracao.getInstance().getTempoMedioEntrega() + " à " + (Configuracao.getInstance().getTempoMedioEntrega() + 15) + " minutos. Já para retirada cerca de " + (Configuracao.getInstance().getTempoMedioRetirada()) + " à " + (Configuracao.getInstance().getTempoMedioRetirada() + 5) + " minutos._", 3000);
             chat.setHandler(new HandlerMenuPrincipal(chat), true);
         }
         return true;
