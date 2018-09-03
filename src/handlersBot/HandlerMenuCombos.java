@@ -21,7 +21,7 @@ import modelo.Produto;
  */
 public class HandlerMenuCombos extends HandlerBotDelivery {
 
-    private int lastCodeCombo;
+    private long lastCodeCombo;
 
     public HandlerMenuCombos(ChatBot chat) {
         super(chat);

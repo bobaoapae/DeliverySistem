@@ -18,7 +18,7 @@ import modelo.Pizza;
  */
 public class HandlerMenuPizzas extends HandlerBotDelivery {
 
-    private int lastCodePizzas;
+    private long lastCodePizzas;
 
     public HandlerMenuPizzas(ChatBot chat) {
         super(chat);

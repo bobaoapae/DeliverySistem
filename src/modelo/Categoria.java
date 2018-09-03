@@ -25,6 +25,7 @@ public class Categoria extends Db4ObjectSaveGeneric implements Comparable<Catego
     private int qtdMinEntrega, ordemExibicao;
     private boolean fazEntrega, precisaPedirOutraCategoria, visivel;
     private RestricaoVisibilidade restricaoVisibilidade;
+    private boolean isPizza;
 
     public Categoria() {
         this.produtosCategoria = new ArrayList<>();
@@ -32,6 +33,14 @@ public class Categoria extends Db4ObjectSaveGeneric implements Comparable<Catego
         this.categoriasParaPoderPedir = new ArrayList<>();
         this.grupoAdicionais = new ArrayList<>();
         this.qtdMinEntrega = 1;
+    }
+
+    public boolean isIsPizza() {
+        return isPizza;
+    }
+
+    public void setIsPizza(boolean isPizza) {
+        this.isPizza = isPizza;
     }
 
     public boolean isVisivel() {

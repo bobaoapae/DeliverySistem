@@ -23,6 +23,14 @@ public class Produto extends Db4ObjectSaveGeneric implements Comparable<Produto>
     protected Categoria categoria;
     protected List<GrupoAdicionais> adicionaisDisponiveis;
     protected RestricaoVisibilidade restricaoVisibilidade;
+    
+    public Produto() {
+        nome = "";
+        descricao = "";
+        onlyLocal = false;
+        adicionaisDisponiveis = new ArrayList<>();
+        visivel = true;
+    }
 
     public boolean isVisivel() {
         return visivel;
@@ -71,13 +79,6 @@ public class Produto extends Db4ObjectSaveGeneric implements Comparable<Produto>
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public Produto() {
-        nome = "";
-        descricao = "";
-        onlyLocal = false;
-        adicionaisDisponiveis = new ArrayList<>();
     }
 
     public String getNome() {

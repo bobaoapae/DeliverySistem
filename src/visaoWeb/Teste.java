@@ -11,9 +11,14 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.config.TTransient;
 import com.db4o.ta.TransparentActivationSupport;
+import controle.ControleProdutos;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import modelo.Pedido;
+import modelo.Produto;
 
 /**
 
@@ -34,12 +39,19 @@ public class Teste {
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).cascadeOnUpdate(true);
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).cascadeOnActivate(true);
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).indexed(true);
+        configClient.common().objectClass(Clientes.class).objectField("chatId").indexed(true);
+        configClient.common().objectClass(Pedido.class).objectField("estadoPedido").indexed(true);
+        configClient.common().objectClass(Pedido.class).objectField("numeroMesa").indexed(true);
         configClient.common().objectClass(Collections.synchronizedList(new ArrayList<>()).getClass()).translate(new TTransient());
         configClient.common().objectClass(FXCollections.synchronizedObservableList(FXCollections.observableList(new ArrayList())).getClass()).translate(new TTransient());
         Db4oGenerico.getInstance("banco", configClient);
-        String categoriasDisponiveis  ="Pizzas, Saladas, Sorvetes, Hamburguers, ";
-        categoriasDisponiveis = categoriasDisponiveis.trim().substring(0, categoriasDisponiveis.lastIndexOf(","));
-        String catWithOut = categoriasDisponiveis.substring(0, categoriasDisponiveis.lastIndexOf(",")) + " ou"+categoriasDisponiveis.substring(categoriasDisponiveis.lastIndexOf(",")+1);
-        System.out.println(catWithOut);
+        for(Produto p:ControleProdutos.getInstance(Db4oGenerico.getInstance("banco")).carregarTodos()){
+            p.setVisivel(true);
+            try {
+                Db4oGenerico.getInstance("banco").salvarObjetoNoBanco(p);
+            } catch (Exception ex) {
+                Logger.getLogger(Teste.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

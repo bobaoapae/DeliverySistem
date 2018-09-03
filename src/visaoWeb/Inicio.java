@@ -100,7 +100,7 @@ import utils.Utilitarios;
  @author jvbor
  */
 public class Inicio extends JFrame {
-    
+
     private Browser browser;
     private BrowserView view;
     private JTabbedPane tabbedPane;
@@ -111,7 +111,7 @@ public class Inicio extends JFrame {
     private ArrayList<Pedido> pedidosJaAdicionados = new ArrayList();
     private ArrayList<Mesa> mesasEmAberto = new ArrayList<>();
     private Logger logger;
-    
+
     public Inicio() {
         init();
         this.setLocationRelativeTo(null);
@@ -139,15 +139,15 @@ public class Inicio extends JFrame {
                             }
                         }
                     } catch (Exception ex) {
-                        
+
                     }
                 }
-                
+
                 @Override
                 public void flush() {
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
-                
+
                 @Override
                 public void close() throws SecurityException {
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -175,7 +175,7 @@ public class Inicio extends JFrame {
             loadIndex();
         }
     }
-    
+
     private void criarConfiguracoesBanco() {
         EmbeddedConfiguration configClient = Db4oEmbedded.newConfiguration();
         configClient.common().detectSchemaChanges(true);
@@ -189,10 +189,14 @@ public class Inicio extends JFrame {
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).cascadeOnUpdate(true);
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).cascadeOnActivate(true);
         configClient.common().objectClass(Db4ObjectSaveGeneric.class).indexed(true);
+        configClient.common().objectClass(Db4ObjectSaveGeneric.class).objectField("cod").indexed(true);
+        configClient.common().objectClass(Clientes.class).objectField("chatId").indexed(true);
+        configClient.common().objectClass(Pedido.class).objectField("estadoPedido").indexed(true);
+        configClient.common().objectClass(Pedido.class).objectField("numeroMesa").indexed(true);
         configClient.common().objectClass(Collections.synchronizedList(new ArrayList<>()).getClass()).translate(new TTransient());
         configClient.common().objectClass(FXCollections.synchronizedObservableList(FXCollections.observableList(new ArrayList())).getClass()).translate(new TTransient());
         Db4oGenerico.getInstance("banco", configClient);
-        
+
         Categoria catPizza = ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).pesquisarPorCodigo(-2);
         if (catPizza == null) {
             catPizza = new Categoria();
@@ -218,9 +222,9 @@ public class Inicio extends JFrame {
             }
         }
         ControleBackups.getInstance(Db4oGenerico.getInstance("banco")).realizarBackup();
-        
+
     }
-    
+
     public void alterarTempos(JSObject object) {
         Configuracao.getInstance().setTempoMedioEntrega(object.getProperty("tempoMedioEntrega").asNumber().getInteger());
         Configuracao.getInstance().setTempoMedioRetirada(object.getProperty("tempoMedioRetirada").asNumber().getInteger());
@@ -280,7 +284,7 @@ public class Inicio extends JFrame {
         };
         Runnable onDisconnect = () -> {
             JOptionPane.showMessageDialog(rootPane, "O celular ao qual o bot está conectado está sem acesso a internet ou desligado!", "Aviso", JOptionPane.WARNING_MESSAGE);
-            
+
         };
         try {
             driver = new WebWhatsDriver(panelWhatsapp, "Bot", false, actionOnLogin, null, actionOnErrorInDriver, onLowBaterry, onDisconnect);
@@ -310,7 +314,7 @@ public class Inicio extends JFrame {
             public void windowClosing(WindowEvent we) {
                 finalizar();
             }
-            
+
         });
     }
 //</editor-fold>
@@ -330,9 +334,9 @@ public class Inicio extends JFrame {
                     novoPedido();
                 }
             }
-            
+
         });
-        
+
         browser.executeJavaScript("window.java = {};");
         JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
         window.asObject().setProperty("atual", this);
@@ -588,7 +592,7 @@ public class Inicio extends JFrame {
             DOMElement buttonVerPedido = browser.getDocument().createElement("button");
             DOMElement buttonConcluido = browser.getDocument().createElement("button");
             DOMElement buttonImprimir = browser.getDocument().createElement("button");
-            
+
             divClearFix.setAttribute("class", "clearfix");
             divPedido.setAttribute("class", "card-pedido col-xs-12 col-md-6 col-lg-4");
             divPanel.setAttribute("class", "panel panel-default");
@@ -746,7 +750,7 @@ public class Inicio extends JFrame {
         DOMElement imgMesa = browser.getDocument().createElement("img");
         DOMElement buttonPedidos = browser.getDocument().createElement("button");
         DOMElement buttonFechar = browser.getDocument().createElement("button");
-        
+
         divMesa.setAttribute("class", "col-xs-3 col-lg-2 card-mesa");
         divPanel.setAttribute("class", "panel panel-default");
         divPanelHeading.setAttribute("class", "panel-heading");
@@ -760,7 +764,7 @@ public class Inicio extends JFrame {
         buttonFechar.setAttribute("class", "btn btn-danger btn-block");
         h3NrMesa.setTextContent("Mesa " + m.getNumeroMesa() + "");
         h2TotalMesa.setTextContent(new DecimalFormat("###,###,###.00").format(m.getTotal()));
-        
+
         divMesa.appendChild(divPanel);
         divPanel.appendChild(divPanelHeading);
         divPanelHeading.appendChild(h3NrMesa);
@@ -770,14 +774,14 @@ public class Inicio extends JFrame {
         divPanelBody.appendChild(buttonPedidos);
         divPanelBody.appendChild(buttonFechar);
         containnerMesas.appendChild(divMesa);
-        
+
         m.addObserver(new Observer() {
             @Override
             public void update(Observable o, Object o1) {
                 h3NrMesa.setTextContent("Mesa " + m.getNumeroMesa() + "");
             }
         });
-        
+
         m.getPedidos().addListener(new ListChangeListener<Pedido>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Pedido> c) {
@@ -903,7 +907,7 @@ public class Inicio extends JFrame {
             }
         }, 0, 1, TimeUnit.SECONDS);
     }
-    
+
     private void addReserva(Reserva r) {
         try {
             if (!r.isImpresso()) {
@@ -970,7 +974,7 @@ public class Inicio extends JFrame {
             logger.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void imprimirReserva(Reserva r) {
         new Thread() {
             public void run() {
@@ -1076,7 +1080,7 @@ public class Inicio extends JFrame {
                 c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Aberto");
             }
         } catch (Exception ex) {
-            
+
         }
         JOptionPane.showMessageDialog(null, "Pedidos Abertos");
     }
@@ -1089,7 +1093,7 @@ public class Inicio extends JFrame {
             internalFecharPedidos();
         }
     }
-    
+
     private void internalFecharPedidos() {
         Configuracao.getInstance().fecharPedidos();
         try {
@@ -1102,7 +1106,7 @@ public class Inicio extends JFrame {
                 c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Fechado");
             }
         } catch (Exception ex) {
-            
+
         }
         try {
             ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).salvar(Configuracao.getInstance());
@@ -1139,7 +1143,7 @@ public class Inicio extends JFrame {
                 c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* ChatBot Aberto");
             }
         } catch (Exception ex) {
-            
+
         }
         Configuracao.getInstance().setOpenChatBot(true);
         try {
@@ -1172,7 +1176,7 @@ public class Inicio extends JFrame {
                     c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* ChatBot Fechado");
                 }
             } catch (Exception ex) {
-                
+
             }
         }
     }
@@ -1185,7 +1189,7 @@ public class Inicio extends JFrame {
             System.exit(0);
         }
     }
-    
+
     public static void main(String[] args) {
         /*
          Set the Nimbus look and feel
@@ -1223,5 +1227,5 @@ public class Inicio extends JFrame {
             }
         });
     }
-    
+
 }

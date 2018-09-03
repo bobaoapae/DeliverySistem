@@ -111,6 +111,7 @@ public class GerenciadorCategorias extends JDialog {
     }
 
     private void addCategoria(DOMElement containner, Categoria c) {
+        System.out.println(c);
         DOMElement ulCat = browser.getDocument().createElement("ul");
         ulCat.setAttribute("cod-categoria", c.getCod() + "");
         ulCat.setAttribute("class", "list-group");
@@ -276,7 +277,7 @@ public class GerenciadorCategorias extends JDialog {
                             DOMElement button = browser.getDocument().createElement("li");
                             button.setAttribute("class", "list-group-item list-group-item-warning");
                             button.setAttribute("data-toggle", "modal");
-                            button.setAttribute("data-target", "#modalCadastroSubCategoria");
+                            button.setAttribute("data-target", "#modalEditar");
                             button.setInnerText("Editar");
                             button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
                                 @Override

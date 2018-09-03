@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Promocao extends Db4ObjectSaveGeneric {
 
-    private int codP;
+    private Produto p;
     private TipoPromocao tipoPromocao;
     private ArrayList<CategoriaPromocao> categoriasPromocao;
     private double valor;
@@ -28,11 +28,15 @@ public class Promocao extends Db4ObjectSaveGeneric {
                 categoriasPromocao.add(c);
             }
         }
-        this.codP = p.getCod();
+        this.p = p;
     }
 
-    public int getCodP() {
-        return codP;
+    public Produto getP() {
+        return p;
+    }
+
+    public void setP(Produto p) {
+        this.p = p;
     }
 
     public ArrayList<CategoriaPromocao> getCategoriasPromocao() {
@@ -65,11 +69,6 @@ public class Promocao extends Db4ObjectSaveGeneric {
 
     public void setTipoPromocao(TipoPromocao tipoPromocao) {
         this.tipoPromocao = tipoPromocao;
-    }
-
-    @Override
-    public String toString() {
-        return "Promocao{" + "codP=" + codP + ", tipoPromocao=" + tipoPromocao + ", valor=" + valor + ", qtd=" + qtd + '}';
     }
 
 }

@@ -186,12 +186,12 @@ public class GerenciadorProdutosCategoria extends JDialog {
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
             DOMElement span = browser.getDocument().createElement("span");
-            if (p.isVisivel()) {
+            if (!p.isVisivel()) {
                 button.setAttribute("title", "Tornar Visivel");
-                span.setAttribute("class", "glyphicon glyphicon-eye-open");
+                span.setAttribute("class", "glyphicon glyphicon-eye-close");
             } else {
                 button.setAttribute("title", "Tornar Invisivel");
-                span.setAttribute("class", "glyphicon glyphicon-eye-close");
+                span.setAttribute("class", "glyphicon glyphicon-eye-open");
             }
             button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
                 @Override

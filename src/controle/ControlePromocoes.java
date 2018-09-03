@@ -33,9 +33,7 @@ public class ControlePromocoes extends ControleGenericoBasico<Promocao> {
     public ArrayList<Promocao> promocoesProduto(Produto p) {
         ArrayList<Promocao> promocoes = new ArrayList<>();
         for (Promocao promocao : carregarTodos()) {
-            if (promocao.getCodP() == p.getCod()) {
-                promocoes.add(promocao);
-            }
+            
         }
         return promocoes;
     }
