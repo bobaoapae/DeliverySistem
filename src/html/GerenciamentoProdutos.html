@@ -160,30 +160,52 @@
                         <td>4,00</td>
 
                         <td class="text-center">
-                            <button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Tornar Invisível">
+                            <button type="button" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Tornar Invisível">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </button>
+                            
+                            <!-- Button modal descrição -->
+                            <div style="display: inline-block;" data-toggle="modal" data-target="#modalDesc">
+                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Descrição">
+                                    <span  class="glyphicon glyphicon-info-sign"></span>
+                                </button>
+                            </div>
 
-                            <button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Descrição">
-                                <span class="glyphicon glyphicon-info-sign"></span>
-                            </button>
-
-                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Gerenciar Adicionais">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Gerenciar Adicionais">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
 
-                            <button class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Editar Produto">
+                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Editar Produto">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </button>
 
-                            <button class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Remover Produto">
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Remover Produto">
                                 <span class="glyphicon glyphicon-trash"></span>
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-
+        </div>
+        
+        <!-- Modal Descrição -->
+        <div class="modal fade" id="modalDesc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-gradient text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h1 class="modal-title" id="myModalLabel">Descrição</h1>
+                    </div>
+                    <div class="modal-body">
+                        <p id="descProduto">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
