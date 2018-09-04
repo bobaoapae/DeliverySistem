@@ -51,12 +51,12 @@ import utils.Utilitarios;
  @author jvbor
  */
 public class GerenciadorProdutosCategoria extends JDialog {
-    
+
     private Browser browser;
     private BrowserView view;
     private Produto produtoAlterando;
     private Categoria categoriaAtual;
-    
+
     public GerenciadorProdutosCategoria(Categoria categoriaAtual) {
         this.categoriaAtual = categoriaAtual;
         init();
@@ -68,7 +68,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.add(view);
         this.setLocationRelativeTo(null);
     }
-    
+
     private void init() {
         if (Configuracao.getInstance().getImg() != null && !Configuracao.getInstance().getImg().isEmpty()) {
             byte[] btDataFile = java.util.Base64.getDecoder().decode(Configuracao.getInstance().getImg().split(",")[1]);
@@ -85,7 +85,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.setMinimumSize(new Dimension(((int) (screenSize.getWidth() * 0.7)), ((int) (screenSize.getHeight() * 0.7))));
         pack();
     }
-    
+
     public void abrir() {
         Browser.invokeAndWaitFinishLoadingMainFrame(browser, new Callback<Browser>() {
             @Override
@@ -105,7 +105,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         this.setVisible(true);
         produtoAlterando = null;
     }
-    
+
     private void recriarTable() {
         DOMElement table = browser.getDocument().findElement(By.id("myTable"));
         for (DOMNode node : table.getChildren()) {
@@ -116,7 +116,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         }
         browser.executeJavaScript("$('[data-toggle=\"tooltip\"]').tooltip();");
     }
-    
+
     private void alterarProduto(Produto p) {
         this.produtoAlterando = p;
         DOMInputElement nomeProduto = (DOMInputElement) browser.getDocument().findElement(By.id("nome"));
@@ -165,13 +165,13 @@ public class GerenciadorProdutosCategoria extends JDialog {
         browser.executeJavaScript("$(\"#nome\").focus()");
         browser.executeJavaScript("$(\"#cadastroProduto\").find(\"input\").trigger('change');");
     }
-    
+
     public void cancelarAlteracao() {
         this.produtoAlterando = null;
         DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
         botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class") + "hide");
     }
-    
+
     private void addProduto(DOMElement table, Produto p) {
         DOMElement tr = browser.getDocument().createElement("tr");
         tr.setAttribute("cod-produto", p.getCod() + "");
@@ -185,6 +185,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             button.setAttribute("class", "btn btn-success");
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
+            button.setAttribute("type", "button");
             DOMElement span = browser.getDocument().createElement("span");
             if (!p.isVisivel()) {
                 button.setAttribute("title", "Tornar Visivel");
@@ -209,15 +210,27 @@ public class GerenciadorProdutosCategoria extends JDialog {
             tdBotoes.appendChild(button);
         }
         {//button descrição
+            DOMElement div = browser.getDocument().createElement("div");
+            div.setAttribute("style", "display: inline-block;");
+            if (!p.getDescricao().isEmpty()) {
+                div.setAttribute("data-toggle", "modal");
+                div.setAttribute("data-target", "#modalDesc");
+                div.setAttribute("data-descricao", p.getDescricao());
+            }
             DOMElement button = browser.getDocument().createElement("button");
             button.setAttribute("class", "btn btn-info");
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
             button.setAttribute("title", "Ver Descrição");
+            button.setAttribute("type", "button");
+            if (p.getDescricao().isEmpty()) {
+                button.setAttribute("disabled", "disabled");
+            }
             DOMElement span = browser.getDocument().createElement("span");
             span.setAttribute("class", "glyphicon glyphicon-info-sign");
             button.appendChild(span);
-            tdBotoes.appendChild(button);
+            div.appendChild(button);
+            tdBotoes.appendChild(div);
         }
         {//button adicionais
             DOMElement button = browser.getDocument().createElement("button");
@@ -225,6 +238,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
             button.setAttribute("title", "Gerenciar Adicionais");
+            button.setAttribute("type", "button");
             button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
                 @Override
                 public void handleEvent(DOMEvent dome) {
@@ -242,6 +256,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
             button.setAttribute("title", "Editar Produto");
+            button.setAttribute("type", "button");
             button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
                 @Override
                 public void handleEvent(DOMEvent dome) {
@@ -259,6 +274,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             button.setAttribute("data-toggle", "tooltip");
             button.setAttribute("data-placement", "top");
             button.setAttribute("title", "Remover Produto");
+            button.setAttribute("type", "button");
             button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
                 @Override
                 public void handleEvent(DOMEvent dome) {
@@ -294,7 +310,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
         tr.appendChild(tdBotoes);
         table.appendChild(tr);
     }
-    
+
     public boolean realizarCadastro(JSObject object) {
         try {
             Produto l = new Produto();
@@ -333,7 +349,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             } else {
                 l.setRestricaoVisibilidade(null);
             }
-            if (ControleProdutos.getInstance(Db4oGenerico.getInstance("banco")).salvar(l) && ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).salvar(categoriaAtual)) {
+            if (ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).salvar(categoriaAtual)) {
                 cancelarAlteracao();
                 recriarTable();
                 produtoAlterando = null;

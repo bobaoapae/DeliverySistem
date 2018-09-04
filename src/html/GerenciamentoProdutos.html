@@ -12,6 +12,7 @@
 
         <link rel="stylesheet" href="assets/css/estilo.css">
         <link rel="stylesheet" href="assets/css/toggle.css">
+        <link rel="stylesheet" href="assets/css/modalCenter.css">
     </head>
 
     <body>
@@ -165,7 +166,7 @@
                             </button>
                             
                             <!-- Button modal descrição -->
-                            <div style="display: inline-block;" data-toggle="modal" data-target="#modalDesc">
+                            <div style="display: inline-block;" data-toggle="modal" data-target="#modalDesc" data-descricao="Teste Descrição">
                                 <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Descrição">
                                     <span  class="glyphicon glyphicon-info-sign"></span>
                                 </button>
@@ -275,6 +276,15 @@
             $(document).ready(function(){
                 $('[data-toggle="tooltip"]').tooltip();   
             });
+            $('#modalDesc').on('show.bs.modal', function (event) {
+                                    var button = $(event.relatedTarget); // Button that triggered the modal
+                                    var endereco = button.data('descricao'); // Extract info from data-* attributes
+                                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                                    var modal = $(this);
+                                    console.log(endereco);
+                                    modal.find('#descProduto').text(endereco);
+                                })
         </script>
     </body>
 

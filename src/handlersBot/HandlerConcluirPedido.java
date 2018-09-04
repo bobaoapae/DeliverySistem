@@ -7,7 +7,6 @@ package handlersBot;
 
 import com.br.joao.Db4oGenerico;
 import controle.ControleCategorias;
-import controle.ControleClientes;
 import controle.ControlePedidos;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +33,6 @@ public class HandlerConcluirPedido extends HandlerBotDelivery {
             chat.setHandler(new HandlerAguardandoPedidoSerImpresso(chat), false);
             ((ChatBotDelivery) chat).getCliente().realizaCompra(((ChatBotDelivery) chat).getPedidoAtual());
             if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(((ChatBotDelivery) chat).getPedidoAtual())) {
-                ControleClientes.getInstance(Db4oGenerico.getInstance("banco")).salvar(((ChatBotDelivery) chat).getCliente());
                 chat.getChat().sendMessage("Tudo certo então!");
                 if (!ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).pesquisarPorCodigo(-2).getProdutosCategoria().isEmpty()) {
                     chat.getChat().sendMessage("Já tenho todas as informações do seu pedido aqui, vou imprimir ele para o nosso Pizzaiolo e já te aviso.");

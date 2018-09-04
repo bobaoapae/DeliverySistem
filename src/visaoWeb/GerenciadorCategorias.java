@@ -476,7 +476,7 @@ public class GerenciadorCategorias extends JDialog {
             c.setExemplosComentarioPedido(object.getProperty("exemplosComentario").asString().getStringValue());
             c.setFazEntrega(object.getProperty("fazEntrega").asBoolean().getBooleanValue());
             c.setCategoriaPai(categoriaAtual);
-            if (ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).salvar(c) && ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).salvar(categoriaAtual)) {
+            if (ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).salvar(categoriaAtual)) {
                 addCategoria(browser.getDocument().findElement(By.cssSelector("ul[cod-categoria='" + categoriaAtual.getCod() + "']")).findElement(By.tagName("li")), c);
                 cancelarAddSubCat();
                 return true;
