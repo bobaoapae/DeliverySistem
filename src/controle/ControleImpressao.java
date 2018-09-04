@@ -46,7 +46,7 @@ public class ControleImpressao {
         return instance;
     }
 
-    public boolean imprimir(Pedido p) {
+    public synchronized boolean imprimir(Pedido p) {
         DecimalFormat moneyFormat = new DecimalFormat("###,###,###.00");
         EscPosBuilder builderImpressaoGeral = new EscPosBuilder().initialize();
         if (p.getNumeroMesa() <= 0) {

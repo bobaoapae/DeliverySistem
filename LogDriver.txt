@@ -37,3 +37,36 @@ java.net.ConnectException: Connection timed out: connect
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
 	at java.lang.Thread.run(Thread.java:745)
 
+set 04, 2018 5:52:48 PM visaoWeb.Inicio$4 run
+GRAVE: java.lang.ClassCastException: Cannot cast to JSObject.
+java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JSObject.
+	at com.teamdev.jxbrowser.chromium.JSValue.asObject(SourceFile:266)
+	at driver.WebWhatsFxBrowserFunctions.subscribeToLowBattery(WebWhatsFxBrowserFunctions.java:37)
+	at driver.WebWhatsDriver.connect(WebWhatsDriver.java:159)
+	at driver.WebWhatsDriver.access$000(WebWhatsDriver.java:40)
+	at driver.WebWhatsDriver$1.run(WebWhatsDriver.java:104)
+Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
+	... 5 more
+
+set 04, 2018 6:01:56 PM visaoWeb.Inicio$4 run
+GRAVE: java.lang.ClassCastException: Cannot cast to JSObject.
+java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JSObject.
+	at com.teamdev.jxbrowser.chromium.JSValue.asObject(SourceFile:266)
+	at driver.WebWhatsFxBrowserFunctions.subscribeToLowBattery(WebWhatsFxBrowserFunctions.java:37)
+	at driver.WebWhatsDriver.connect(WebWhatsDriver.java:159)
+	at driver.WebWhatsDriver.access$000(WebWhatsDriver.java:40)
+	at driver.WebWhatsDriver$1.run(WebWhatsDriver.java:104)
+Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
+	... 5 more
+
+set 04, 2018 6:05:57 PM visaoWeb.Inicio$4 run
+GRAVE: java.lang.ClassCastException: Cannot cast to JSObject.
+java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JSObject.
+	at com.teamdev.jxbrowser.chromium.JSValue.asObject(SourceFile:266)
+	at driver.WebWhatsFxBrowserFunctions.subscribeToLowBattery(WebWhatsFxBrowserFunctions.java:37)
+	at driver.WebWhatsDriver.connect(WebWhatsDriver.java:159)
+	at driver.WebWhatsDriver.access$000(WebWhatsDriver.java:40)
+	at driver.WebWhatsDriver$1.run(WebWhatsDriver.java:104)
+Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
+	... 5 more
+

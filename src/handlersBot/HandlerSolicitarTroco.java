@@ -23,11 +23,11 @@ public class HandlerSolicitarTroco extends HandlerBotDelivery {
     protected boolean runFirstTime(Message m) {
         chat.getChat().sendMessage("Seu pedido ficou no valor de R$" + moneyFormat.format(((ChatBotDelivery)chat).getPedidoAtual().getTotal()));
         if (((ChatBotDelivery)chat).getPedidoAtual().isCartao()) {
-            chat.getChat().sendMessage("Me informe como sera a divisão para que eu possa levar o troco");
+            chat.getChat().sendMessage("Me informe como sera a divisão para que eu possa levar o troco.");
         } else {
-            chat.getChat().sendMessage("Você quer que levemos o troco para quantos Reais?");
+            chat.getChat().sendMessage("Você vai precisar que levemos troco? Caso precise, basta me informar para quantos reais.");
         }
-        chat.getChat().sendMessage("*_Obs: Caso não queira troco, basta enviar não_*");
+        chat.getChat().sendMessage("*_Obs: Caso não queira troco, basta enviar NÃO_*");
         return true;
     }
 

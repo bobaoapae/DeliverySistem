@@ -7,12 +7,20 @@ package handlersBot;
 
 import com.br.joao.Db4oGenerico;
 import controle.ControleCategorias;
+import controle.ControleImpressao;
 import controle.ControlePedidos;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import modelo.Chat;
 import modelo.ChatBot;
 import modelo.ChatBotDelivery;
+import modelo.Configuracao;
 import modelo.Message;
+import modelo.Pedido;
+import utils.Utilitarios;
+import static visaoWeb.Inicio.driver;
 
 /**
 
@@ -26,13 +34,13 @@ public class HandlerConcluirPedido extends HandlerBotDelivery {
 
     @Override
     protected boolean runFirstTime(Message m) {
-        ((ChatBotDelivery) chat).getPedidoAtual().setChat(chat);
-        ((ChatBotDelivery) chat).getPedidoAtual().setNomeCliente(((ChatBotDelivery) chat).getNome());
-        ((ChatBotDelivery) chat).getPedidoAtual().setCelular(((ChatBotDelivery) chat).getCliente().getTelefoneMovel());
+        Pedido p = ((ChatBotDelivery) chat).getPedidoAtual();
+        p.setChat(chat);
+        p.setNomeCliente(((ChatBotDelivery) chat).getNome());
+        p.setCelular(((ChatBotDelivery) chat).getCliente().getTelefoneMovel());
         try {
-            chat.setHandler(new HandlerAguardandoPedidoSerImpresso(chat), false);
-            ((ChatBotDelivery) chat).getCliente().realizaCompra(((ChatBotDelivery) chat).getPedidoAtual());
-            if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(((ChatBotDelivery) chat).getPedidoAtual())) {
+            ((ChatBotDelivery) chat).getCliente().realizaCompra(p);
+            if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
                 chat.getChat().sendMessage("Tudo certo então!");
                 if (!ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).pesquisarPorCodigo(-2).getProdutosCategoria().isEmpty()) {
                     chat.getChat().sendMessage("Já tenho todas as informações do seu pedido aqui, vou imprimir ele para o nosso Pizzaiolo e já te aviso.");
@@ -40,6 +48,41 @@ public class HandlerConcluirPedido extends HandlerBotDelivery {
                     chat.getChat().sendMessage("Já tenho todas as informações do seu pedido aqui, vou imprimir ele para a nossa àrea de produção e já te aviso.");
                 }
                 chat.getChat().sendMessage("😉");
+                if (!ControleImpressao.getInstance().imprimir(((ChatBotDelivery) chat).getPedidoAtual())) {
+                    try {
+                        Chat c = driver.getFunctions().getChatByNumber("554491050665");
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Falha ao Imprimir Pedido #" + p.getCod());
+                        }
+                        c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Falha ao Imprimir Pedido #" + p.getCod());
+                        }
+                    } catch (Exception ex) {
+                        driver.onError(ex);
+                    }
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            JOptionPane.showMessageDialog(null, "Falha ao Imprimir o Pedido #" + p.getCod(), "Erro!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }.start();
+                }
+                chat.getChat().sendMessage("Pronto, " + p.getNomeCliente() + ". Seu pedido de numero #" + p.getCod() + " foi registrado e já está em produção\nCaso deseje realizar um novo pedido, basta me enviar uma mensagem");
+                if (p.getHoraAgendamento() == null) {
+                    if (!p.isEntrega()) {
+                        chat.getChat().sendMessage("Em cerca de 10 à 15 minutos você já pode vir busca-lo.");
+                    } else {
+                        chat.getChat().sendMessage("Em cerca de 30 à 45 minutos ele sera entrege no endereço informado.");
+                    }
+                } else {
+                    if (!p.isEntrega()) {
+                        chat.getChat().sendMessage("Às " + p.getHoraAgendamento().format(DateTimeFormatter.ofPattern("HH:mm")) + " você já pode vir busca-lo.");
+                    } else {
+                        chat.getChat().sendMessage("Às " + p.getHoraAgendamento().format(DateTimeFormatter.ofPattern("HH:mm")) + " ele sera entregue no endereço informado.");
+                    }
+                }
+                chat.setHandler(new HandlerPedidoConcluido(chat), true);
             } else {
                 chat.setHandler(this, false);
                 chat.getChat().sendMessage("Ouve um erro ao salvar seu pedido!");
@@ -49,7 +92,7 @@ public class HandlerConcluirPedido extends HandlerBotDelivery {
             chat.setHandler(this, false);
             chat.getChat().sendMessage("Ouve um erro ao salvar seu pedido!");
             chat.getChat().sendMessage("Tente novamente em alguns minutos ou aguarde nosso Atendente ler suas mensagens.");
-             Logger.getLogger("LogDelivery").log(Level.SEVERE, null, ex);
+            Logger.getLogger("LogDelivery").log(Level.SEVERE, null, ex);
         }
         return true;
     }

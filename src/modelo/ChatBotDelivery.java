@@ -159,7 +159,7 @@ public class ChatBotDelivery extends ChatBot {
     }
 
     @Override
-    public void sendRequestAjuda() {
+    public boolean sendRequestAjuda() {
         setQtdErroResposta(0);
         getChat().sendMessage("Parece que você precisa de ajuda, vou te transferir para nosso atendente.");
         getChat().sendMessage("Caso queira voltar para o atendimento automatico envie: *INICIAR*.");
@@ -182,6 +182,7 @@ public class ChatBotDelivery extends ChatBot {
         } catch (Exception ex) {
 
         }
+        return true;
     }
 
     @Override

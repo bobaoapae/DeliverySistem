@@ -13,6 +13,7 @@ import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.dom.By;
 import com.teamdev.jxbrowser.chromium.dom.DOMInputElement;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
+import controle.ControleImpressao;
 import controle.ControleReservas;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -28,9 +29,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import modelo.Chat;
 import modelo.Configuracao;
 import modelo.Reserva;
 import utils.DateUtils;
+import utils.Utilitarios;
+import static visaoWeb.Inicio.driver;
 
 /**
 
@@ -127,6 +131,21 @@ public class Reservas extends JDialog {
                         this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Cadastrado com Sucesso!");
+                        if (!ControleImpressao.getInstance().imprimir(r)) {
+                            try {
+                                Chat c = driver.getFunctions().getChatByNumber("554491050665");
+                                if (c != null) {
+                                    c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Falha ao Imprimir Reserva #" + r.getCod());
+                                }
+                                c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
+                                if (c != null) {
+                                    c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Falha ao Imprimir Reserva #" + r.getCod());
+                                }
+                            } catch (Exception ex) {
+                                driver.onError(ex);
+                            }
+                            JOptionPane.showMessageDialog(null, "Falha ao Imprimir o Reserva #" + r.getCod(), "Erro!", JOptionPane.ERROR_MESSAGE);
+                        }
                         reservaAlterando = null;
                     }
                     return true;

@@ -10,6 +10,11 @@ import com.br.joao.Db4oGenerico;
 import com.db4o.Db4oEmbedded;
 import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.config.TTransient;
+import com.db4o.events.Event4;
+import com.db4o.events.EventListener4;
+import com.db4o.events.EventRegistry;
+import com.db4o.events.EventRegistryFactory;
+import com.db4o.events.ObjectInfoEventArgs;
 import com.db4o.ta.TransparentActivationSupport;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.Callback;
@@ -35,7 +40,6 @@ import controle.ControleReservas;
 import driver.WebWhatsDriver;
 import handlersBot.HandlerBoasVindas;
 import handlersBot.HandlerBotDelivery;
-import handlersBot.HandlerPedidoConcluido;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -82,7 +86,6 @@ import modelo.ActionOnErrorInDriver;
 import modelo.ActionOnLowBaterry;
 import modelo.Categoria;
 import modelo.Chat;
-import modelo.ChatBot;
 import modelo.ChatBotDelivery;
 import modelo.Configuracao;
 import modelo.EstadoDriver;
@@ -107,10 +110,9 @@ public class Inicio extends JFrame {
     private JPanel panelWhatsapp;
     public static WebWhatsDriver driver;
     private ScheduledExecutorService executores = Executors.newSingleThreadScheduledExecutor();
-    private ArrayList<Reserva> reservasJaAdicionadas = new ArrayList();
-    private ArrayList<Pedido> pedidosJaAdicionados = new ArrayList();
     private ArrayList<Mesa> mesasEmAberto = new ArrayList<>();
     private Logger logger;
+    private EventRegistry events;
 
     public Inicio() {
         init();
@@ -196,7 +198,7 @@ public class Inicio extends JFrame {
         configClient.common().objectClass(Collections.synchronizedList(new ArrayList<>()).getClass()).translate(new TTransient());
         configClient.common().objectClass(FXCollections.synchronizedObservableList(FXCollections.observableList(new ArrayList())).getClass()).translate(new TTransient());
         Db4oGenerico.getInstance("banco", configClient);
-
+        events = EventRegistryFactory.forObjectContainer(Db4oGenerico.getInstance("banco").getDb());
         Categoria catPizza = ControleCategorias.getInstance(Db4oGenerico.getInstance("banco")).pesquisarPorCodigo(-2);
         if (catPizza == null) {
             catPizza = new Categoria();
@@ -434,48 +436,60 @@ public class Inicio extends JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="Gerenciar Pedidos Ativos">
     private void gerenciarPedidos() {
-        executores.scheduleWithFixedDelay(() -> {
-            boolean flag = false;
-            try {
-                for (Pedido p : ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).getPedidosAtivos()) {
-                    if (!pedidosJaAdicionados.contains(p)) {
-                        pedidosJaAdicionados.add(p);
-                        flag = true;
-                        if (p.getNumeroMesa() == 0) {
-                            try {
-                                addPedidosRetiradaEntrega(p);
-                            } catch (Exception ex) {
-                                logger.log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            Mesa m = new Mesa(p.getNumeroMesa());
-                            if (mesasEmAberto.contains(m)) {
-                                m = mesasEmAberto.get(mesasEmAberto.indexOf(m));
-                                synchronized (m.getPedidos()) {
-                                    m.getPedidos().add(p);
-                                }
-                            } else {
-                                mesasEmAberto.add(m);
-                                synchronized (m.getPedidos()) {
-                                    m.getPedidos().add(p);
-                                }
-                                addMesa(m);
-                            }
+        for (Pedido p : ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).getPedidosAtivos()) {
+            if (p.getNumeroMesa() == 0) {
+                try {
+                    addPedidosRetiradaEntrega(p);
+                } catch (Exception ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
+            } else {
+                Mesa m = new Mesa(p.getNumeroMesa());
+                if (mesasEmAberto.contains(m)) {
+                    m = mesasEmAberto.get(mesasEmAberto.indexOf(m));
+                    synchronized (m.getPedidos()) {
+                        m.getPedidos().add(p);
+                    }
+                } else {
+                    mesasEmAberto.add(m);
+                    synchronized (m.getPedidos()) {
+                        m.getPedidos().add(p);
+                    }
+                    addMesa(m);
+                }
+            }
+        }
+        events.created().addListener(new EventListener4<ObjectInfoEventArgs>() {
+            @Override
+            public void onEvent(Event4<ObjectInfoEventArgs> event4, ObjectInfoEventArgs t) {
+                if (t.object() instanceof Pedido) {
+                    Pedido p = (Pedido) t.object();
+                    try {
+                        addPedidosRetiradaEntrega(p);
+                        atualizarValoresIndex();
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        Chat c = driver.getFunctions().getChatByNumber("554491050665");
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Novo Pedido #" + p.getCod());
                         }
+                        c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Novo Pedido #" + p.getCod());
+                        }
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, null, ex);
                     }
                 }
-                if (flag) {
-                    atualizarValoresIndex();
-                }
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, null, ex);
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        });
     }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Atualizar Valores Mini - Relatório da Index">
-    private void atualizarValoresIndex() {
+    private synchronized void atualizarValoresIndex() {
         try {
             LinkedHashMap<String, Integer> ranking = ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).getTopVendidosMes(5);
             String series = "";
@@ -559,11 +573,8 @@ public class Inicio extends JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Adicionar Div dos Pedidos Retirada/Entrega">
-    private void addPedidosRetiradaEntrega(Pedido p) {
+    private synchronized void addPedidosRetiradaEntrega(Pedido p) {
         try {
-            if (!p.isImpresso()) {
-                imprimirPedido(p);
-            }
             final DOMElement containnerPedidos;
             if (null == p.getEstadoPedido()) {
                 throw new Exception("Estado do Pedido invalido");
@@ -813,43 +824,7 @@ public class Inicio extends JFrame {
                 } else {
                     try {
                         if (!p.isImpresso()) {
-                            Thread.sleep(5000);
                             p.setImpresso(true);
-                            if (p.getChatId() != null && !p.getChatId().isEmpty() && driver != null && driver.getEstadoDriver() != null && driver.getEstadoDriver() == EstadoDriver.LOGGED) {
-                                p.getChat(driver).sendMessage("Pronto, " + p.getNomeCliente() + ". Seu pedido de numero #" + p.getCod() + " foi registrado e já está em produção\nCaso deseje realizar um novo pedido, basta me enviar uma mensagem");
-                                if (p.getHoraAgendamento() == null) {
-                                    if (!p.isEntrega()) {
-                                        p.getChat(driver).sendMessage("Em cerca de 10 à 15 minutos você já pode vir busca-lo");
-                                    } else {
-                                        p.getChat(driver).sendMessage("Em cerca de 30 à 45 minutos ele sera entrege no endereço informado");
-                                    }
-                                } else {
-                                    if (!p.isEntrega()) {
-                                        p.getChat(driver).sendMessage("Às " + p.getHoraAgendamento().format(DateTimeFormatter.ofPattern("HH:mm")) + " você já pode vir buscar");
-                                    } else {
-                                        p.getChat(driver).sendMessage("Às " + p.getHoraAgendamento().format(DateTimeFormatter.ofPattern("HH:mm")) + " ele sera entregue no endereço informado");
-                                    }
-                                }
-                                ChatBot chat = ControleChatsAsync.getInstance().getChatAsyncByChat(p.getChatId());
-                                if (chat != null) {
-                                    chat.setHandler(new HandlerPedidoConcluido(chat), true);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Falha ao notificar cliente sobre a conclusão do pedido");
-                                    throw new Exception("Falha ao encontrar o ChatAsync");
-                                }
-                                try {
-                                    Chat c = driver.getFunctions().getChatByNumber("554491050665");
-                                    if (c != null) {
-                                        c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Novo Pedido #" + p.getCod());
-                                    }
-                                    c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
-                                    if (c != null) {
-                                        c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Novo Pedido #" + p.getCod());
-                                    }
-                                } catch (Exception ex) {
-                                    logger.log(Level.SEVERE, null, ex);
-                                }
-                            }
                             ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).alterar(p);
                         }
                     } catch (Exception ex) {
@@ -894,25 +869,42 @@ public class Inicio extends JFrame {
         for (DOMNode node : table.getChildren()) {
             table.removeChild(node);
         }
-        executores.scheduleWithFixedDelay(() -> {
+        for (Reserva r : ControleReservas.getInstance(Db4oGenerico.getInstance("banco")).getReservasAtivas()) {
             try {
-                for (Reserva r : ControleReservas.getInstance(Db4oGenerico.getInstance("banco")).getReservasAtivas()) {
-                    if (!reservasJaAdicionadas.contains(r)) {
-                        reservasJaAdicionadas.add(r);
-                        addReserva(r);
-                    }
-                }
+                addReserva(r);
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }
+        events.created().addListener(new EventListener4<ObjectInfoEventArgs>() {
+            @Override
+            public void onEvent(Event4<ObjectInfoEventArgs> event4, ObjectInfoEventArgs t) {
+                if (t.object() instanceof Reserva) {
+                    Reserva r = (Reserva) t.object();
+                    try {
+                        addReserva(r);
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        Chat c = driver.getFunctions().getChatByNumber("554491050665");
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Nova Reserva #" + r.getCod());
+                        }
+                        c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
+                        if (c != null) {
+                            c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Novo Reserva #" + r.getCod());
+                        }
+                    } catch (Exception ex) {
+                        logger.log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
     }
 
     private void addReserva(Reserva r) {
         try {
-            if (!r.isImpresso()) {
-                imprimirReserva(r);
-            }
             DOMElement table = browser.getDocument().findElement(By.id("myTable"));
             DOMElement tr = browser.getDocument().createElement("tr");
             tr.setAttribute("cod-reserva", r.getCod() + "");

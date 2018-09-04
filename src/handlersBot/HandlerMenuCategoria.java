@@ -58,14 +58,14 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
                     break;
                 }
             }
-            if (!temCategoriaPrecisa || c.getRootCategoria().getQtdMinEntrega() > ((ChatBotDelivery) chat).getPedidoAtual().getProdutos(c).size()) {
+            if (!temCategoriaPrecisa || c.getRootCategoria().getQtdMinEntrega() > 1 && c.getRootCategoria().getQtdMinEntrega() > ((ChatBotDelivery) chat).getPedidoAtual().getProdutos(c).size()) {
                 msg = true;
             }
-            if (c.getQtdMinEntrega() > 1 && !c.isPrecisaPedirOutraCategoria() && msg) {
-                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens_*", 3000);
-            } else if (c.getQtdMinEntrega() > 1 && c.isPrecisaPedirOutraCategoria() && msg) {
-                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens ou pedir junto algum produto de outro cardapio_*", 3000);
-            } else if (c.isPrecisaPedirOutraCategoria() && msg) {
+            if (c.getRootCategoria().getQtdMinEntrega() > 1 && !c.getRootCategoria().isPrecisaPedirOutraCategoria() && msg) {
+                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getRootCategoria().getQtdMinEntrega() + " itens_*", 3000);
+            } else if (c.getRootCategoria().getQtdMinEntrega() > 1 && c.getRootCategoria().isPrecisaPedirOutraCategoria() && msg) {
+                chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir no minimo " + c.getRootCategoria().getQtdMinEntrega() + " itens ou pedir junto algum produto de outro cardapio_*", 3000);
+            } else if (c.getRootCategoria().isPrecisaPedirOutraCategoria() && msg) {
                 chat.getChat().sendMessage("*_Obs³: A entrega só e feita se você pedir junto algum produto de outro cardapio_*", 3000);
             }
         }
@@ -107,34 +107,6 @@ public class HandlerMenuCategoria extends HandlerBotDelivery {
             if (c.getRootCategoria().isFazEntrega()) {
                 if (!c.isFazEntrega()) {
                     builder.text("(*Não é feita a entrega*)");
-                } else {
-                    List<ItemPedido> pedidos = new ArrayList<>();
-                    Collections.copy(((ChatBotDelivery) chat).getPedidoAtual().getProdutos(), pedidos);
-                    boolean temCategoriaPrecisa = false;
-                    boolean msg = false;
-                    List<Categoria> categoriasCompradas = new ArrayList<>();
-                    for (ItemPedido item2 : ((ChatBotDelivery) chat).getPedidoAtual().getProdutos()) {
-                        if (!categoriasCompradas.contains(item2.getP().getCategoria().getRootCategoria())) {
-                            categoriasCompradas.add(item2.getP().getCategoria().getRootCategoria());
-                        }
-                    }
-
-                    for (Categoria catPrecisa : c.getRootCategoria().getCategoriasParaPoderPedir()) {
-                        if (categoriasCompradas.contains(catPrecisa)) {
-                            temCategoriaPrecisa = true;
-                            break;
-                        }
-                    }
-                    if (!temCategoriaPrecisa || c.getRootCategoria().getQtdMinEntrega() > ((ChatBotDelivery) chat).getPedidoAtual().getProdutos(c).size()) {
-                        msg = true;
-                    }
-                    if (c.getQtdMinEntrega() > 1 && !c.isPrecisaPedirOutraCategoria() && msg) {
-                        builder.text("(*A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens*)");
-                    } else if (c.getQtdMinEntrega() > 1 && c.isPrecisaPedirOutraCategoria() && msg) {
-                        builder.text("(*A entrega só e feita se você pedir no minimo " + c.getQtdMinEntrega() + " itens ou pedir junto algum produto de outro cardapio*)");
-                    } else if (c.isPrecisaPedirOutraCategoria() && msg) {
-                        builder.text("(*A entrega só e feita se você pedir junto algum produto de outro cardapio*)");
-                    }
                 }
             }
         }

@@ -43,7 +43,7 @@ public class HandlerEscolhaAdicionalDoGrupo extends HandlerBotDelivery {
                 chat.getChat().sendMessage("*_Obs¹: Envie o número da sua escolha, ou escolhas separadas por virgula. Ex: 1, 2, 3_*");
             }
             if (grupoAtual.getQtdMin() == 0) {
-                chat.getChat().sendMessage("*_Obs²: Caso não deseje nada, basta enviar não._*");
+                chat.getChat().sendMessage("*_Obs²: Caso não deseje nada, basta enviar NÃO._*");
             }
             String adicionais = "";
             for (AdicionalProduto ad : grupoAtual.getAdicionais()) {
