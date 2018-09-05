@@ -5,6 +5,7 @@
  */
 package visaoWeb;
 
+//<editor-fold defaultstate="collapsed" desc="imports">
 import com.br.joao.Db4ObjectSaveGeneric;
 import com.br.joao.Db4oGenerico;
 import com.db4o.Db4oEmbedded;
@@ -24,7 +25,6 @@ import com.teamdev.jxbrowser.chromium.ProtocolService;
 import com.teamdev.jxbrowser.chromium.dom.By;
 import com.teamdev.jxbrowser.chromium.dom.DOMElement;
 import com.teamdev.jxbrowser.chromium.dom.DOMInputElement;
-import com.teamdev.jxbrowser.chromium.dom.DOMNode;
 import com.teamdev.jxbrowser.chromium.dom.events.DOMEvent;
 import com.teamdev.jxbrowser.chromium.dom.events.DOMEventListener;
 import com.teamdev.jxbrowser.chromium.dom.events.DOMEventType;
@@ -97,6 +97,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import utils.JXBrowserCrack;
 import utils.ProtocoloHandlerJar;
 import utils.Utilitarios;
+//</editor-fold>
 
 /**
 
@@ -125,6 +126,7 @@ public class Inicio extends JFrame {
         this.tabbedPane.add("Sistema", view);
         this.tabbedPane.add("WhatsApp", panelWhatsapp);
         this.setVisible(true);
+        //<editor-fold defaultstate="collapsed" desc="log erros">
         logger = Logger.getLogger("DeliveryError");
         FileHandler fh;
         try {
@@ -168,6 +170,7 @@ public class Inicio extends JFrame {
                 logger.log(Level.SEVERE, null, e);
             }
         });
+//</editor-fold>
         initWpp();
         criarConfiguracoesBanco();
         if (ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).isEmpty()) {
@@ -178,6 +181,7 @@ public class Inicio extends JFrame {
         }
     }
 
+    //<editor-fold defaultstate="collapsed" desc="configurações banco">
     private void criarConfiguracoesBanco() {
         EmbeddedConfiguration configClient = Db4oEmbedded.newConfiguration();
         configClient.common().detectSchemaChanges(true);
@@ -224,9 +228,10 @@ public class Inicio extends JFrame {
             }
         }
         ControleBackups.getInstance(Db4oGenerico.getInstance("banco")).realizarBackup();
-
     }
+//</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="atualizar tempos">
     public void alterarTempos(JSObject object) {
         Configuracao.getInstance().setTempoMedioEntrega(object.getProperty("tempoMedioEntrega").asNumber().getInteger());
         Configuracao.getInstance().setTempoMedioRetirada(object.getProperty("tempoMedioRetirada").asNumber().getInteger());
@@ -240,6 +245,7 @@ public class Inicio extends JFrame {
         ((DOMInputElement) browser.getDocument().findElement(By.id("tempRet"))).setValue(Configuracao.getInstance().getTempoMedioRetirada() + "");
         ((DOMInputElement) browser.getDocument().findElement(By.id("tempEntre"))).setValue(Configuracao.getInstance().getTempoMedioEntrega() + "");
     }
+//</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="iniciar chat bot">
     private void initWpp() {
@@ -358,6 +364,7 @@ public class Inicio extends JFrame {
         browser.getDocument().findElement(By.id("mesasAbertas")).setInnerText("");
         browser.getDocument().findElement(By.id("pedidosAtivos")).setInnerText("");
         browser.getDocument().findElement(By.id("pedidosSaiuEntrega")).setInnerText("");
+        browser.getDocument().findElement(By.id("myTable")).setInnerText("");
         browser.getDocument().findElement(By.id("tempoMedioRetirada")).setInnerText(Configuracao.getInstance().getTempoMedioRetirada() + "");
         browser.getDocument().findElement(By.id("tempoMedioEntrega")).setInnerText(Configuracao.getInstance().getTempoMedioEntrega() + "");
         ((DOMInputElement) browser.getDocument().findElement(By.id("tempRet"))).setValue(Configuracao.getInstance().getTempoMedioRetirada() + "");
@@ -865,10 +872,6 @@ public class Inicio extends JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="Gerenciar Reservas Ativas">
     private void gerenciarReservas() {
-        DOMElement table = browser.getDocument().findElement(By.id("myTable"));
-        for (DOMNode node : table.getChildren()) {
-            table.removeChild(node);
-        }
         for (Reserva r : ControleReservas.getInstance(Db4oGenerico.getInstance("banco")).getReservasAtivas()) {
             try {
                 addReserva(r);
@@ -1174,6 +1177,7 @@ public class Inicio extends JFrame {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="finalizar">
     public void finalizar() {
         int result = JOptionPane.showConfirmDialog(null, "Deseja realmente sair do sistema?\nObs: Lembre-se de fechar os pedidos para que não ocorram problemas no fluxo do caixa!", "Atenção!!", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
@@ -1181,6 +1185,7 @@ public class Inicio extends JFrame {
             System.exit(0);
         }
     }
+//</editor-fold>
 
     public static void main(String[] args) {
         /*
