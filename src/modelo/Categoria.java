@@ -7,6 +7,8 @@ package modelo;
 
 import com.br.joao.Db4ObjectSaveGeneric;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
 
@@ -153,6 +155,7 @@ public class Categoria extends Db4ObjectSaveGeneric implements Comparable<Catego
     }
 
     public ArrayList<Produto> getProdutosCategoria() {
+        Collections.sort(produtosCategoria, Comparator.comparing(Produto::getNome).thenComparingDouble(Produto::getValor));
         return produtosCategoria;
     }
 

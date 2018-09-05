@@ -18,11 +18,20 @@ public class ItemPedido implements Comparable<ItemPedido> {
     private int qtd;
     private String comentario;
     private ArrayList<AdicionalProduto> adicionais;
+    private boolean removido;
 
     public ItemPedido() {
         adicionais = new ArrayList<>();
         comentario = "";
         qtd = 1;
+    }
+
+    public boolean isRemovido() {
+        return removido;
+    }
+
+    public void setRemovido(boolean removido) {
+        this.removido = removido;
     }
 
     public int getQtd() {

@@ -316,6 +316,11 @@ public class GerenciadorProdutosCategoria extends JDialog {
             Produto l = new Produto();
             if (produtoAlterando != null) {
                 l = produtoAlterando;
+                if(l.getValor()!=object.getProperty("valor").asNumber().getDouble()){
+                    categoriaAtual.getProdutosCategoria().remove(l);
+                    l = new Produto();
+                    l.setAdicionaisDisponiveis(produtoAlterando.getAdicionaisDisponiveis());
+                }
             }
             l.setNome(object.getProperty("nome").asString().getStringValue());
             l.setDescricao(object.getProperty("desc").asString().getStringValue());

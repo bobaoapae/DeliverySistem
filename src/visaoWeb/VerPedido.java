@@ -148,7 +148,11 @@ public class VerPedido extends JDialog {
         DOMElement h4Valor = browser.getDocument().createElement("h4");
         DOMElement pAdicionais = browser.getDocument().createElement("p");
         DOMElement pComentario = browser.getDocument().createElement("p");
-        li.setAttribute("class", "list-group-item");
+        if (!item.isRemovido()) {
+            li.setAttribute("class", "list-group-item");
+        } else {
+            li.setAttribute("class", "list-group-item disabled");
+        }
         div.setAttribute("class", "clearfix");
         h4Qtd.setAttribute("class", "pull-left");
         h4Nome.setAttribute("class", "pull-left");
@@ -163,15 +167,14 @@ public class VerPedido extends JDialog {
             public void handleEvent(DOMEvent dome) {
                 int result = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o item?", "Atenção!!", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
-                    synchronized (p.getProdutos()) {
-                        p.getProdutos().remove(item);
-                    }
+                    item.setRemovido(true);
                     try {
                         if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).alterar(p)) {
                             JOptionPane.showMessageDialog(null, "Excluido com Sucesso!");
-                            table.removeChild(li);
+                            li.setAttribute("class", "list-group-item disabled");
                             DOMElement valorTotal = browser.getDocument().findElement(By.id("valorTotal"));
                             valorTotal.setInnerText(new DecimalFormat("###,###,###.00").format(p.getTotal()));
+                            div.removeChild(imgRemover);
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(VerPedido.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,7 +202,9 @@ public class VerPedido extends JDialog {
         li.appendChild(div);
         div.appendChild(h4Qtd);
         div.appendChild(h4Nome);
-        div.appendChild(imgRemover);
+        if (!item.isRemovido()) {
+            div.appendChild(imgRemover);
+        }
         div.appendChild(h4Valor);
         li.appendChild(pAdicionais);
         li.appendChild(pComentario);

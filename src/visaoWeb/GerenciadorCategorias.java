@@ -111,7 +111,6 @@ public class GerenciadorCategorias extends JDialog {
     }
 
     private void addCategoria(DOMElement containner, Categoria c) {
-        System.out.println(c);
         DOMElement ulCat = browser.getDocument().createElement("ul");
         ulCat.setAttribute("cod-categoria", c.getCod() + "");
         ulCat.setAttribute("class", "list-group");

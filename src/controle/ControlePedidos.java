@@ -120,6 +120,9 @@ public class ControlePedidos extends ControleGenericoBasico<Pedido> {
                 List<ItemPedido> itens = p.getProdutos();
                 for (int y = 0; y < itens.size(); y++) {
                     ItemPedido item = itens.get(y);
+                    if(item.isRemovido()){
+                        continue;
+                    }
                     if (item.getP() instanceof Pizza) {
                         ArrayList<AdicionalProduto> saboresPizza = item.getAdicionais(SaborPizza.class);
                         for (AdicionalProduto ad : saboresPizza) {

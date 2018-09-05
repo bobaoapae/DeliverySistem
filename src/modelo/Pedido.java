@@ -6,14 +6,11 @@
 package modelo;
 
 import com.br.joao.Db4ObjectSaveGeneric;
-import com.br.joao.Db4oGenerico;
-import controle.ControlePromocoes;
 import driver.WebWhatsDriver;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -153,7 +150,7 @@ public class Pedido extends Db4ObjectSaveGeneric {
         //atualizarDesconto();
     }
 
-    public void atualizarDesconto() {
+    /*public void atualizarDesconto() {
         HashMap<Produto, Integer> hashMap = new HashMap<>();
         desconto = 0;
         synchronized (this.getProdutos()) {
@@ -176,7 +173,7 @@ public class Pedido extends Db4ObjectSaveGeneric {
                 }
             }
         }
-    }
+    }*/
 
     public boolean isIncluirNoRelatorio() {
         return incluirNoRelatorio;
@@ -246,6 +243,9 @@ public class Pedido extends Db4ObjectSaveGeneric {
         double total = 0;
         synchronized (getProdutos()) {
             for (ItemPedido p : getProdutos()) {
+                if(p.isRemovido()){
+                    continue;
+                }
                 total += p.getSubTotal();
             }
         }
