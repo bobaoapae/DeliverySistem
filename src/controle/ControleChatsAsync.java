@@ -45,7 +45,6 @@ public class ControleChatsAsync {
     }
 
     public void addChat(Chat chat) {
-        System.out.println(chat);
         synchronized (chats) {
             try {
                 if (chat instanceof UserChat) {
