@@ -654,8 +654,8 @@ public class Inicio extends JFrame {
                                     containnerPedidos.removeChild(divPedido);
                                     if (p.getEstadoPedido() != Pedido.EstadoPedido.Concluido) {
                                         addPedidosRetiradaEntrega(p);
-                                        atualizarValoresIndex();
                                     }
+                                    atualizarValoresIndex();
                                 }
                             } catch (Exception ex) {
                                 p.setEstadoPedido(estadoAnterior);
