@@ -90,6 +90,7 @@ import modelo.ChatBotDelivery;
 import modelo.Configuracao;
 import modelo.EstadoDriver;
 import modelo.Mesa;
+import modelo.MessageBuilder;
 import modelo.NewChatObserver;
 import modelo.Pedido;
 import modelo.Reserva;
@@ -254,7 +255,7 @@ public class Inicio extends JFrame {
             for (Chat chat : driver.getFunctions().getAllNewChats()) {
                 ControleChatsAsync.getInstance().addChat(chat);
             }
-            driver.getFunctions().addListennerToNewChat(new NewChatObserver() {
+            driver.getFunctions().setListennerToNewChat(new NewChatObserver() {
                 @Override
                 public void onNewChat(Chat chat) {
                     ControleChatsAsync.getInstance().addChat(chat);
@@ -1091,24 +1092,6 @@ public class Inicio extends JFrame {
 
     private void internalFecharPedidos() {
         Configuracao.getInstance().fecharPedidos();
-        try {
-            Chat c = driver.getFunctions().getChatByNumber("554491050665");
-            if (c != null) {
-                c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Fechado");
-            }
-            c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
-            if (c != null) {
-                c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Fechado");
-            }
-        } catch (Exception ex) {
-
-        }
-        try {
-            ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).salvar(Configuracao.getInstance());
-            ControleBackups.getInstance(Db4oGenerico.getInstance("banco")).realizarBackup();
-        } catch (Exception ex) {
-            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
         new Thread() {
             public void run() {
                 for (ChatBotDelivery chat : ControleChatsAsync.getInstance().getChats()) {
@@ -1120,6 +1103,60 @@ public class Inicio extends JFrame {
                 }
             }
         }.start();
+        List<Pedido> pedidosDoDia = ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).getPedidosDeliveryDoDia();
+        long totalPedidoCancelados = pedidosDoDia.stream().filter(o -> ((Pedido) o).getEstadoPedido() == Pedido.EstadoPedido.Cancelado).count();
+        long totalPedidos = pedidosDoDia.size();
+        long totalPedidosDelivery = pedidosDoDia.stream().filter(o -> o.isEntrega()).count();
+        long totalPedidosDeliveryEntregues = pedidosDoDia.stream().filter(o -> ((Pedido) o).getEstadoPedido() == Pedido.EstadoPedido.Concluido && o.isEntrega()).count();
+        long totalPedidosDeliveryEmAberto = pedidosDoDia.stream().filter(o -> o.getEstadoPedido() != Pedido.EstadoPedido.Cancelado && ((Pedido) o).getEstadoPedido() != Pedido.EstadoPedido.Concluido && o.isEntrega()).count();
+        long totalPedidosDeliveryCancelados = pedidosDoDia.stream().filter(o -> o.getEstadoPedido() == Pedido.EstadoPedido.Cancelado && o.isEntrega()).count();
+        long totalPedidosRetirada = pedidosDoDia.stream().filter(o -> !o.isEntrega()).count();
+        long totalPedidosRetiradaEntregues = pedidosDoDia.stream().filter(o -> ((Pedido) o).getEstadoPedido() == Pedido.EstadoPedido.Concluido && !o.isEntrega()).count();
+        long totalPedidosRetiradaEmAberto = pedidosDoDia.stream().filter(o -> o.getEstadoPedido() != Pedido.EstadoPedido.Cancelado && ((Pedido) o).getEstadoPedido() != Pedido.EstadoPedido.Concluido && !o.isEntrega()).count();
+        long totalPedidosRetiradaCancelados = pedidosDoDia.stream().filter(o -> o.getEstadoPedido() == Pedido.EstadoPedido.Cancelado && !o.isEntrega()).count();
+
+        long valorPedidos = 0;
+        for (Pedido p : pedidosDoDia) {
+            if (p.getEstadoPedido() == Pedido.EstadoPedido.Cancelado) {
+                continue;
+            }
+            valorPedidos += p.getTotal();
+        }
+        MessageBuilder builder = new MessageBuilder();
+        builder.textBold(Configuracao.getInstance().getNomeEstabelecimento()).text(" - Resumo do Dia").newLine().newLine();
+        builder.textBold("Total de Pedidos").text(": ").text(totalPedidos + "").newLine();
+        builder.textBold("Total de Pedidos Cancelados").text(": ").text(totalPedidoCancelados + "").newLine().newLine();
+        builder.textBold("Total de Pedidos Delivery").text(": ").text(totalPedidosDelivery + "").newLine();
+        builder.textBold("Total de Pedidos Delivery Entregues").text(": ").text(totalPedidosDeliveryEntregues + "").newLine();
+        builder.textBold("Total de Pedidos Delivery Em Aberto").text(": ").text(totalPedidosDeliveryEmAberto + "").newLine();
+        builder.textBold("Total de Pedidos Delivery Cancelados").text(": ").text(totalPedidosDeliveryCancelados + "").newLine().newLine();
+        builder.textBold("Total de Pedidos Retirada").text(": ").text(totalPedidosRetirada + "").newLine();
+        builder.textBold("Total de Pedidos Retirada Concluidos").text(": ").text(totalPedidosRetiradaEntregues + "").newLine();
+        builder.textBold("Total de Pedidos Retirada Em Aberto").text(": ").text(totalPedidosRetiradaEmAberto + "").newLine();
+        builder.textBold("Total de Pedidos Retirada Cancelados").text(": ").text(totalPedidosRetiradaCancelados + "").newLine().newLine();
+        if (valorPedidos > 0) {
+            builder.textBold("Valor Total: ").text(": ").text(new DecimalFormat("###,###,###.00").format(valorPedidos) + "").newLine().newLine();
+        }
+        try {
+            Chat c = driver.getFunctions().getChatByNumber("554491050665");
+            if (c != null) {
+                c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Fechado");
+                c.sendMessage(builder.build());
+            }
+            c = driver.getFunctions().getChatByNumber("55" + Utilitarios.plainText(Configuracao.getInstance().getNumeroAviso()));
+            if (c != null) {
+                c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Pedidos Fechado");
+                c.sendMessage(builder.build());
+            }
+        } catch (Exception ex) {
+
+        }
+        try {
+            ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).salvar(Configuracao.getInstance());
+            ControleBackups.getInstance(Db4oGenerico.getInstance("banco")).realizarBackup();
+        } catch (Exception ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JOptionPane.showMessageDialog(null, "Pedidos Fechados");
     }
     //</editor-fold>
