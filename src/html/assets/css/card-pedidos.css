@@ -1,0 +1,59 @@
+
+
+li.card-pedido {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+li.card-pedido:hover {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+li.card-pedido-ativo {
+	border-left: 3px solid #337AB7;
+}
+
+li.card-pedido-entrega {
+	border-left: 3px solid #EC971F;
+}
+
+li.card-pedido img {
+	vertical-align: top;
+	padding-right: 10px;
+}
+
+li.card-pedido h1 {
+	font-size: 20px;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+li.card-pedido h2 {
+	font-size: 15px;
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+li.card-pedido .info {
+	display: inline-block;
+}
+
+li.card-pedido .valor {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	font-weight: bold;
+	color: darkgreen;
+	font-size: 20px;
+
+}
+
+li.card-pedido .glyphicon-remove {
+	color: red;
+	cursor: pointer;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
