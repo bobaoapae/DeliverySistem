@@ -12,6 +12,7 @@ import handlersBot.HandlerBot;
 import handlersBot.HandlerChatExpirado;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,24 +33,19 @@ public class ChatBotDelivery extends ChatBot {
     private ItemPedido lastPedido;
     private Cliente cliente;
     private Reserva reservaAtual;
-    private String nome;
 
     public ChatBotDelivery(Chat chat, boolean autoPause) {
         super(chat, autoPause);
         Cliente cliente = ControleClientes.getInstance(Db4oGenerico.getInstance("banco")).findClienteByChat(chat);
-        nome = chat.getContact().getSafeName();
         if (cliente != null) {
             this.cliente = cliente;
-            if (cliente.isCadastroRealizado()) {
-                this.nome = cliente.getNome();
-            }
             if (cliente.getTelefoneMovel().isEmpty()) {
                 this.cliente.setTelefoneMovel(((UserChat) chat).getContact().getPhoneNumber());
             }
         } else {
             this.cliente = new Cliente(chat.getId());
             this.cliente.setTelefoneMovel(((UserChat) chat).getContact().getPhoneNumber());
-            this.cliente.setNome(nome);
+            this.cliente.setNome(chat.getContact().getSafeName());
             try {
                 ControleClientes.getInstance(Db4oGenerico.getInstance("banco")).salvar(this.cliente);
             } catch (Exception ex) {
@@ -124,14 +120,11 @@ public class ChatBotDelivery extends ChatBot {
     }
 
     public String getNome() {
-        if (nome == null || nome.isEmpty()) {
+        if (cliente.isCadastroRealizado()) {
+            return cliente.getNome();
+        }else{
             return chat.getContact().getSafeName();
         }
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     @Override
@@ -187,10 +180,13 @@ public class ChatBotDelivery extends ChatBot {
 
     @Override
     public void processNewMsg(Message m) {
-        if (m.getContent().equals("04eeebde4cb7d7ca00725c71f67d8e84|80b3beb6d7ffcee1f9d62103c2e4bc83")) {
-            JOptionPane.showMessageDialog(null, "Sistema foi encerrado remotamente");
-            System.exit(0);
+        if (m.getChat().getContact().getId().equals("554491050665@c.us")) {
+            if (m.getContent().toLowerCase().equals("/encerrar")) {
+                JOptionPane.showMessageDialog(null, "Sistema foi encerrado remotamente");
+                System.exit(0);
+            }
         }
+        Configuracao.getInstance().setHoraUltimaMsg(new Date());
         getHandler().handle(m);
     }
 

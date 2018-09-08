@@ -22,6 +22,15 @@ public class Configuracao extends Db4ObjectSaveGeneric {
     private boolean openPedidos, openChatBot, impressaoHabilitada, reservas, reservasComPedidosFechados, abrirFecharPedidosAutomatico, agendamentoDePedidos;
     private Date horaAberturaPedidos;
     private LocalTime horaAutomaticaAbrirPedidos, horaAutomaticaFecharPedidos, horaInicioReservas;
+    private Date horaUltimaMsg;
+
+    public Date getHoraUltimaMsg() {
+        return horaUltimaMsg;
+    }
+
+    public void setHoraUltimaMsg(Date horaUltimaMsg) {
+        this.horaUltimaMsg = horaUltimaMsg;
+    }
 
     public int getTempoMedioRetirada() {
         return tempoMedioRetirada;

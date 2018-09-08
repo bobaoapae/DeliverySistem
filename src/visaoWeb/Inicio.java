@@ -98,7 +98,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import utils.JXBrowserCrack;
 import utils.ProtocoloHandlerJar;
 import utils.Utilitarios;
-//</editor-fold>
 
 /**
 
@@ -118,6 +117,13 @@ public class Inicio extends JFrame {
 
     public Inicio() {
         init();
+        new CheckForUpdate("http://ddtank.gamesnexus.com.br/delivery/");
+        executores.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                new CheckForUpdate("http://ddtank.gamesnexus.com.br/delivery/");
+            }
+        }, 1, 1, TimeUnit.MINUTES);
         this.setLocationRelativeTo(null);
         new JXBrowserCrack();
         browser = new Browser(ContextManager.getInstance().getContext());
@@ -254,6 +260,7 @@ public class Inicio extends JFrame {
             tabbedPane.setSelectedIndex(1);
             for (Chat chat : driver.getFunctions().getAllNewChats()) {
                 ControleChatsAsync.getInstance().addChat(chat);
+                System.out.println(chat);
             }
             driver.getFunctions().setListennerToNewChat(new NewChatObserver() {
                 @Override
@@ -261,6 +268,20 @@ public class Inicio extends JFrame {
                     ControleChatsAsync.getInstance().addChat(chat);
                 }
             });
+            executores.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    Chat c = driver.getFunctions().getChatByNumber("5544991050665");
+                    if (c.getContact().isBlocked()) {
+                        c.getContact().setBlocked(false);
+                        while (c.getContact().isBlocked()) {
+
+                        }
+                        c.sendMessage("*" + Configuracao.getInstance().getNomeEstabelecimento() + ":* Tinha bloqueado seu número.");
+                        JOptionPane.showMessageDialog(null, "O Contato do Administrador do sistema estava bloqueado, um aviso foi enviado.\n Caso isso se repita, o sistema ira ser suspenso.");
+                    }
+                }
+            }, 0, 1, TimeUnit.MINUTES);
             JOptionPane.showMessageDialog(null, "Bot Logado Com Sucesso");
         };
         Logger logger = Logger.getLogger("DriverError");
@@ -1135,7 +1156,7 @@ public class Inicio extends JFrame {
         builder.textBold("Total de Pedidos Retirada Concluidos").text(": ").text(totalPedidosRetiradaEntregues + "").newLine();
         builder.textBold("Total de Pedidos Retirada Cancelados").text(": ").text(totalPedidosRetiradaCancelados + "").newLine().newLine();
         if (valorPedidos > 0) {
-            builder.textBold("Valor Total: ").text(": ").text(new DecimalFormat("###,###,###.00").format(valorPedidos) + "").newLine().newLine();
+            builder.textBold("Valor Total").text(": ").text(new DecimalFormat("###,###,###.00").format(valorPedidos) + "").newLine().newLine();
         }
         try {
             Chat c = driver.getFunctions().getChatByNumber("554491050665");
@@ -1219,6 +1240,11 @@ public class Inicio extends JFrame {
         int result = JOptionPane.showConfirmDialog(null, "Deseja realmente sair do sistema?\nObs: Lembre-se de fechar os pedidos para que não ocorram problemas no fluxo do caixa!", "Atenção!!", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             executores.shutdown();
+            try {
+                ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).salvar(Configuracao.getInstance());
+            } catch (Exception ex) {
+                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.exit(0);
         }
     }
