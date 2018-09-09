@@ -1,0 +1,56 @@
+ul.lista-reservas li {
+	margin-bottom: 10px !important;
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+ul.lista-reservas li:hover {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+ul.lista-reservas h1 {
+	margin: 0;
+	margin-bottom: 5px;
+	font-size: 20px;
+}
+
+ul.lista-reservas h2 {
+	margin: 0;
+	margin-bottom: 5px;
+	font-size: 15px;
+}
+
+ul.lista-reservas .badge {
+	background-color: #337AB7;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+ul.lista-reservas p {
+	margin: 0;
+	margin-top: 5px;
+	line-height: 20px;
+	color: black;
+}
+
+ul.lista-reservas .glyphicon {
+	position: absolute;
+	top: 10px;
+	cursor: pointer;
+	z-index: 999;
+	font-size: 16px;
+}
+
+ul.lista-reservas .glyphicon-pencil {
+	color: orange;
+	right: 40px;
+}
+
+ul.lista-reservas .glyphicon-remove {
+	color: red;
+	right: 15px;
+}
+
+ul.lista-reservas .comentario {
+	border-top: 1px solid #e1e1e1
+}
