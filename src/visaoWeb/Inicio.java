@@ -387,7 +387,7 @@ public class Inicio extends JFrame {
         browser.getDocument().findElement(By.id("mesasAbertas")).setInnerText("");
         browser.getDocument().findElement(By.id("pedidosAtivos")).setInnerText("");
         browser.getDocument().findElement(By.id("pedidosSaiuEntrega")).setInnerText("");
-        browser.getDocument().findElement(By.id("myTable")).setInnerText("");
+        browser.getDocument().findElement(By.id("reservas")).setInnerText("");
         browser.getDocument().findElement(By.id("tempoMedioRetirada")).setInnerText(Configuracao.getInstance().getTempoMedioRetirada() + "");
         browser.getDocument().findElement(By.id("tempoMedioEntrega")).setInnerText(Configuracao.getInstance().getTempoMedioEntrega() + "");
         ((DOMInputElement) browser.getDocument().findElement(By.id("tempRet"))).setValue(Configuracao.getInstance().getTempoMedioRetirada() + "");
@@ -606,172 +606,205 @@ public class Inicio extends JFrame {
     private synchronized void addPedidosRetiradaEntrega(Pedido p) {
         try {
             final DOMElement containnerPedidos;
+            final DOMElement liPedido = browser.getDocument().createElement("li");
             if (null == p.getEstadoPedido()) {
                 throw new Exception("Estado do Pedido invalido");
             } else {
                 switch (p.getEstadoPedido()) {
                     case Novo:
                         containnerPedidos = browser.getDocument().findElement(By.id("pedidosAtivos"));
+                        liPedido.setAttribute("class", "list-group-item card-pedido card-pedido-ativo");
                         break;
                     case SaiuEntrega:
                         containnerPedidos = browser.getDocument().findElement(By.id("pedidosSaiuEntrega"));
+                        liPedido.setAttribute("class", "list-group-item card-pedido card-pedido-entrega");
                         break;
                     default:
                         throw new Exception("Estado do Pedido invalido");
                 }
             }
-            DOMElement divPedido = browser.getDocument().createElement("div");
-            DOMElement divPanel = browser.getDocument().createElement("div");
-            DOMElement divPanelHeading = browser.getDocument().createElement("div");
-            DOMElement divPanelBody = browser.getDocument().createElement("div");
-            DOMElement divClearFix = browser.getDocument().createElement("div");
-            DOMElement h3NrPedido = browser.getDocument().createElement("h3");
-            DOMElement spanCancelarPedido = browser.getDocument().createElement("span");
-            DOMElement h2TotalPedido = browser.getDocument().createElement("h2");
-            DOMElement imgPedido = browser.getDocument().createElement("img");
-            DOMElement pNomeRetirada = browser.getDocument().createElement("p");
-            DOMElement buttonVerPedido = browser.getDocument().createElement("button");
-            DOMElement buttonConcluido = browser.getDocument().createElement("button");
-            DOMElement buttonImprimir = browser.getDocument().createElement("button");
+            {//liPedido
+                DOMElement img = browser.getDocument().createElement("img");
+                img.setAttribute("class", "hidden-xs hidden-sm");
+                img.setAttribute("width", "60");
+                img.setAttribute("src", "assets/img/Icon/order.svg");
+                DOMElement spanValor = browser.getDocument().createElement("span");
+                spanValor.setAttribute("class", "valor");
+                spanValor.setTextContent(new DecimalFormat("###,###,###.00").format(p.getTotal()));
+                DOMElement divInfo = browser.getDocument().createElement("div");
+                divInfo.setAttribute("class", "info");
+                {//divInfo
+                    {//cod
+                        DOMElement h1 = browser.getDocument().createElement("h1");
+                        DOMElement strong = browser.getDocument().createElement("strong");
+                        strong.setTextContent("#" + p.getCod());
+                        h1.appendChild(strong);
+                        divInfo.appendChild(h1);
+                    }
+                    {//cliente
+                        DOMElement h2 = browser.getDocument().createElement("h2");
+                        h2.setTextContent(p.getNomeCliente());
+                        divInfo.appendChild(h2);
+                    }
+                    {//valor
+                        divInfo.appendChild(spanValor);
+                    }
+                    {//remover
+                        DOMElement span = browser.getDocument().createElement("span");
+                        span.setAttribute("class", "glyphicon glyphicon-remove");
+                        span.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                            @Override
+                            public void handleEvent(DOMEvent dome) {
+                                int result = JOptionPane.showConfirmDialog(null, "Deseja realmente cancelar o pedido?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                if (result == JOptionPane.YES_OPTION) {
+                                    Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
+                                    p.setEstadoPedido(Pedido.EstadoPedido.Cancelado);
+                                    if (p.getChatId() != null && !p.getChatId().isEmpty()) {
+                                        String motivo = JOptionPane.showInputDialog(null, "Qual o motivo do cancelamento? Obs: o cliente sera avisado");
+                                        if (motivo != null && !motivo.isEmpty()) {
+                                            p.getChat(driver).sendMessage("Tenho más notícias 😔, seu pedido foi cancelado pelo seguinte motivo: " + motivo);
+                                        }
+                                    }
+                                    try {
+                                        if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
+                                            JOptionPane.showMessageDialog(null, "Pedido Cancelado");
+                                            containnerPedidos.removeChild(liPedido);
+                                            if (p.getC() != null) {
+                                                p.getC().realizarRecarga(p.getPgCreditos());
+                                            }
+                                            atualizarValoresIndex();
+                                        }
+                                    } catch (Exception ex) {
+                                        p.setEstadoPedido(estadoAnterior);
+                                        Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            }
+                        }, true);
+                        divInfo.appendChild(span);
+                    }
+                    DOMElement divAcoes = browser.getDocument().createElement("div");
+                    divAcoes.setAttribute("class", "acoes");
+                    {
+                        {//verPedido
+                            DOMElement button = browser.getDocument().createElement("button");
+                            button.setAttribute("class", "btn btn-info");
+                            button.setAttribute("data-toggle", "tooltip");
+                            button.setAttribute("data-placement", "top");
+                            button.setAttribute("title", "Ver Pedido");
+                            DOMElement span = browser.getDocument().createElement("span");
+                            span.setAttribute("class", "glyphicon glyphicon-eye-open");
+                            button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                                @Override
+                                public void handleEvent(DOMEvent dome) {
+                                    VerPedido verPedido = new VerPedido(p);
+                                    verPedido.abrir();
+                                    spanValor.setTextContent(new DecimalFormat("###,###,###.00").format(p.getTotal()));
+                                }
+                            }, true);
+                            button.appendChild(span);
+                            divAcoes.appendChild(button);
+                        }
+                        {//pedidoConcluido
+                            DOMElement button = browser.getDocument().createElement("button");
+                            DOMElement span = browser.getDocument().createElement("span");
 
-            divClearFix.setAttribute("class", "clearfix");
-            divPedido.setAttribute("class", "card-pedido col-xs-12 col-md-6 col-lg-4");
-            divPanel.setAttribute("class", "panel panel-default");
-            divPanelHeading.setAttribute("class", "panel-heading");
-            divPanelBody.setAttribute("class", "panel-body text-center");
-            h3NrPedido.setAttribute("class", "panel-title pull-left");
-            spanCancelarPedido.setAttribute("class", "panel-title pull-right glyphicon glyphicon-remove");
-            spanCancelarPedido.setAttribute("title", "Cancelar Pedido");
-            h2TotalPedido.setAttribute("class", "text-success");
-            imgPedido.setAttribute("class", "img-responsive center-block");
-            imgPedido.setAttribute("width", "75");
-            imgPedido.setAttribute("src", "assets/img/Icon/order.svg");
-            buttonVerPedido.setAttribute("class", "btn btn-info btn-block");
-            buttonConcluido.setAttribute("class", "btn btn-warning btn-block");
-            buttonImprimir.setAttribute("class", "btn btn-default btn-block");
-            buttonVerPedido.setTextContent("Ver Pedido");
-            if (p.getEstadoPedido() == Pedido.EstadoPedido.Novo) {
-                buttonConcluido.setTextContent(p.isEntrega() ? "Saiu p/ entrega" : "Foi Retirado");
-                buttonConcluido.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                    @Override
-                    public void handleEvent(DOMEvent dome) {
-                        int result = JOptionPane.showConfirmDialog(null, "Deseja realmente marcar o pedido como " + (p.isEntrega() ? "saiu p/ entrega" : "retirado") + "?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                        if (result == JOptionPane.YES_OPTION) {
-                            Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
-                            result = JOptionPane.showConfirmDialog(null, "Deseja enviar a mensagem de aviso para o cliente?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                            p.setEstadoPedido(p.isEntrega() ? Pedido.EstadoPedido.SaiuEntrega : Pedido.EstadoPedido.Concluido);
-                            if (result == JOptionPane.YES_OPTION) {
-                                if (p.getChatId() != null && !p.getChatId().isEmpty()) {
-                                    if (!p.isEntrega()) {
-                                        p.getChat(driver).sendMessage("Ótimas notícias " + p.getNomeCliente() + ", seu pedido já esta pronto e aguardando a retirada!!");
-                                    } else {
-                                        p.getChat(driver).sendMessage("Ótimas notícias " + p.getNomeCliente() + ", seu pedido já esta pronto e esta saindo para a entrega!!");
+                            if (p.getEstadoPedido() == Pedido.EstadoPedido.Novo) {
+                                button.setAttribute("class", p.isEntrega() ? "btn btn-warning" : "btn btn-success");
+                                button.setAttribute("data-toggle", "tooltip");
+                                button.setAttribute("data-placement", "top");
+                                button.setAttribute("title", p.isEntrega() ? "Saiu para Entrega" : "Pedido Entregue");
+                                span.setAttribute("class", p.isEntrega() ? "glyphicon glyphicon-share-alt" : "glyphicon glyphicon-ok");
+                                button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                                    @Override
+                                    public void handleEvent(DOMEvent dome) {
+                                        int result = JOptionPane.showConfirmDialog(null, "Deseja realmente marcar o pedido como " + (p.isEntrega() ? "saiu p/ entrega" : "retirado") + "?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                        if (result == JOptionPane.YES_OPTION) {
+                                            Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
+                                            result = JOptionPane.showConfirmDialog(null, "Deseja enviar a mensagem de aviso para o cliente?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                            p.setEstadoPedido(p.isEntrega() ? Pedido.EstadoPedido.SaiuEntrega : Pedido.EstadoPedido.Concluido);
+                                            if (result == JOptionPane.YES_OPTION) {
+                                                if (p.getChatId() != null && !p.getChatId().isEmpty()) {
+                                                    if (!p.isEntrega()) {
+                                                        p.getChat(driver).sendMessage("Ótimas notícias " + p.getNomeCliente() + ", seu pedido já esta pronto e aguardando a retirada!!");
+                                                    } else {
+                                                        p.getChat(driver).sendMessage("Ótimas notícias " + p.getNomeCliente() + ", seu pedido já esta pronto e esta saindo para a entrega!!");
+                                                    }
+                                                }
+                                            }
+                                            try {
+                                                if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
+                                                    p.getC().adicionarSelos(p);
+                                                    ControleClientes.getInstance(Db4oGenerico.getInstance("banco")).salvar(p.getC());
+                                                    containnerPedidos.removeChild(liPedido);
+                                                    if (p.getEstadoPedido() != Pedido.EstadoPedido.Concluido) {
+                                                        addPedidosRetiradaEntrega(p);
+                                                    }
+                                                    atualizarValoresIndex();
+                                                }
+                                            } catch (Exception ex) {
+                                                p.setEstadoPedido(estadoAnterior);
+                                                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        }
+                                    }
+                                }, true);
+                            } else if (p.getEstadoPedido() == Pedido.EstadoPedido.SaiuEntrega) {
+                                button.setAttribute("class", "btn btn-success");
+                                button.setAttribute("data-toggle", "tooltip");
+                                button.setAttribute("data-placement", "top");
+                                button.setAttribute("title", "Pedido Entregue");
+                                span.setAttribute("class", "glyphicon glyphicon-ok");
+                                button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                                    @Override
+                                    public void handleEvent(DOMEvent dome) {
+                                        int result = JOptionPane.showConfirmDialog(null, "Deseja realmente marcar o pedido como entregue?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                        if (result == JOptionPane.YES_OPTION) {
+                                            Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
+                                            p.setEstadoPedido(Pedido.EstadoPedido.Concluido);
+                                            try {
+                                                if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
+                                                    containnerPedidos.removeChild(liPedido);
+                                                    atualizarValoresIndex();
+                                                }
+                                            } catch (Exception ex) {
+                                                p.setEstadoPedido(estadoAnterior);
+                                                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                                            }
+                                        }
+                                    }
+                                }, true);
+                            }
+                            button.appendChild(span);
+                            divAcoes.appendChild(button);
+                        }
+                        {//imprimirPedido
+                            DOMElement button = browser.getDocument().createElement("button");
+                            button.setAttribute("class", "btn btn-default");
+                            button.setAttribute("data-toggle", "tooltip");
+                            button.setAttribute("data-placement", "top");
+                            button.setAttribute("title", "Imprimir Pedido");
+                            DOMElement span = browser.getDocument().createElement("span");
+                            span.setAttribute("class", "glyphicon glyphicon-print");
+                            button.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                                @Override
+                                public void handleEvent(DOMEvent dome) {
+                                    int result = JOptionPane.showConfirmDialog(null, "Deseja realmente imprimir o pedido?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                    if (result == JOptionPane.YES_OPTION) {
+                                        imprimirPedido(p);
                                     }
                                 }
-                            }
-                            try {
-                                if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
-                                    p.getC().adicionarSelos(p);
-                                    ControleClientes.getInstance(Db4oGenerico.getInstance("banco")).salvar(p.getC());
-                                    containnerPedidos.removeChild(divPedido);
-                                    if (p.getEstadoPedido() != Pedido.EstadoPedido.Concluido) {
-                                        addPedidosRetiradaEntrega(p);
-                                    }
-                                    atualizarValoresIndex();
-                                }
-                            } catch (Exception ex) {
-                                p.setEstadoPedido(estadoAnterior);
-                                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            }, true);
+                            button.appendChild(span);
+                            divAcoes.appendChild(button);
                         }
+                        divInfo.appendChild(divAcoes);
                     }
-                }, true);
-            } else if (p.getEstadoPedido() == Pedido.EstadoPedido.SaiuEntrega) {
-                buttonConcluido.setTextContent("Entregue");
-                buttonConcluido.setAttribute("class", "btn btn-success btn-block");
-                buttonConcluido.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                    @Override
-                    public void handleEvent(DOMEvent dome) {
-                        int result = JOptionPane.showConfirmDialog(null, "Deseja realmente marcar o pedido como entregue?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                        if (result == JOptionPane.YES_OPTION) {
-                            Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
-                            p.setEstadoPedido(Pedido.EstadoPedido.Concluido);
-                            try {
-                                if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
-                                    containnerPedidos.removeChild(divPedido);
-                                    atualizarValoresIndex();
-                                }
-                            } catch (Exception ex) {
-                                p.setEstadoPedido(estadoAnterior);
-                                Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    }
-                }, true);
+                }
+                liPedido.appendChild(img);
+                liPedido.appendChild(divInfo);
+                containnerPedidos.appendChild(liPedido);
             }
-            buttonImprimir.setTextContent("Imprimir Pedido");
-            spanCancelarPedido.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                @Override
-                public void handleEvent(DOMEvent dome) {
-                    int result = JOptionPane.showConfirmDialog(null, "Deseja realmente cancelar o pedido?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                    if (result == JOptionPane.YES_OPTION) {
-                        Pedido.EstadoPedido estadoAnterior = p.getEstadoPedido();
-                        p.setEstadoPedido(Pedido.EstadoPedido.Cancelado);
-                        if (p.getChatId() != null && !p.getChatId().isEmpty()) {
-                            String motivo = JOptionPane.showInputDialog(null, "Qual o motivo do cancelamento? Obs: o cliente sera avisado");
-                            if (motivo != null && !motivo.isEmpty()) {
-                                p.getChat(driver).sendMessage("Tenho más notícias 😔, seu pedido foi cancelado pelo seguinte motivo: " + motivo);
-                            }
-                        }
-                        try {
-                            if (ControlePedidos.getInstance(Db4oGenerico.getInstance("banco")).salvar(p)) {
-                                JOptionPane.showMessageDialog(null, "Pedido Cancelado");
-                                containnerPedidos.removeChild(divPedido);
-                                if (p.getC() != null) {
-                                    p.getC().realizarRecarga(p.getPgCreditos());
-                                }
-                                atualizarValoresIndex();
-                            }
-                        } catch (Exception ex) {
-                            p.setEstadoPedido(estadoAnterior);
-                            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }, true);
-            buttonImprimir.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                @Override
-                public void handleEvent(DOMEvent dome) {
-                    int result = JOptionPane.showConfirmDialog(null, "Deseja realmente imprimir o pedido?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                    if (result == JOptionPane.YES_OPTION) {
-                        imprimirPedido(p);
-                    }
-                }
-            }, true);
-            buttonVerPedido.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                @Override
-                public void handleEvent(DOMEvent dome) {
-                    VerPedido verPedido = new VerPedido(p);
-                    verPedido.abrir();
-                    h2TotalPedido.setTextContent(new DecimalFormat("###,###,###.00").format(p.getTotal()));
-                }
-            }, true);
-            h3NrPedido.setTextContent("Pedido #" + p.getCod());
-            h2TotalPedido.setTextContent(new DecimalFormat("###,###,###.00").format(p.getTotal()));
-            pNomeRetirada.setTextContent(p.getNomeCliente());
-            divPedido.appendChild(divPanel);
-            divPanel.appendChild(divPanelHeading);
-            divPanelHeading.appendChild(h3NrPedido);
-            divPanelHeading.appendChild(spanCancelarPedido);
-            divPanelHeading.appendChild(divClearFix);
-            divPanel.appendChild(divPanelBody);
-            divPanelBody.appendChild(imgPedido);
-            divPanelBody.appendChild(pNomeRetirada);
-            divPanelBody.appendChild(h2TotalPedido);
-            divPanelBody.appendChild(buttonVerPedido);
-            divPanelBody.appendChild(buttonConcluido);
-            divPanelBody.appendChild(buttonImprimir);
-            containnerPedidos.appendChild(divPedido);
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
