@@ -1,156 +1,141 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
-        <title>Delivery System</title>
-        <!-- Bootstrap -->
-        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="assets/css/index.css">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+	<title>Delivery System</title>
+	<!-- Bootstrap -->
+	<link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/index.css">
+	<link rel="stylesheet" href="assets/css/card-pedidos.css">
+	<link rel="stylesheet" href="assets/css/lista-reservas.css">
 
-        <script src="assets/js/jquery-3.3.1.min.js"></script>
-        <script src="assets/js/jquery-ui.min.js"></script>
-        <script>
-            $(function () {
+	<script src="assets/js/jquery-3.3.1.min.js"></script>
+	<script src="assets/js/jquery-ui.min.js"></script>
+	<script>
+		$(function () {
                 $("#content").tabs();
             });
         </script>
-        <script src="assets/highcharts/highcharts.js"></script>
-        <script src="assets/highcharts/exporting.js"></script>
-        <script src="assets/highcharts/export-data.js"></script>
-        <style>
-            a img {
-                width: 35px;
-                margin-right: 10px;
-            }
+	<script src="assets/highcharts/highcharts.js"></script>
+	<script src="assets/highcharts/exporting.js"></script>
+	<script src="assets/highcharts/export-data.js"></script>
+	<style>
+		a img {
+			width: 35px;
+			margin-right: 10px;
+		}
 
-            .card-delivery p {
-                margin: 0;
-            }
+		.card-delivery p {
+			margin: 0;
+		}
 
-            .card-delivery img {
-                width: 70px;
-            }
+		.card-delivery img {
+			width: 70px;
+		}
 
-            .card-delivery h1 {
-                margin: 0;
-                font-size: 64px;
-            }
+		.card-delivery h1 {
+			margin: 0;
+			font-size: 64px;
+		}
 
-            .panel-heading {
-                background-color: #262626 !important;
-            }
+		.panel-heading {
+			background-color: #262626 !important;
+		}
 
-            .panel-heading span {
-                color: red;
-                cursor: pointer;
-            }
+		.panel-heading span {
+			color: red;
+			cursor: pointer;
+		}
 
-            .panel-title {
-                color: aliceblue;
-            }
+		.panel-title {
+			color: aliceblue;
+		}
 
-            .card-mesa h2 {
-                margin: 0;
-            }
-            
-            .card-pedido .panel {
-                border-radius: 10px;
-                box-shadow: 5px 5px 10px grey;
-            }
+		.temp-entre-retirada h4,
+		button {
+			padding-right: 20px;
+		}
+	</style>
+</head>
 
-            .card-pedido p {
-                margin: 0;
-                color: #000;
-            }
+<body>
+	<div class="wrapper">
+		<!-- NavBar -->
+		<nav id="sidebar">
+			<div class="sidebar-header">
+				<h3>Delivery System</h3>
+			</div>
+			<ul class="list-unstyled components">
+				<li class="text-center"> <img id="logoEmpresa" class="img-circle" width="100" height="100" src="assets/img/logo.png" style="border: 1px solid #FFF;">
+					<p id="nomeEmpresa">Nome Empresa</p>
+				</li>
 
-            .card-pedido h2 {
-                margin: 0;
-            }
+				<!-- CHATBOT -->
+				<li>
+					<a href="#chatBotSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/whatsapp.svg"> Chatbot </a>
+					<ul class="collapse list-unstyled" id="chatBotSubmenu">
+						<li><a href="#" onclick="java.atual.abrirChatBot();">Abrir ChatBot</a></li>
+						<li><a href="#" onclick="java.atual.fecharChatBot();">Fechar ChatBot</a></li>
+					</ul>
+				</li>
 
-            .temp-entre-retirada h4, button {
-                padding-right: 20px;
-            }
-        </style>
-    </head>
+				<!-- PEDIDOS -->
+				<li>
+					<a href="#pedidosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/order.svg"> Pedidos </a>
+					<ul class="collapse list-unstyled" id="pedidosSubmenu">
+						<li><a href="#" onclick="java.atual.novoPedido();">Novo Pedido</a></li>
+						<li><a href="#" onclick="java.HistoricoPedidos.abrir();">Historico de Pedidos</a></li>
+						<li><a href="#" onclick="java.atual.abrirPedidos();">Abrir Pedidos</a></li>
+						<li><a href="#" onclick="java.atual.fecharPedidos();">Fechar Pedidos</a></li>
+					</ul>
+				</li>
 
-    <body>
-        <div class="wrapper">
-            <!-- NavBar -->
-            <nav id="sidebar">
-                <div class="sidebar-header">
-                    <h3>Delivery System</h3> 
-                </div>
-                <ul class="list-unstyled components">
-                    <li class="text-center"> <img id="logoEmpresa" class="img-circle" width="100" height="100" src="assets/img/logo.png" style="border: 1px solid #FFF;">
-                        <p id="nomeEmpresa">Nome Empresa</p>
-                    </li>
-
-                    <!-- CHATBOT -->
-                    <li>
-                        <a href="#chatBotSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/whatsapp.svg"> Chatbot </a>
-                        <ul class="collapse list-unstyled" id="chatBotSubmenu">
-                            <li><a href="#" onclick="java.atual.abrirChatBot();">Abrir ChatBot</a></li>
-                            <li><a href="#" onclick="java.atual.fecharChatBot();">Fechar ChatBot</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- PEDIDOS -->
-                    <li>
-                        <a href="#pedidosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/order.svg"> Pedidos </a>
-                        <ul class="collapse list-unstyled" id="pedidosSubmenu">
-                            <li><a href="#" onclick="java.atual.novoPedido();">Novo Pedido</a></li>
-                            <li><a href="#" onclick="java.HistoricoPedidos.abrir();">Historico de Pedidos</a></li>
-                            <li><a href="#" onclick="java.atual.abrirPedidos();">Abrir Pedidos</a></li>
-                            <li><a href="#" onclick="java.atual.fecharPedidos();">Fechar Pedidos</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- CLIENTES -->
-                    <li>
-                        <a href="#clientesSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/group-cor.svg"> Clientes </a>
-                        <ul class="collapse list-unstyled" id="clientesSubmenu">
-                            <li><a href="#" onclick="java.Clientes.abrir()">Gerenciar Clientes</a></li>
-                        </ul>
-                    </li>
+				<!-- CLIENTES -->
+				<li>
+					<a href="#clientesSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/group-cor.svg"> Clientes </a>
+					<ul class="collapse list-unstyled" id="clientesSubmenu">
+						<li><a href="#" onclick="java.Clientes.abrir()">Gerenciar Clientes</a></li>
+					</ul>
+				</li>
 
 
-                    <!-- PRODUTOS -->
-                    <li>
-                        <a href="#produtosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/produtos.svg"> Produtos </a>
-                        <ul class="collapse list-unstyled" id="produtosSubmenu">
-                            <li><a href="#" onclick="java.Categorias.abrir();">Gerenciar Produtos</a></li>
-                        </ul>
-                    </li>
+				<!-- PRODUTOS -->
+				<li>
+					<a href="#produtosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/produtos.svg"> Produtos </a>
+					<ul class="collapse list-unstyled" id="produtosSubmenu">
+						<li><a href="#" onclick="java.Categorias.abrir();">Gerenciar Produtos</a></li>
+					</ul>
+				</li>
 
-                    <!-- COMBOS -->
-                    <li>
-                        <a href="#combosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/combo.svg"> Combos </a>
-                        <ul class="collapse list-unstyled" id="combosSubmenu">
-                            <li><a href="#" onclick="java.Combos.abrir();">Gerenciar Combos</a></li>
-                        </ul>
-                    </li>
+				<!-- COMBOS -->
+				<li>
+					<a href="#combosSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/combo.svg"> Combos </a>
+					<ul class="collapse list-unstyled" id="combosSubmenu">
+						<li><a href="#" onclick="java.Combos.abrir();">Gerenciar Combos</a></li>
+					</ul>
+				</li>
 
-                    <!-- PIZZAS -->
-                    <li>
-                        <a href="#pizzaSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/pizza-pedaco-cor.svg"> Pizzas </a>
-                        <ul class="collapse list-unstyled" id="pizzaSubmenu">
-                            <li><a href="#" onclick="java.PizzasTamanho.abrir();">Gerenciar Tamanhos</a></li>
-                            <li><a href="#" onclick="java.PizzasSabor.abrir();">Gerenciar Sabores</a></li>
-                            <li><a href="#" onclick="java.PizzasBorda.abrir();">Gerenciar Bordas</a></li>
-                        </ul>
-                    </li>
+				<!-- PIZZAS -->
+				<li>
+					<a href="#pizzaSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/pizza-pedaco-cor.svg"> Pizzas </a>
+					<ul class="collapse list-unstyled" id="pizzaSubmenu">
+						<li><a href="#" onclick="java.PizzasTamanho.abrir();">Gerenciar Tamanhos</a></li>
+						<li><a href="#" onclick="java.PizzasSabor.abrir();">Gerenciar Sabores</a></li>
+						<li><a href="#" onclick="java.PizzasBorda.abrir();">Gerenciar Bordas</a></li>
+					</ul>
+				</li>
 
-                    <!-- RODIZIO -->
-                    <li>
-                        <a href="#rodizioSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/restaurant.svg"> Rodizios </a>
-                        <ul class="collapse list-unstyled" id="rodizioSubmenu">
-                            <li><a href="#" onclick="java.Rodizios.abrir();">Gerenciar Rodizios</a></li>
-                        </ul>
-                    </li>
+				<!-- RODIZIO -->
+				<li>
+					<a href="#rodizioSubmenu" data-toggle="collapse" aria-expanded="false"> <img src="assets/img/Icon/restaurant.svg"> Rodizios </a>
+					<ul class="collapse list-unstyled" id="rodizioSubmenu">
+						<li><a href="#" onclick="java.Rodizios.abrir();">Gerenciar Rodizios</a></li>
+					</ul>
+				</li>
 
                     <!-- PROMOÇÕES -->
                     <li>
@@ -165,139 +150,159 @@
                         <a href="#" onclick="java.Relatorios.abrir();"> <img src="assets/img/Icon/loss.svg"> Relatórios </a>
                     </li>
 
-                    <!-- CONFIGURAÇÕES -->
-                    <li>
-                        <a href="#"> <img src="assets/img/Icon/settings.svg"> Configurações </a>
-                    </li>
-                </ul>
-            </nav>
+				<!-- CONFIGURAÇÕES -->
+				<li>
+					<a href="#"> <img src="assets/img/Icon/settings.svg"> Configurações </a>
+				</li>
+			</ul>
+		</nav>
 
 
 
 
 
 
+		<!-- Page Content Holder -->
+		<div id="content" class="container-fluid">
+			<!-- Barra de Navegação -->
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button id="sidebarCollapse" class="btn btn-info navbar-btn">
+							<i class="glyphicon glyphicon-align-left"></i>
+							<span>Menu Lateral</span>
+						</button>
+					</div>
+
+					<div class="navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#tabs-1">Inicio</a></li>
+							<li><a href="#tabs-2">Pedidos</a></li>
+							<li><a href="#tabs-3">Mesas</a></li>
+							<li><a href="#tabs-4">Reservas</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
 
 
 
+			<!-- Inico -->
+			<div id="tabs-1">
+				<h3>Tempo de Retirada/Entrega</h3>
+				<div class="row">
+					<div class="col-xs-12 temp-entre-retirada">
+						<h4 class="pull-left">
+							Retirada: <span id="tempoMedioRetirada">10</span> Min
+						</h4>
 
+						<h4 class="pull-left">
+							Entrega: <span id="tempoMedioEntrega">50</span> Min
+						</h4>
 
+						<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#modalTempoRetirada">
+							Alterar
+						</button>
+					</div>
 
-            <!-- Page Content Holder -->
-            <div id="content" class="container-fluid">
-                <!-- Barra de Navegação -->
-                <nav class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <div class="navbar-header">
-                            <button id="sidebarCollapse" class="btn btn-info navbar-btn"> <i class="glyphicon glyphicon-align-left"></i> <span>Menu Lateral</span> </button>
-                        </div>
-                        <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="#tabs-1">Inicio</a></li>
-                                <li><a href="#tabs-2">Pedidos</a></li>
-                                <li><a href="#tabs-3">Mesas</a></li>
-                                <li><a href="#tabs-4">Reservas</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+					<!-- Modal -->
+					<div class="modal fade" id="modalTempoRetirada" tabindex="-1" role="dialog" aria-labelledby="modalTempoRetirada">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header text-center">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
 
+									<h4 class="modal-title" id="myModalLabel">Alterar tempo de Retirada/Entrega</h4>
+								</div>
 
+								<form class="form-horizontal" id="formTempos">
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="tempRet" class="col-xs-4 control-label">Tempo para Retirada: </label>
 
-                <!-- Inico -->
-                <div id="tabs-1">
-                    <h3>Tempo de Retirada/Entrega</h3>
-                    <div class="row">
-                        <div class="col-xs-12 temp-entre-retirada">
-                            <h4 class="pull-left">Retirada: <span id="tempoMedioRetirada">10</span> Min</h4>
-                            <h4 class="pull-left">Entrega: <span id="tempoMedioEntrega">50</span> Min</h4>
-                            <button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#modalTempoRetirada">Alterar</button>
-                        </div>
+											<div class="col-xs-8">
+												<input type="text" id="tempRet" class="form-control">
+											</div>
+										</div>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="modalTempoRetirada" tabindex="-1" role="dialog" aria-labelledby="modalTempoRetirada">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header text-center">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Alterar tempo de Retirada/Entrega</h4>
-                                    </div>
-                                    <form class="form-horizontal" id="formTempos">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="tempRet" class="col-xs-4 control-label">Tempo para Retirada: </label>
-                                                <div class="col-xs-8">
-                                                    <input type="text" id="tempRet" class="form-control">
-                                                </div>
-                                            </div>
+										<div class="form-group">
+											<label for="tempEntre" class="col-xs-4 control-label">Tempo para Entrega: </label>
 
-                                            <div class="form-group">
-                                                <label for="tempEntre" class="col-xs-4 control-label">Tempo para Entrega: </label>
-                                                <div class="col-xs-8">
-                                                    <input type="text" id="tempEntre" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="reset" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-success">Salvar</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+											<div class="col-xs-8">
+												<input type="text" id="tempEntre" class="form-control">
+											</div>
+										</div>
+									</div>
 
-                    <h3>Seu Delivery Hoje</h3>
-                    <div class="row">
-                        <div class="col-xs-4 card-delivery">
-                            <p>Entregue</p>
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-5"> 
-                                            <img src="assets/img/Icon/check.svg">
-                                        </div>
-                                        <div class="col-xs-6 text-right">
-                                            <h1 style="color: #4DBBEB;" id="qtdPedidosEntregues">00</h1> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4 card-delivery">
-                            <p>Ativo</p>
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-5"> 
-                                            <img src="assets/img/Icon/warning.svg"> 
-                                        </div>
-                                        <div class="col-xs-6 text-right">
-                                            <h1 style="color: #FFD311;" id="qtdPedidosAtivos">00</h1> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-4 card-delivery">
-                            <p>Cancelado</p>
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-5"> <img src="assets/img/Icon/cancel.svg"> </div>
-                                        <div class="col-xs-6 text-right">
-                                            <h1 style="color: #FD3C65;" id="qtdPedidosCancelados">00</h1> 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="topVendidos" class="col-xs-12"></div>
-                        <script>
-                            Highcharts.chart('topVendidos', {
+									<div class="modal-footer">
+										<button type="reset" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+										<button type="submit" class="btn btn-success">Salvar</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<h3>Seu Delivery Hoje</h3>
+
+				<div class="row">
+					<div class="col-xs-4 card-delivery">
+						<p>Entregue</p>
+
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-xs-5">
+										<img src="assets/img/Icon/check.svg">
+									</div>
+									<div class="col-xs-6 text-right">
+										<h1 style="color: #4DBBEB;" id="qtdPedidosEntregues">00</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-4 card-delivery">
+						<p>Ativo</p>
+
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-xs-5">
+										<img src="assets/img/Icon/warning.svg">
+									</div>
+									<div class="col-xs-6 text-right">
+										<h1 style="color: #FFD311;" id="qtdPedidosAtivos">00</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-4 card-delivery">
+						<p>Cancelado</p>
+
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-xs-5"> <img src="assets/img/Icon/cancel.svg"> </div>
+									<div class="col-xs-6 text-right">
+										<h1 style="color: #FD3C65;" id="qtdPedidosCancelados">00</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div id="topVendidos" class="col-xs-12"></div>
+					<script>
+						Highcharts.chart('topVendidos', {
                                 chart: {
                                     type: 'column'
                                 }
@@ -358,178 +363,415 @@
                                     }]
                             });
                         </script>
-                    </div>
-                </div>
-                <!-- Pedidos -->
-                <div id="tabs-2">
-                    <h3>Pedidos</h3>
-                    <div class="row">
-                        <div class="col-xs-6 bg-info">
-                            <h3>Ativos</h3>
-                            <div id="pedidosAtivos" class="row">
-                                <!-- Card pedido -->
-                                <div class="card-pedido col-xs-12 col-md-6 col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading clearfix">
-                                            <h3 class="panel-title pull-left">Pedido #0051</h3> <span class="panel-title pull-right glyphicon glyphicon-remove" title="Cancelar Pedido"></span> </div>
-                                        <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/order.svg">
-                                            <p>William Martins Coelho</p>
-                                            <h2 class="text-success">R$ 00,00</h2>
-                                            <button class="btn btn-info btn-block">Ver Pedido</button>
-                                            <button class="btn btn-warning btn-block">Saiu p/ entrega</button>
-                                            <button class="btn btn-default btn-block">Imprimir</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-pedido col-xs-12 col-md-6 col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading clearfix">
-                                            <h3 class="panel-title pull-left">Pedido #0051</h3> <span class="panel-title pull-right glyphicon glyphicon-remove" title="Cancelar Pedido"></span> </div>
-                                        <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/order.svg">
-                                            <p>William Martins Coelho</p>
-                                            <h2 class="text-success">R$ 00,00</h2>
-                                            <button class="btn btn-info btn-block">Ver Pedido</button>
-                                            <button class="btn btn-warning btn-block">Saiu p/ entrega</button>
-                                            <button class="btn btn-default btn-block">Imprimir</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-pedido col-xs-12 col-md-6 col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading clearfix">
-                                            <h3 class="panel-title pull-left">Pedido #0051</h3> <span class="panel-title pull-right glyphicon glyphicon-remove" title="Cancelar Pedido"></span> </div>
-                                        <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/order.svg">
-                                            <p>William Martins Coelho</p>
-                                            <h2 class="text-success">R$ 00,00</h2>
-                                            <button class="btn btn-info btn-block">Ver Pedido</button>
-                                            <button class="btn btn-warning btn-block">Saiu p/ entrega</button>
-                                            <button class="btn btn-default btn-block">Imprimir</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-pedido col-xs-12 col-md-6 col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading clearfix">
-                                            <h3 class="panel-title pull-left">Pedido #0051</h3> <span class="panel-title pull-right glyphicon glyphicon-remove" title="Cancelar Pedido"></span> </div>
-                                        <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/order.svg">
-                                            <p>William Martins Coelho</p>
-                                            <h2 class="text-success">R$ 00,00</h2>
-                                            <button class="btn btn-info btn-block">Ver Pedido</button>
-                                            <button class="btn btn-warning btn-block">Saiu p/ entrega</button>
-                                            <button class="btn btn-default btn-block">Imprimir</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 bg-warning">
-                            <h3>Saiu para Entrega</h3>
-                            <div id="pedidosSaiuEntrega" class="row">
-                                <div class="card-pedido col-xs-12 col-md-6 col-lg-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading clearfix">
-                                            <h3 class="panel-title pull-left">Pedido #0051</h3> <span class="panel-title pull-right glyphicon glyphicon-remove" title="Cancelar Pedido"></span> </div>
-                                        <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/order.svg">
-                                            <p>William Martins Coelho</p>
-                                            <h2 class="text-success">R$ 00,00</h2>
-                                            <button class="btn btn-info btn-block">Ver Pedido</button>
-                                            <button class="btn btn-success btn-block">Entregue</button>
-                                            <button class="btn btn-default btn-block">Imprimir</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Mesas -->
-                <div id="tabs-3">
-                    <h3>Mesas com Pedido Aberto</h3>
-                    <div class="form-group">
-                        <button class="btn btn-primary">Trocar Mesa</button>
-                        <button class="btn btn-primary">Juntar Mesas</button>
-                    </div>
-                    <div id="mesasAbertas" class="row">
-                        <!-- Exemplo de mesa com Pedidos -->
-                        <div class="col-xs-3 col-lg-2 card-mesa">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Mesa 05</h3> </div>
-                                <div class="panel-body text-center"> <img width="75" src="assets/img/Icon/table.svg">
-                                    <h2 class="text-success">R$ 00,00</h2>
-                                    <button class="btn btn-info btn-block">Pedidos</button>
-                                    <button class="btn btn-danger btn-block">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-3 col-lg-2 card-mesa">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Mesa 09</h3> </div>
-                                <div class="panel-body text-center"> <img class="img-responsive center-block" width="75" src="assets/img/Icon/table.svg">
-                                    <h2 class="text-success">R$ 00,00</h2>
-                                    <button class="btn btn-info btn-block">Pedidos</button>
-                                    <button class="btn btn-danger btn-block">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Reservas -->
-                <div id="tabs-4">
-                    <h3>Reservas</h3>
-                    <div class="form-group">
-                        <button onclick="java.Reservas.abrir();" class="btn btn-primary">Nova Reserva</button>
-                    </div>
-                    <input class="form-control" type="text" placeholder="Digite aqui para fazer uma pesquisa..." id="myInput">
-                    <table class="table table-striped" style="background-color: #FFF;">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nome</th>
-                                <th>Telefone p/ Contato</th>
-                                <th>Dia</th>
-                                <th>Hora</th>
-                                <th>Qtd. Pessoas</th>
-                                <th>Observações</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="myTable">
-                            <tr>
-                                <td>#001</td>
-                                <td>William Martins Coelho</td>
-                                <td>(44) 9 9999-9999</td>
-                                <td>25/07</td>
-                                <td>19:50</td>
-                                <td>5</td>
-                                <td>A primeira mesa lá do canto se tiver como</td>
-                                <td>
-                                    <button class="btn btn-warning">Editar</button>
-                                    <button class="btn btn-danger">Remover</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
-        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-        <script src="assets/js/index.js"></script>
-        <script src="assets/js/search-table.js"></script>
-        <script type="text/javascript">
-        $("#formTempos").submit(function(event) {
-            event.preventDefault();
-            var tempo = {
-                tempoMedioEntrega: parseInt($("#tempEntre").val()),
-                tempoMedioRetirada: parseInt($("#tempRet").val())
-            };
-            java.atual.alterarTempos(tempo);
-        });
-    </script>
-    </body>
+				</div>
+			</div>
+
+			<!-- Pedidos -->
+			<div id="tabs-2">
+				<h3>Pedidos</h3>
+
+				<div class="form-group">
+					<input class="form-control" id="searchTextPedidos" placeholder="Digite aqui para fazer uma busca...">
+				</div>
+
+				<div class="row">
+					<div class="col-xs-6 bg-info">
+						<h3>Ativos</h3>
+
+						<div id="pedidosAtivos">
+							<ul class="list-group" id="lista-pedidos">
+								<li class="list-group-item card-pedido card-pedido-ativo">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0001</strong></h1>
+										<h2>William Martins Coelho</h2>
+										<span class="valor">R$ 50,00</span>
+										<span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="left" title="Cancelar Pedido"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Pedido">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Saiu para Entrega">
+												<span class="glyphicon glyphicon-share-alt"></span>
+											</button>
+
+											<button class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Imprimir Pedido">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+
+								<li class="list-group-item card-pedido card-pedido-ativo">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0002</strong></h1>
+										<h2>William Martins</h2>
+										<span class="valor">R$ 40,00</span>
+										<span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="left" title="Cancelar Pedido"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Pedido">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Saiu para Entrega">
+												<span class="glyphicon glyphicon-share-alt"></span>
+											</button>
+
+											<button class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Imprimir Pedido">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+
+								<li class="list-group-item card-pedido card-pedido-ativo">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0003</strong></h1>
+										<h2>William M. Coelho</h2>
+										<span class="valor">R$ 30,00</span>
+										<span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="left" title="Cancelar Pedido"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Pedido">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Saiu para Entrega">
+												<span class="glyphicon glyphicon-share-alt"></span>
+											</button>
+
+											<button class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Imprimir Pedido">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+
+					<div class="col-xs-6 bg-warning">
+						<h3>Saiu para Entrega</h3>
+
+						<div id="pedidosSaiuEntrega">
+							<ul class="list-group" id="lista-pedidos">
+								<li class="list-group-item card-pedido card-pedido-entrega">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0001</strong></h1>
+										<h2>William Martins</h2>
+										<span class="valor">R$ 50,00</span>
+										<span class="glyphicon glyphicon-remove"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Ver Pedido">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Pedido Entregue">
+												<span class="glyphicon glyphicon-ok"></span>
+											</button>
+
+											<button class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Imprimir Pedido">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+
+								<li class="list-group-item card-pedido card-pedido-entrega">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0002</strong></h1>
+										<h2>William Martins</h2>
+										<span class="valor">R$ 40,00</span>
+										<span class="glyphicon glyphicon-remove"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-success">
+												<span class="glyphicon glyphicon-ok"></span>
+											</button>
+
+											<button class="btn btn-default">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+
+								<li class="list-group-item card-pedido card-pedido-entrega">
+									<img class="hidden-xs hidden-sm" width="60" src="assets/img/Icon/order.svg">
+
+									<div class="info">
+										<h1><strong>Pedido #0003</strong></h1>
+										<h2>William Martins</h2>
+										<span class="valor">R$ 30,00</span>
+										<span class="glyphicon glyphicon-remove"></span>
+
+										<div class="acoes">
+											<button class="btn btn-info">
+												<span class="glyphicon glyphicon-eye-open"></span>
+											</button>
+
+											<button class="btn btn-success">
+												<span class="glyphicon glyphicon-ok"></span>
+											</button>
+
+											<button class="btn btn-default">
+												<span class="glyphicon glyphicon-print"></span>
+											</button>
+										</div>
+									</div>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Mesas -->
+			<div id="tabs-3">
+				<h3>Mesas com Pedido Aberto</h3>
+
+				<div class="form-group">
+					<button class="btn btn-primary">Trocar Mesa</button>
+					<button class="btn btn-primary">Juntar Mesas</button>
+				</div>
+
+				<div id="mesasAbertas" class="row">
+					<!-- Exemplo de mesa com Pedidos -->
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 card-mesa">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Mesa 05</h3>
+							</div>
+							<div class="panel-body text-center"> <img width="75" src="assets/img/Icon/table.svg">
+								<h2 class="text-success">R$ 00,00</h2>
+								<button class="btn btn-info btn-block">Pedidos</button>
+								<button class="btn btn-danger btn-block">Fechar</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 card-mesa">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Mesa 09</h3>
+							</div>
+							<div class="panel-body text-center"> <img class="img-responsive center-block" width="75" src="assets/img/Icon/table.svg">
+								<h2 class="text-success">R$ 00,00</h2>
+								<button class="btn btn-info btn-block">Pedidos</button>
+								<button class="btn btn-danger btn-block">Fechar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Reservas -->
+			<div id="tabs-4">
+				<h3>Reservas</h3>
+
+				<div class="form-group">
+					<button onclick="java.Reservas.abrir();" class="btn btn-primary">Nova Reserva</button>
+				</div>
+
+				<input class="form-control" id="searchTextReservas" placeholder="Digite aqui para fazer uma pesquisa..." style="margin-bottom: 10px;">
+
+				<!--
+				<table class="table table-striped" style="background-color: #FFF;">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Nome</th>
+							<th>Telefone p/ Contato</th>
+							<th>Dia</th>
+							<th>Hora</th>
+							<th>Qtd. Pessoas</th>
+							<th>Observações</th>
+							<th>Ações</th>
+						</tr>
+					</thead>
+					
+					<tbody id="myTable">
+						<tr>
+							<td>#001</td>
+							<td>William Martins Coelho</td>
+							<td>(44) 9 9999-9999</td>
+							<td>25/07</td>
+							<td>19:50</td>
+							<td>5</td>
+							<td>A primeira mesa lá do canto se tiver como</td>
+							<td>
+								<button class="btn btn-warning">Editar</button>
+								<button class="btn btn-danger">Remover</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				-->
+
+				<ul class="list-group lista-reservas">
+				
+					<li class="list-group-item">
+						<div class="row">
+							<span class="glyphicon glyphicon-pencil" title="Editar" data-toggle="tooltip" data-placement="top"></span>
+							<span class="glyphicon glyphicon-remove" title="Remover" data-toggle="tooltip" data-placement="top"></span>
+
+							<div class="col-xs-12 col-md-4 col-lg-6">
+								<h1>#001</h1>
+								<h2>William Martins Coelho</h2>
+							</div>
+
+							<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+								<h1>Fone</h1>
+								<span class="badge">(44) 9 9999-9999</span>
+							</div>
+
+							<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+								<h1>Data</h1>
+								<span class="badge">10/10</span>
+								<span class="badge">19:00</span>
+							</div>
+
+							<div class="col-xs-6 col-sm-4 col-md-2">
+								<h1>Para</h1>
+								<span class="badge">5 pessoas</span>
+							</div>
+						</div>
+
+						<div class="row comentario">
+							<div class="col-xs-12">
+								<p>A primeira mesa lá do canto se tiver como</p>
+							</div>
+						</div>
+					</li>
+					
+					<li class="list-group-item">
+						<div class="row">
+							<span class="glyphicon glyphicon-pencil" title="Editar" data-toggle="tooltip" data-placement="top"></span>
+							<span class="glyphicon glyphicon-remove" title="Remover" data-toggle="tooltip" data-placement="top"></span>
+
+							<div class="col-xs-12 col-md-4 col-lg-6">
+								<h1>#002</h1>
+								<h2>William Martins Coelho</h2>
+							</div>
+
+							<div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+								<h1>Fone</h1>
+								<span class="badge">(44) 9 9999-9999</span>
+							</div>
+
+							<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+								<h1>Data</h1>
+								<span class="badge">10/10</span>
+								<span class="badge">19:00</span>
+							</div>
+
+							<div class="col-xs-6 col-sm-4 col-md-2">
+								<h1>Para</h1>
+								<span class="badge">5 pessoas</span>
+							</div>
+						</div>
+
+						<div class="row comentario">
+							<div class="col-xs-12">
+								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras massa massa, tristique sed neque eu.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<!-- Fim Reservas -->
+
+		</div>
+	</div>
+	<!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+	<!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+	<script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	<script src="assets/js/index.js"></script>
+	<script src="assets/js/search-table.js"></script>
+	<script type="text/javascript">
+		$("#formTempos").submit(function(event) {
+			event.preventDefault();
+			var tempo = {
+				tempoMedioEntrega: parseInt($("#tempEntre").val()),
+				tempoMedioRetirada: parseInt($("#tempRet").val())
+			};
+			java.atual.alterarTempos(tempo);
+		});
+	</script>
+
+	<!-- Habilitar Tooltip -->
+	<script>
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		$('#modalDesc').on('show.bs.modal', function(event) {
+			var button = $(event.relatedTarget); // Button that triggered the modal
+			var endereco = button.data('descricao'); // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this);
+			console.log(endereco);
+			modal.find('#descProduto').text(endereco);
+		})
+	</script>
+	
+	<!-- Busca nos pedidos -->
+	<script>
+		$('#searchTextPedidos').bind('keyup', function() {
+
+			var searchString = $(this).val();
+
+			$("ul#lista-pedidos li").each(function(index, value) {
+
+				currentName = $(value).text()
+				if (currentName.toUpperCase().indexOf(searchString.toUpperCase()) > -1) {
+					$(value).show();
+				} else {
+					$(value).hide();
+				}
+
+			});
+		});
+	</script>
+	
+	<!-- Busca nas reservas -->
+	<script>
+		$('#searchTextReservas').bind('keyup', function() {
+
+			var searchString = $(this).val();
+
+			$("ul.lista-reservas li").each(function(index, value) {
+
+				currentName = $(value).text()
+				if (currentName.toUpperCase().indexOf(searchString.toUpperCase()) > -1) {
+					$(value).show();
+				} else {
+					$(value).hide();
+				}
+
+			});
+		});
+	</script>
+</body>
 
 </html>
