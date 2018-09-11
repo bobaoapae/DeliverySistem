@@ -166,3 +166,23 @@ java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JS
 Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
 	... 4 more
 
+set 11, 2018 3:25:16 PM visaoWeb.Inicio$6 run
+GRAVE: java.lang.ClassCastException: Cannot cast to JSObject.
+java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JSObject.
+	at com.teamdev.jxbrowser.chromium.JSValue.asObject(SourceFile:266)
+	at driver.WebWhatsFxBrowserFunctions.getChatByNumber(WebWhatsFxBrowserFunctions.java:319)
+	at visaoWeb.Inicio.abrirPedidos(Inicio.java:1196)
+	at visaoWeb.Inicio$11$2.run(Inicio.java:418)
+Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
+	... 4 more
+
+set 11, 2018 3:25:17 PM visaoWeb.Inicio$6 run
+GRAVE: java.lang.ClassCastException: Cannot cast to JSObject.
+java.lang.IllegalStateException: java.lang.ClassCastException: Cannot cast to JSObject.
+	at com.teamdev.jxbrowser.chromium.JSValue.asObject(SourceFile:266)
+	at driver.WebWhatsFxBrowserFunctions.getChatByNumber(WebWhatsFxBrowserFunctions.java:319)
+	at visaoWeb.Inicio.abrirPedidos(Inicio.java:1200)
+	at visaoWeb.Inicio$11$2.run(Inicio.java:418)
+Caused by: java.lang.ClassCastException: Cannot cast to JSObject.
+	... 4 more
+

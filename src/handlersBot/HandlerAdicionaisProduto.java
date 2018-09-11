@@ -35,17 +35,19 @@ public class HandlerAdicionaisProduto extends HandlerBotDelivery {
 
     @Override
     protected boolean runFirstTime(Message m) {
-        for (GrupoAdicionais grupo : gruposDisponiveis) {
-            if (gruposJaForam.contains(grupo)) {
-                continue;
+        if (!gruposDisponiveis.isEmpty()) {
+            for (GrupoAdicionais grupo : gruposDisponiveis) {
+                if (gruposJaForam.contains(grupo)) {
+                    continue;
+                }
+                gruposJaForam.add(grupo);
+                if (grupo.getAdicionais().size() <= grupo.getQtdMin()) {
+                    ((ChatBotDelivery) chat).getLastPedido().getAdicionais().addAll(grupo.getAdicionais());
+                    continue;
+                }
+                chat.setHandler(new HandlerEscolhaAdicionalDoGrupo(grupo, this, chat), true);
+                return true;
             }
-            gruposJaForam.add(grupo);
-            if (grupo.getAdicionais().size() <= grupo.getQtdMin()) {
-                ((ChatBotDelivery)chat).getLastPedido().getAdicionais().addAll(grupo.getAdicionais());
-                continue;
-            }
-            chat.setHandler(new HandlerEscolhaAdicionalDoGrupo(grupo, this, chat), true);
-            return true;
         }
         chat.setHandler(new HandlerComentarioPedido(chat, new HandlerDesejaMaisCategoria(p.getCategoria(), chat)), true);
         return true;

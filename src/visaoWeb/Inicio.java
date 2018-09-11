@@ -114,6 +114,8 @@ public class Inicio extends JFrame {
     private ArrayList<Mesa> mesasEmAberto = new ArrayList<>();
     private Logger logger;
     private EventRegistry events;
+    private SimpleDateFormat formatadorDia = new SimpleDateFormat("dd/MM");
+    private SimpleDateFormat formatadorHora = new SimpleDateFormat("HH:mm");
 
     public Inicio() {
         init();
@@ -123,7 +125,7 @@ public class Inicio extends JFrame {
             public void run() {
                 new CheckForUpdate("http://ddtank.gamesnexus.com.br/delivery/");
             }
-        }, 1, 1, TimeUnit.MINUTES);
+        }, 1, 1, TimeUnit.HOURS);
         this.setLocationRelativeTo(null);
         new JXBrowserCrack();
         browser = new Browser(ContextManager.getInstance().getContext());
@@ -180,6 +182,15 @@ public class Inicio extends JFrame {
 //</editor-fold>
         initWpp();
         criarConfiguracoesBanco();
+        if(!ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).isEmpty() && ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).pesquisarPorCodigo(1) == null){
+            for(Configuracao c :ControleConfiguracao.getInstance(Db4oGenerico.getInstance("banco")).carregarTodos()){
+                try {
+                    ControleConfiguracao.getInstance(Db4oGenerico.getInstance("banco")).excluir(c);
+                } catch (Exception ex) {
+                    Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
         if (ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).isEmpty()) {
             loadConfigPage();
         } else {
@@ -942,6 +953,7 @@ public class Inicio extends JFrame {
                     Reserva r = (Reserva) t.object();
                     try {
                         addReserva(r);
+                        imprimirReserva(r);
                     } catch (Exception ex) {
                         logger.log(Level.SEVERE, null, ex);
                     }
@@ -964,63 +976,131 @@ public class Inicio extends JFrame {
 
     private void addReserva(Reserva r) {
         try {
-            DOMElement table = browser.getDocument().findElement(By.id("myTable"));
-            DOMElement tr = browser.getDocument().createElement("tr");
-            tr.setAttribute("cod-reserva", r.getCod() + "");
-            DOMElement tdCod = browser.getDocument().createElement("td");
-            DOMElement tdNome = browser.getDocument().createElement("td");
-            DOMElement tdTelefoneContato = browser.getDocument().createElement("td");
-            DOMElement tdDia = browser.getDocument().createElement("td");
-            DOMElement tdHora = browser.getDocument().createElement("td");
-            DOMElement tdQtPessoas = browser.getDocument().createElement("td");
-            DOMElement tdObs = browser.getDocument().createElement("td");
-            DOMElement tdBotoes = browser.getDocument().createElement("td");
-            DOMElement btAlterar = browser.getDocument().createElement("button");
-            btAlterar.setAttribute("class", "btn btn-warning");
-            btAlterar.setInnerText("Alterar");
-            DOMElement btExcluir = browser.getDocument().createElement("button");
-            btExcluir.setAttribute("class", "btn btn-danger");
-            btExcluir.setInnerText("Remover");
-            tdBotoes.appendChild(btAlterar);
-            tdBotoes.appendChild(btExcluir);
-            btExcluir.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                @Override
-                public void handleEvent(DOMEvent dome) {
-                    int result = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Atenção!!", JOptionPane.YES_NO_OPTION);
-                    if (result == JOptionPane.YES_OPTION) {
-                        try {
-                            if (ControleReservas.getInstance(Db4oGenerico.getInstance("banco")).excluir(r)) {
-                                JOptionPane.showMessageDialog(null, "Excluido com Sucesso!");
-                                table.removeChild(tr);
+            DOMElement containner = browser.getDocument().findElement(By.id("reservas"));
+            {
+                DOMElement liReserva = browser.getDocument().createElement("li");
+                liReserva.setAttribute("class", "list-group-item");
+                {
+                    DOMElement row = browser.getDocument().createElement("div");
+                    row.setAttribute("class", "row");
+                    {
+                        DOMElement spanEditar = browser.getDocument().createElement("span");
+                        spanEditar.setAttribute("class", "glyphicon glyphicon-pencil");
+                        spanEditar.setAttribute("title", "Editar");
+                        spanEditar.setAttribute("data-toggle", "tooltip");
+                        spanEditar.setAttribute("data-placement", "top");
+                        row.appendChild(spanEditar);
+                        spanEditar.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                            @Override
+                            public void handleEvent(DOMEvent dome) {
+                                new Reservas(r).abrir();
                             }
-                        } catch (Exception ex) {
-                            logger.log(Level.SEVERE, null, ex);
+                        }, true);
+
+                        DOMElement spanRemover = browser.getDocument().createElement("span");
+                        spanRemover.setAttribute("class", "glyphicon glyphicon-remove");
+                        spanRemover.setAttribute("title", "Remover");
+                        spanRemover.setAttribute("data-toggle", "tooltip");
+                        spanRemover.setAttribute("data-placement", "top");
+                        row.appendChild(spanRemover);
+                        spanRemover.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
+                            @Override
+                            public void handleEvent(DOMEvent dome) {
+                                int result = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir?", "Atenção!!", JOptionPane.YES_NO_OPTION);
+                                if (result == JOptionPane.YES_OPTION) {
+                                    try {
+                                        if (ControleReservas.getInstance(Db4oGenerico.getInstance("banco")).excluir(r)) {
+                                            JOptionPane.showMessageDialog(null, "Excluido com Sucesso!");
+                                            containner.removeChild(liReserva);
+                                        }
+                                    } catch (Exception ex) {
+                                        logger.log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            }
+                        }, true);
+                        {//nome e codigo
+                            DOMElement div = browser.getDocument().createElement("div");
+                            div.setAttribute("class", "col-xs-12 col-md-4 col-lg-6");
+                            {
+                                DOMElement h1 = browser.getDocument().createElement("h1");
+                                h1.setTextContent("#" + r.getCod());
+                                DOMElement h2 = browser.getDocument().createElement("h2");
+                                h2.setTextContent(r.getNomeContato());
+                                div.appendChild(h1);
+                                div.appendChild(h2);
+                            }
+                            row.appendChild(div);
+                        }
+
+                        {//telefone
+                            DOMElement div = browser.getDocument().createElement("div");
+                            div.setAttribute("class", "col-xs-12 col-sm-4 col-md-3 col-lg-2");
+                            {
+                                DOMElement h1 = browser.getDocument().createElement("h1");
+                                h1.setTextContent("Fone");
+                                DOMElement span = browser.getDocument().createElement("span");
+                                span.setAttribute("class", "badge");
+                                span.setTextContent(r.getTelefoneContato());
+                                div.appendChild(h1);
+                                div.appendChild(span);
+                            }
+                            row.appendChild(div);
+                        }
+
+                        {//data
+                            DOMElement div = browser.getDocument().createElement("div");
+                            div.setAttribute("class", "col-xs-6 col-sm-4 col-md-3 col-lg-2");
+                            {
+                                DOMElement h1 = browser.getDocument().createElement("h1");
+                                h1.setTextContent("Data");
+                                DOMElement span = browser.getDocument().createElement("span");
+                                DOMElement span2 = browser.getDocument().createElement("span");
+                                span.setAttribute("class", "badge");
+                                span2.setAttribute("class", "badge");
+                                span.setTextContent(formatadorDia.format(r.getDataReserva()));
+                                span2.setTextContent(formatadorHora.format(r.getDataReserva()));
+                                div.appendChild(h1);
+                                div.appendChild(span);
+                                div.appendChild(span2);
+                            }
+                            row.appendChild(div);
+                        }
+
+                        {//quantidade
+                            DOMElement div = browser.getDocument().createElement("div");
+                            div.setAttribute("class", "col-xs-6 col-sm-4 col-md-2");
+                            {
+                                DOMElement h1 = browser.getDocument().createElement("h1");
+                                h1.setTextContent("Para");
+                                DOMElement span = browser.getDocument().createElement("span");
+                                span.setAttribute("class", "badge");
+                                span.setTextContent(r.getQtdPessoas() + " pessoas");
+                                div.appendChild(h1);
+                                div.appendChild(span);
+                            }
+                            row.appendChild(div);
                         }
                     }
+                    liReserva.appendChild(row);
                 }
-            }, true);
-            btAlterar.addEventListener(DOMEventType.OnClick, new DOMEventListener() {
-                @Override
-                public void handleEvent(DOMEvent dome) {
-                    new Reservas(r).abrir();
+                if (!r.getComentario().isEmpty()) {
+                    DOMElement row = browser.getDocument().createElement("div");
+                    row.setAttribute("class", "row comentario");
+                    {
+                        DOMElement div = browser.getDocument().createElement("div");
+                        div.setAttribute("class", "col-xs-12");
+                        {
+                            DOMElement p = browser.getDocument().createElement("p");
+                            p.setTextContent(r.getComentario());
+                            div.appendChild(p);
+                        }
+                        row.appendChild(div);
+                    }
+                    liReserva.appendChild(row);
                 }
-            }, true);
-            tdCod.setInnerText("#" + r.getCod());
-            tdNome.setInnerText(r.getNomeContato());
-            tdDia.setInnerText(new SimpleDateFormat("dd/MM").format(r.getDataReserva()));
-            tdHora.setInnerText(new SimpleDateFormat("HH:mm").format(r.getDataReserva()));
-            tdQtPessoas.setInnerText(r.getQtdPessoas() + "");
-            tdTelefoneContato.setInnerText(r.getTelefoneContato());
-            tdObs.setInnerText(r.getComentario());
-            tr.appendChild(tdCod);
-            tr.appendChild(tdNome);
-            tr.appendChild(tdTelefoneContato);
-            tr.appendChild(tdDia);
-            tr.appendChild(tdHora);
-            tr.appendChild(tdQtPessoas);
-            tr.appendChild(tdObs);
-            tr.appendChild(tdBotoes);
-            table.appendChild(tr);
+                containner.appendChild(liReserva);
+            }
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -1049,7 +1129,6 @@ public class Inicio extends JFrame {
     //<editor-fold defaultstate="collapsed" desc="Salvar Configuração">
     public boolean saveConfig(JSObject object) {
         try {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Configuracao c = Configuracao.getInstance();
             c.setNomeEstabelecimento(object.getProperty("nomeEstabelecimento").asString().getStringValue());
             c.setNomeBot(object.getProperty("nomeBot").asString().getStringValue());
