@@ -370,6 +370,7 @@ public class Inicio extends JFrame {
         browser.executeJavaScript("window.java = {};");
         JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
         window.asObject().setProperty("atual", this);
+        window.asObject().setProperty("Relatorios", new Relatorios());
         window.asObject().setProperty("Combos", new GerenciadorCombos());
         window.asObject().setProperty("Rodizios", new Rodizios());
         window.asObject().setProperty("Reservas", new Reservas());

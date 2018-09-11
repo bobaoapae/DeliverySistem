@@ -32,18 +32,26 @@ public class CheckForUpdate {
 
     private void checkNewVersion(String url) {
         try {
-            File e = new File("update.txt");
-            File ee = new File("update.zip");
-            if(ee.exists()){
-                ee.delete();
+            File ignoreUpdate = new File("ignore.txt");
+            if (ignoreUpdate.exists()) {
+                return;
             }
-            if (!e.exists()) {
-                doUpdate(url + "update.zip");
+            File versionCheck = new File("update.txt");
+            File fileUpdate = new File("update.zip");
+            if (fileUpdate.exists()) {
+                fileUpdate.delete();
+            }
+            if (!versionCheck.exists()) {
+                doUpdate(url);
                 return;
             }
             String hashLocal = new String(Files.readAllBytes(Paths.get("update.txt")));
-            if (!hashLocal.equals(getText(url + "update.txt"))) {
-                doUpdate(url + "update.zip");
+            String hashExterna = getText(url + "index.php");
+            if (hashExterna.isEmpty()) {
+                return;
+            }
+            if (!hashLocal.equals(hashExterna)) {
+                doUpdate(url);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -81,7 +89,7 @@ public class CheckForUpdate {
                 Runtime.getRuntime().exec("\"" + javaBin + "\"" + " -jar \"" + new File("").getAbsolutePath() + File.separator + "Atualizador.jar\" \"" + url + "\" \"" + new File("").getAbsolutePath() + File.separator + "SistemaDeliveryWhatsApp.jar\"");
                 System.exit(0);
             }
-        } else if(Configuracao.getInstance().getHoraUltimaMsg() == null || new Date().getTime() - Configuracao.getInstance().getHoraUltimaMsg().getTime() >= 1*60*60*1000){
+        } else if (Configuracao.getInstance().getHoraUltimaMsg() == null || new Date().getTime() - Configuracao.getInstance().getHoraUltimaMsg().getTime() >= 1 * 60 * 60 * 1000) {
             final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
             System.out.println("\"" + javaBin + "\"" + " -jar \"" + new File("").getAbsolutePath() + File.separator + "Atualizador.jar\" \"" + url + "\" \"" + new File("").getAbsolutePath() + File.separator + "SistemaDeliveryWhatsApp.jar\"");
             Runtime.getRuntime().exec("\"" + javaBin + "\"" + " -jar \"" + new File("").getAbsolutePath() + File.separator + "Atualizador.jar\" \"" + url + "\" \"" + new File("").getAbsolutePath() + File.separator + "SistemaDeliveryWhatsApp.jar\"");

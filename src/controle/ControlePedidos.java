@@ -71,7 +71,7 @@ public class ControlePedidos extends ControleGenericoBasico<Pedido> {
                         ArrayList<AdicionalProduto> saboresPizza = item.getAdicionais(SaborPizza.class);
                         for (AdicionalProduto ad : saboresPizza) {
                             if (ranking.containsKey(item.getP().getNome() + " - " + ad.getNome())) {
-                                ranking.put(item.getP().getNome() + " - " + ad.getNome(), ranking.get("Pizza " + item.getP().getNome() + " - " + ad.getNome()) + 1);
+                                ranking.put(item.getP().getNome() + " - " + ad.getNome(), ranking.get(item.getP().getNome() + " - " + ad.getNome()) + 1);
                             } else {
                                 ranking.put(item.getP().getNome() + " - " + ad.getNome(), 1);
                             }
