@@ -1,800 +1,819 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
-
-        <!-- Bootstrap -->
-        <link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
-        <link rel="stylesheet" href="assets/css/estilo.css">
-        <link rel="stylesheet" href="assets/css/toggle.css">
-        <link rel="stylesheet" href="assets/css/lista-categorias.css">
-    </head>
-
-    <body>
-        <!-- Modal CADASTRO CATEGORIA -->
-        <div class="modal fade" id="modalCadastroCategoria" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <form id="cadastrarCategoria">
-                    <div class="modal-content">
-                        <div class="modal-header text-center bg-gradient">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h1 class="modal-title" id="myModalLabel">Cadastrar Nova Categoria</h1>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="nome">Nome: </label>
-                                    <input class="form-control" required id="nome">
-                                </div>
-
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="exemplosComentario">Exemplos Comentario Pedido: </label>
-                                    <input class="form-control" id="exemplosComentario" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
-                                </div>
-
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="ordemExibicao">Ordem de Exibição no Menu: </label>
-                                    <input class="form-control" required id="ordemExibicao" type="number" min="0">
-                                </div>
-
-                                <div class="col-xs-6 form-group">
-                                    <label for="checkFazEntrega">Realiza Entrega? </label><br>
-
-                                    <label class="custom-check">
-                                        <input type="checkbox" name="onOff" id="checkFazEntrega">
-                                        <i></i> 
-                                        <span></span>
-                                    </label>
-                                </div>
-
-                                <div class="col-xs-6 form-group">
-                                    <label for="checkRegrasVisibilidade">Regras de Visibilidade? </label><br>
-
-                                    <label class="custom-check">
-                                        <input type="checkbox" name="onOff" id="checkRegrasVisibilidade">
-                                        <i></i> 
-                                        <span></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div id="regrasEntregaCadastro" style="display: none;">
-
-                                        <h3>Regras de Entrega: </h3>
-
-                                        <div class="row">
-                                            <div class="col-xs-4 form-group">
-                                                <label for="checkQuatidade">Por quantidade: </label><br>
-
-                                                <label class="custom-check">
-                                                    <input type="checkbox" name="onOff" id="checkQuatidade">
-                                                    <i></i> 
-                                                    <span></span>
-                                                </label>
-                                            </div>
-
-                                            <div class="col-xs-8 form-group">
-                                                <label class="control-label" for="qtdMinima">Quantidade mínima para entrega:</label>
-                                                <input class="form-control" type="number" required disabled min="1" step="1" id="qtdMinima">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-xs-4 form-group">
-                                                <label for="checkOutrasCategorias">Precisa Pedir de outras Categorias: </label><br>
-
-                                                <label class="custom-check">
-                                                    <input type="checkbox" name="onOff" id="checkOutrasCategorias">
-                                                    <i></i> 
-                                                    <span></span>
-                                                </label>
-                                            </div>
-
-                                            <div class="col-xs-8 form-group">
-                                                <label for="outrasCategorias">Categorias: </label>
-                                                <select class="form-control" disabled multiple id="outrasCategorias">
-                                                    <option value="1">Pizzas</option>
-                                                    <option value="2">Lanches</option>
-                                                    <option value="3">Porções</option>
-                                                    <option value="4">Bebidas</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-6">
-                                    <div id="regrasVisibilidade" style="display: none;">
-                                        <h3>Restrição de Visibilidade</h3>
-
-                                        <div class="row">
-                                            <div class="col-xs-4 form-group">
-                                                <label for="checkVisibilidadeHorario">Por Horário: </label>
-
-                                                <label class="custom-check">
-                                                    <input type="checkbox" name="onOff" id="checkVisibilidadeHorario">
-                                                    <i></i> 
-                                                    <span></span>
-                                                </label>
-                                            </div>
-
-                                            <div class="col-xs-4 form-group">
-                                                <label for="horarioDe">De:</label>
-                                                <input type="time" disabled required class="form-control" id="horarioDe" name="horarioDe">
-                                            </div>
-
-                                            <div class="col-xs-4 form-group">
-                                                <label for="horarioAte">Até:</label>
-                                                <input type="time" disabled required class="form-control" id="horarioAte" name="horarioAte">
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-xs-4 form-group">
-                                                <label for="checkVisibilidadeDia">Dia(s) da Semana:</label>
-
-                                                <label class="custom-check">
-                                                    <input type="checkbox" name="onOff" id="checkVisibilidadeDia">
-                                                    <i></i> 
-                                                    <span></span>
-                                                </label>
-                                            </div>
-
-                                            <div class="col-xs-8 form-group">
-                                                <label for="diasDaSemana">Dias: </label>
-                                                <select class="form-control" disabled required multiple id="diasDaSemana">
-                                                    <option value="0">Domingo</option>
-                                                    <option value="1">Segunda</option>
-                                                    <option value="2">Terça</option>
-                                                    <option value="3">Quarta</option>
-                                                    <option value="4">Quinta</option>
-                                                    <option value="5">Sexta</option>
-                                                    <option value="6">Sábado</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar Cadastro</button>
-                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
-                            <button type="submit" class="btn btn-success">Cadastrar Categoria</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal CADASTRO SUBCATEGORIA -->
-        <div class="modal fade" id="modalCadastroSubCategoria" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <form id="cadastrarSubcategoria">
-                    <div class="modal-content">
-                        <div class="modal-header text-center bg-gradient">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h1 class="modal-title" id="myModalLabel2">Cadastrar Nova Subcategoria</h1>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="nomeSubCat">Nome: </label>
-                                    <input class="form-control" required id="nomeSubCat">
-                                </div>
-
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="exemplosComentarioSubCat">Exemplos Comentario Pedido: </label>
-                                    <input class="form-control" id="exemplosComentarioSubCat" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
-                                </div>
-
-                                <div class="col-xs-12 form-group">
-                                    <label for="checkFazEntregaSubCat">Realiza Entrega? </label><br>
-
-                                    <label class="custom-check">
-                                        <input type="checkbox" name="onOff" id="checkFazEntregaSubCat">
-                                        <i></i> 
-                                        <span></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="reset" id="cancelarAddSubCat" onclick="java.atual.cancelarAddSubCat();" class="btn btn-danger" data-dismiss="modal">Cancelar Cadastro</button>
-                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
-                            <button type="submit" class="btn btn-success">Cadastrar Subcategoria</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal EDITAR -->
-        <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
-                <form id="form-editar-cat">
-                    <div class="modal-content">
-                        <div class="modal-header text-center bg-gradient">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h1 class="modal-title" id="myModalLabel3">Editar Categoria</h1>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="nomeAlterarCategoria">Nome: </label>
-                                    <input class="form-control" required id="nomeAlterarCategoria">
-                                </div>
-
-                                <div class="col-xs-12 form-group">
-                                    <label class="control-label" for="exemplosComentarioAlterar">Exemplos Comentario Pedido: </label>
-                                    <input class="form-control" id="exemplosComentarioAlterar" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
-                                </div>
-
-                                <div data-only-root="true">
-                                    <div class="col-xs-12 form-group">
-                                        <label class="control-label" for="ordemExibicaoEdit">Ordem de Exibição no Menu: </label>
-                                        <input class="form-control" required id="ordemExibicaoEdit" type="number" min="0">
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-6 form-group">
-                                    <label for="checkFazEntregaEdit">Realiza Entrega? </label><br>
-
-                                    <label class="custom-check">
-                                        <input type="checkbox" name="onOff" id="checkFazEntregaEdit">
-                                        <i></i> 
-                                        <span></span>
-                                    </label>
-                                </div>
-
-                                <div data-only-root="true">
-                                    <div class="col-xs-6 form-group">
-                                        <label for="checkRegrasVisibilidadeEdit">Regras de Visibilidade? </label><br>
-
-                                        <label class="custom-check">
-                                            <input type="checkbox" name="onOff" id="checkRegrasVisibilidadeEdit">
-                                            <i></i> 
-                                            <span></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div data-only-root="true">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div id="regrasEntregaCadastroEdit" style="display: none;">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <h3>Regras de Entrega: </h3>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="checkQuatidadeEdit">Por quantidade: </label><br>
-
-                                                    <label class="custom-check">
-                                                        <input type="checkbox" name="onOff" id="checkQuatidadeEdit">
-                                                        <i></i> 
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="col-xs-8 form-group">
-                                                    <label class="control-label" for="qtdMinimaEdit">Quantidade mínima para entrega:</label>
-                                                    <input class="form-control" type="number" required disabled min="1" step="1" id="qtdMinimaEdit">
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row">
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="checkOutrasCategoriasEdit">Precisa Pedir de outras Categorias: </label><br>
-
-                                                    <label class="custom-check">
-                                                        <input type="checkbox" name="onOff" id="checkOutrasCategoriasEdit">
-                                                        <i></i> 
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="col-xs-8 form-group">
-                                                    <label for="outrasCategoriasEdit">Categorias: </label>
-                                                    <select class="form-control" disabled multiple id="outrasCategoriasEdit">
-                                                        <option value="1">Pizzas</option>
-                                                        <option value="2">Lanches</option>
-                                                        <option value="3">Porções</option>
-                                                        <option value="4">Bebidas</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-6">
-                                        <div id="regrasVisibilidadeEdit" style="display: none;">
-                                            <h3>Restrição de Visibilidade</h3>
-
-                                            <div class="row">
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="checkVisibilidadeHorarioEdit">Por Horário: </label>
-
-                                                    <label class="custom-check">
-                                                        <input type="checkbox" name="onOff" id="checkVisibilidadeHorarioEdit">
-                                                        <i></i> 
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="horarioDeEdit">De:</label>
-                                                    <input type="time" disabled required class="form-control" id="horarioDeEdit" name="horarioDe">
-                                                </div>
-
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="horarioAteEdit">Até:</label>
-                                                    <input type="time" disabled required class="form-control" id="horarioAteEdit" name="horarioAte">
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-xs-4 form-group">
-                                                    <label for="checkVisibilidadeDiaEdit">Dia(s) da Semana:</label>
-
-                                                    <label class="custom-check">
-                                                        <input type="checkbox" name="onOff" id="checkVisibilidadeDiaEdit">
-                                                        <i></i> 
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-
-                                                <div class="col-xs-8 form-group">
-                                                    <label for="diasDaSemanaEdit">Dias: </label>
-                                                    <select class="form-control" disabled required multiple id="diasDaSemanaEdit">
-                                                        <option value="0">Domingo</option>
-                                                        <option value="1">Segunda</option>
-                                                        <option value="2">Terça</option>
-                                                        <option value="3">Quarta</option>
-                                                        <option value="4">Quinta</option>
-                                                        <option value="5">Sexta</option>
-                                                        <option value="6">Sábado</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();"  data-dismiss="modal" class="btn btn-danger">Cancelar Edição</button>
-
-                            <button type="reset" class="btn btn-primary">Limpar Campos</button>
-
-                            <button type="submit" class="btn btn-success">Atualizar Categoria</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal Proxima Categoria -->
-        <div class="modal fade" id="modalProximaCategoria" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <form id="formProximaCategoria">
-                    <div class="modal-content">
-                        <div class="modal-header text-center bg-gradient">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h1 class="modal-title" id="myModalLabel2">Proxima Categoria</h1>
-                        </div>
-
-                        <div class="modal-body">
-                            <p style="color: red;">
-                                *Ao selecionar "Para a Categoria", o usuario recebera este menu depois de fazer o pedido na categoria <span id="categoria">Lanche</span>. 
-                            </p>
-                            <div class="row">
-                                <div class="col-xs-6 form-group">
-                                    <label class="control-label" for="deCategoria">Da Categoria: </label>
-                                    <input class="form-control" disabled id="deCategoria" value="Lanche">
-                                </div>
-
-                                <div class="col-xs-6 form-group">
-                                    <label class="control-label" for="praCategoria">Para a Categoria: </label>
-                                    <select class="form-control" name="" id="praCategoria">
-                                        <option value="1">Bebida</option>
-                                        <option value="2">Pizza</option>
-                                        <option value="3">Porções</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Salvar</button>
-                        </div>
-                    </div>
-                </form>
-            </div> 
-        </div>
-
-        <!-- LISTA -->
-        <div class="panel">
-            <div class="panel-heading text-center">
-                <h1>Lista de Categorias</h1>
-            </div>
-
-            <div class="panel-body">
-                <div class="form-group">
-                    <!-- BOTÃO MODAL NOVA CATEGORIA --> 
-                    <button type="button" class="btn btn-primary" onclick="java.atual.cancelarAlteracao();" data-toggle="modal" data-target="#modalCadastroCategoria">
-                        Nova Categoria
-                    </button>
-                </div>
-
-                <div id="categorias">
-                    <ul class="list-group">
-                        <li class="list-group-item cat">
-                            <div class="dropdown">
-                                <!-- btn drop -->
-                                <span class="btn" id="drop-bebidas" data-toggle="dropdown">
-                                    Bebidas
-                                    <span class="caret"></span>
-                                </span>
-
-                                <span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
-
-                                <!-- Drop Menu -->
-                                <ul class="dropdown-menu" aria-labelledby="drop-bebidas">
-                                    <li class="list-group-item list-group-item-success">Produtos</li>
-                                    <li class="list-group-item list-group-item-info">Adicionais</li>
-                                    <li class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#modalCadastroSubCategoria">Nova Subcategoria</li>
-                                    <li class="list-group-item list-group-item-info" data-toggle="modal" data-target="#modalProximaCategoria" title="Escolha para qual categoria o sistema mandará o usuario depois de fazer o pedido nesta">Proxima Categoria</li>
-                                    <li class="list-group-item list-group-item-warning" onclick="abrirFormEdit()">Editar</li>
-                                    <li class="list-group-item list-group-item-danger">Remover</li>
-                                </ul>
-                            </div>
-
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <div class="dropdown">
-                                        <!-- btn drop -->
-                                        <span class="btn" id="drop-sucos" data-toggle="dropdown">
-                                            Sucos
-                                            <span class="caret"></span>
-                                        </span>
-
-                                        <span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
-
-                                        <!-- Drop Menu -->
-                                        <ul class="dropdown-menu" aria-labelledby="drop-sucos">
-                                            <li class="list-group-item list-group-item-success">Produtos</li>
-                                            <li class="list-group-item list-group-item-info">Adicionais</li>
-                                            <li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
-                                            <li class="list-group-item list-group-item-warning">Editar</li>
-                                            <li class="list-group-item list-group-item-danger">Remover</li>
-                                        </ul>
-                                    </div>
-
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            <div class="dropdown">
-                                                <!-- btn drop -->
-                                                <span class="btn" id="drop-Naturais" data-toggle="dropdown" >
-                                                    Naturais
-                                                    <span class="caret"></span>
-                                                </span>
-
-                                                <span class="glyphicon glyphicon-eye-close" onclick="" title="Tornar Visivel"></span>
-
-                                                <!-- Drop Menu -->
-                                                <ul class="dropdown-menu" aria-labelledby="drop-Naturais">
-                                                    <li class="list-group-item list-group-item-success">Produtos</li>
-                                                    <li class="list-group-item list-group-item-info">Adicionais</li>
-                                                    <li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
-                                                    <li class="list-group-item list-group-item-warning">Editar</li>
-                                                    <li class="list-group-item list-group-item-danger">Remover</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-
-                                        <li class="list-group-item">
-                                            <div class="dropdown">
-                                                <!-- btn drop -->
-                                                <span class="btn" id="drop-Naturais" data-toggle="dropdown" >
-                                                    Ao Leite
-                                                    <span class="caret"></span>
-                                                </span>
-
-                                                <span class="glyphicon glyphicon-eye-close" onclick="" title="Tornar Visivel"></span>
-
-                                                <!-- Drop Menu -->
-                                                <ul class="dropdown-menu" aria-labelledby="drop-Naturais">
-                                                    <li class="list-group-item list-group-item-success">Produtos</li>
-                                                    <li class="list-group-item list-group-item-info">Adicionais</li>
-                                                    <li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
-                                                    <li class="list-group-item list-group-item-warning">Editar</li>
-                                                    <li class="list-group-item list-group-item-danger">Remover</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-
-                                <li class="list-group-item">
-                                    <div class="dropdown">
-                                        <!-- btn drop -->
-                                        <span class="btn" id="drop-Refrigerante" data-toggle="dropdown">
-                                            Refrigerante
-                                            <span class="caret"></span>
-                                        </span>
-
-                                        <span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
-
-                                        <!-- Drop Menu -->
-                                        <ul class="dropdown-menu" aria-labelledby="drop-Refrigerante">
-                                            <li class="list-group-item list-group-item-success">Produtos</li>
-                                            <li class="list-group-item list-group-item-info">Adicionais</li>
-                                            <li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
-                                            <li class="list-group-item list-group-item-warning">Editar</li>
-                                            <li class="list-group-item list-group-item-danger">Remover</li>
-                                        </ul>
-                                    </div>
-
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
-        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-
-        <script type="text/javascript">
-
-            //Cadastrar Categoria
-            $("#cadastrarCategoria").submit(function (event) {
-                event.preventDefault();
-                var categoria = {
-                    nome: $("#nome").val(),
-                    exemplosComentario: $("#exemplosComentario").val(),
-                    fazEntrega: $("#checkFazEntrega").is(":checked"),
-                    qtdMinEntrega: $('#checkQuatidade').is(":checked") ? parseInt($("#qtdMinima").val()) : 1,
-                    ordemExibicao: parseInt($("#ordemExibicao").val()),
-                    outrasCategorias: $("#checkOutrasCategorias").is(":checked") ? $("#outrasCategorias").val() : [],
-                    precisaPedirOutraCategoria: $("#checkOutrasCategorias").is(":checked"),
-                    temRegrasVisibilidade: $("#checkRegrasVisibilidade").is(":checked"),
-                    temRegraVisibilidadeHorario: $("#checkVisibilidadeHorario").is(":checked"),
-                    temRegraVisibilidadeDia: $("#checkVisibilidadeDia").is(":checked"),
-                    horariosRegraVisibilidade: $("#checkRegrasVisibilidade").is(":checked") ? {horarioDe:$("#horarioDe").val(),horarioAte:$("#horarioAte").val()}:{} ,
-                    diasRegraVisibilidade: $("#checkVisibilidadeDia").is(":checked") ? $("#diasDaSemana").val(): []
-                };
-                var resultado = java.atual.realizarCadastro(categoria);
-                if (resultado === true) {
-                    $(this)[0].reset();
-                }
-            });
-
-            $('#cadastrarCategoria').on('reset', function (e) {
-                $("#nome").focus();
-                $("#cadastrarCategoria").find("input").trigger('change');
-            });
-
-            //Editar Categoria
-            $("#form-editar-cat").submit(function (event) {
-                event.preventDefault();
-                var categoria = {
-                    nome: $("#nomeAlterarCategoria").val(),
-                    exemplosComentario: $("#exemplosComentarioAlterar").val(),
-                    fazEntrega: $("#checkFazEntregaEdit").is(":checked"),
-                    qtdMinEntrega: $('#checkQuatidadeEdit').is(":checked") ? parseInt($("#qtdMinimaEdit").val()) : 1,
-                    ordemExibicao: parseInt($("#ordemExibicaoEdit").val()),
-                    outrasCategorias: $("#checkOutrasCategoriasEdit").is(":checked") ? $("#outrasCategoriasEdit").val() : [],
-                    precisaPedirOutraCategoria: $("#checkOutrasCategoriasEdit").is(":checked"),
-                    temRegrasVisibilidade: $("#checkRegrasVisibilidadeEdit").is(":checked"),
-                    temRegraVisibilidadeHorario: $("#checkVisibilidadeHorarioEdit").is(":checked"),
-                    temRegraVisibilidadeDia: $("#checkVisibilidadeDiaEdit").is(":checked"),
-                    horariosRegraVisibilidade: $("#checkRegrasVisibilidadeEdit").is(":checked") ? {horarioDe:$("#horarioDeEdit").val(),horarioAte:$("#horarioAteEdit").val()}:{} ,
-                    diasRegraVisibilidade: $("#checkVisibilidadeDiaEdit").is(":checked") ? $("#diasDaSemanaEdit").val(): []
-                };
-                var resultado = java.atual.realizarCadastro(categoria);
-                if (resultado === true) {
-                    $(this)[0].reset();
-                }
-            });
-
-            $('#form-editar-cat').on('reset', function (e) {
-                $("#nomeAlterarCategoria").focus();
-                $("#form-editar-cat").find("input").trigger('change');
-            });
-
-            //Cadastrar Subcategoria
-            $("#cadastrarSubcategoria").submit(function (event) {
-                event.preventDefault();
-                var categoria = {
-                    nome: $("#nomeSubCat").val(),
-                    exemplosComentario: $("#exemplosComentarioSubCat").val(),
-                    fazEntrega: $("#checkFazEntregaSubCat").is(":checked")
-                };
-                var resultado = java.atual.realizarCadastroSub(categoria);
-                if (resultado === true) {
-                    $(this)[0].reset();
-                }
-            });
-
-            $('#cadastrarSubcategoria').on('reset', function (e) {
-                $("#nomeAlterarCategoria").focus();
-            });
-
-            //-----------------//
-            //(Regra de Entrega) (Cadastro)
-
-            //Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Cadastro)
-            $("#checkFazEntrega").change(e => {
-                if ($("#checkFazEntrega").is(":checked")) {
-                    $("#regrasEntregaCadastro").slideDown();
-                } else {
-                    $("#regrasEntregaCadastro").slideUp();
-                }
-            });
-
-            //Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Cadastro)
-            $('#checkQuatidade').change(function (event) {
-                $('#qtdMinima').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //Habilita/Desabilita campo de outras categorias (Regra de Entrega) (Cadastro)
-            $('#checkOutrasCategorias').change(function (event) {
-                $('#outrasCategorias').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //-----------------//
-            //(Regra de Visibilidade) (Cadastro)
-
-            //Mostra/Esconde campos de regras de visibilidade (Regra de Visibilidade) (Cadastro)
-            $("#checkRegrasVisibilidade").change(e => {
-                if ($("#checkRegrasVisibilidade").is(":checked")) {
-                    $("#regrasVisibilidade").slideDown();
-                } else {
-                    $("#regrasVisibilidade").slideUp();
-                }
-            });
-
-            //Habilida/Desabilita campos de horario (Regra de Visibilidade) (Cadastro)
-            $('#checkVisibilidadeHorario').change(function (event) {
-                $('#horarioDe').prop("disabled", !$(this).is(":checked"));
-                $('#horarioAte').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //Habilida/Desabilita campo de dias (Regra de Visibilidade) (Cadastro)
-            $('#checkVisibilidadeDia').change(function (event) {
-                $('#diasDaSemana').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //-----------------//
-            //(Regra de Entrega) (Edit)
-
-            //Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Edit)
-            $("#checkFazEntregaEdit").change(e => {
-                if ($("#checkFazEntregaEdit").is(":checked")) {
-                    $("#regrasEntregaCadastroEdit").slideDown();
-                } else {
-                    $("#regrasEntregaCadastroEdit").slideUp();
-                }
-            });
-
-            //Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Edit)
-            $('#checkQuatidadeEdit').change(function (event) {
-                $('#qtdMinimaEdit').prop("disabled", !$(this).is(":checked"));
-            });
-
-
-
-            //Habilita/Desabilita campo de outras categorias (Regra de Entrega) (Edit)
-            $('#checkOutrasCategoriasEdit').change(function (event) {
-                $('#outrasCategoriasEdit').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //-----------------//
-            //(Regra de Visibilidade) (Edit)
-
-            //Mostra/Esconde campos de regras de visibilidade (Regra de Visibilidade) (Edit)
-            $("#checkRegrasVisibilidadeEdit").change(e => {
-                if ($("#checkRegrasVisibilidadeEdit").is(":checked")) {
-                    $("#regrasVisibilidadeEdit").slideDown();
-                } else {
-                    $("#regrasVisibilidadeEdit").slideUp();
-                }
-            });
-
-            //Habilida/Desabilita campos de horario (Regra de Visibilidade) (Edit)
-            $('#checkVisibilidadeHorarioEdit').change(function (event) {
-                $('#horarioDeEdit').prop("disabled", !$(this).is(":checked"));
-                $('#horarioAteEdit').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //Habilida/Desabilita campo de dias (Regra de Visibilidade) (Edit)
-            $('#checkVisibilidadeDiaEdit').change(function (event) {
-                $('#diasDaSemanaEdit').prop("disabled", !$(this).is(":checked"));
-            });
-
-            //-----------------//
-
-            //Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Subcategoria)
-            $("#checkFazEntregaSubCat").change(e => {
-                if ($("#checkFazEntregaSubCat").is(":checked")) {
-                    $("#regrasEntregaCadastroSubCat").slideDown();
-                } else {
-                    $("#regrasEntregaCadastroSubCat").slideUp();
-                }
-            });
-
-
-            //Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Subcategoria)
-            $('#checkQuatidadeSubCat').change(function (event) {
-                $('#qtdMinimaSubCat').prop("disabled", !$(this).is(":checked"));
-            });
-        </script>
-
-        <script type="text/javascript">
-            function drop() {
-                $(document).on("shown.bs.dropdown", ".dropdown", function () {
-                    // calculate the required sizes, spaces
-                    var $ul = $(this).children(".dropdown-menu");
-                    var $button = $(this).children(".dropdown-toggle");
-                    var ulOffset = $ul.offset();
-                    // how much space would be left on the top if the dropdown opened that direction
-                    var spaceUp = (ulOffset.top - $button.height() - $ul.height()) - $(window).scrollTop();
-                    // how much space is left at the bottom
-                    var spaceDown = $(window).scrollTop() + $(window).height() - (ulOffset.top + $ul.height());
-                    // switch to dropup only if there is no space at the bottom AND there is space at the top, or there isn't either but it would be still better fit
-                    if (spaceDown < 0 && (spaceUp >= 0 || spaceUp > spaceDown))
-                        $(this).addClass("dropup");
-                }).on("hidden.bs.dropdown", ".dropdown", function () {
-                    // always reset after close
-                    $(this).removeClass("dropup");
-                });
-            }
-
-            var callback = function (mutationsList) {
-                drop();
-            };
-            var config = {attributes: true, childList: true, subtree: true};
-            var targetNode = document.getElementById('categorias');
-            var observer = new MutationObserver(callback);
-            observer.observe(targetNode, config);
-        </script>
-    </body>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+
+	<!-- Bootstrap -->
+	<link href="assets/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="assets/css/estilo.css">
+	<link rel="stylesheet" href="assets/css/toggle.css">
+	<link rel="stylesheet" href="assets/css/lista-categorias.css">
+</head>
+
+<body>
+	<!-- Modal CADASTRO CATEGORIA -->
+	<div class="modal fade" id="modalCadastroCategoria" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<form id="cadastrarCategoria">
+				<div class="modal-content">
+					<div class="modal-header text-center bg-gradient">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h1 class="modal-title" id="myModalLabel">Cadastrar Nova Categoria</h1>
+					</div>
+
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="nome">Nome: </label>
+								<input class="form-control" required id="nome">
+							</div>
+
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="exemplosComentario">Exemplos Comentario Pedido: </label>
+								<input class="form-control" id="exemplosComentario" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
+							</div>
+
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="ordemExibicao">Ordem de Exibição no Menu: </label>
+								<input class="form-control" required id="ordemExibicao" type="number" min="0">
+							</div>
+
+							<div class="col-xs-6 form-group">
+								<label for="checkFazEntrega">Realiza Entrega? </label><br>
+
+								<label class="custom-check">
+									<input type="checkbox" name="onOff" id="checkFazEntrega">
+									<i></i>
+									<span></span>
+								</label>
+							</div>
+
+							<div class="col-xs-6 form-group">
+								<label for="checkRegrasVisibilidade">Regras de Visibilidade? </label><br>
+
+								<label class="custom-check">
+									<input type="checkbox" name="onOff" id="checkRegrasVisibilidade">
+									<i></i>
+									<span></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-6">
+								<div id="regrasEntregaCadastro" style="display: none;">
+
+									<h3>Regras de Entrega: </h3>
+
+									<div class="row">
+										<div class="col-xs-4 form-group">
+											<label for="checkQuatidade">Por quantidade: </label><br>
+
+											<label class="custom-check">
+												<input type="checkbox" name="onOff" id="checkQuatidade">
+												<i></i>
+												<span></span>
+											</label>
+										</div>
+
+										<div class="col-xs-8 form-group">
+											<label class="control-label" for="qtdMinima">Quantidade mínima para entrega:</label>
+											<input class="form-control" type="number" required disabled min="1" step="1" id="qtdMinima">
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-xs-4 form-group">
+											<label for="checkOutrasCategorias">Precisa Pedir de outras Categorias: </label><br>
+
+											<label class="custom-check">
+												<input type="checkbox" name="onOff" id="checkOutrasCategorias">
+												<i></i>
+												<span></span>
+											</label>
+										</div>
+
+										<div class="col-xs-8 form-group">
+											<label for="outrasCategorias">Categorias: </label>
+											<select class="form-control" disabled multiple id="outrasCategorias">
+												<option value="1">Pizzas</option>
+												<option value="2">Lanches</option>
+												<option value="3">Porções</option>
+												<option value="4">Bebidas</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-6">
+								<div id="regrasVisibilidade" style="display: none;">
+									<h3>Restrição de Visibilidade</h3>
+
+									<div class="row">
+										<div class="col-xs-4 form-group">
+											<label for="checkVisibilidadeHorario">Por Horário: </label>
+
+											<label class="custom-check">
+												<input type="checkbox" name="onOff" id="checkVisibilidadeHorario">
+												<i></i>
+												<span></span>
+											</label>
+										</div>
+
+										<div class="col-xs-4 form-group">
+											<label for="horarioDe">De:</label>
+											<input type="time" disabled required class="form-control" id="horarioDe" name="horarioDe">
+										</div>
+
+										<div class="col-xs-4 form-group">
+											<label for="horarioAte">Até:</label>
+											<input type="time" disabled required class="form-control" id="horarioAte" name="horarioAte">
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-xs-4 form-group">
+											<label for="checkVisibilidadeDia">Dia(s) da Semana:</label>
+
+											<label class="custom-check">
+												<input type="checkbox" name="onOff" id="checkVisibilidadeDia">
+												<i></i>
+												<span></span>
+											</label>
+										</div>
+
+										<div class="col-xs-8 form-group">
+											<label for="diasDaSemana">Dias: </label>
+											<select class="form-control" disabled required multiple id="diasDaSemana">
+												<option value="0">Domingo</option>
+												<option value="1">Segunda</option>
+												<option value="2">Terça</option>
+												<option value="3">Quarta</option>
+												<option value="4">Quinta</option>
+												<option value="5">Sexta</option>
+												<option value="6">Sábado</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar Cadastro</button>
+						<button type="reset" class="btn btn-primary">Limpar Campos</button>
+						<button type="submit" class="btn btn-success">Cadastrar Categoria</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal CADASTRO SUBCATEGORIA -->
+	<div class="modal fade" id="modalCadastroSubCategoria" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<form id="cadastrarSubcategoria">
+				<div class="modal-content">
+					<div class="modal-header text-center bg-gradient">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h1 class="modal-title" id="myModalLabel2">Cadastrar Nova Subcategoria</h1>
+					</div>
+
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="nomeSubCat">Nome: </label>
+								<input class="form-control" required id="nomeSubCat">
+							</div>
+
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="exemplosComentarioSubCat">Exemplos Comentario Pedido: </label>
+								<input class="form-control" id="exemplosComentarioSubCat" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
+							</div>
+
+							<div class="col-xs-12 form-group">
+								<label for="checkFazEntregaSubCat">Realiza Entrega? </label><br>
+
+								<label class="custom-check">
+									<input type="checkbox" name="onOff" id="checkFazEntregaSubCat">
+									<i></i>
+									<span></span>
+								</label>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="modal-footer">
+						<button type="reset" id="cancelarAddSubCat" onclick="java.atual.cancelarAddSubCat();" class="btn btn-danger" data-dismiss="modal">Cancelar Cadastro</button>
+						<button type="reset" class="btn btn-primary">Limpar Campos</button>
+						<button type="submit" class="btn btn-success">Cadastrar Subcategoria</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal EDITAR -->
+	<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<form id="form-editar-cat">
+				<div class="modal-content">
+					<div class="modal-header text-center bg-gradient">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h1 class="modal-title" id="myModalLabel3">Editar Categoria</h1>
+					</div>
+
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="nomeAlterarCategoria">Nome: </label>
+								<input class="form-control" required id="nomeAlterarCategoria">
+							</div>
+
+							<div class="col-xs-12 form-group">
+								<label class="control-label" for="exemplosComentarioAlterar">Exemplos Comentario Pedido: </label>
+								<input class="form-control" id="exemplosComentarioAlterar" placeholder="Sem salada, sem bacon, sem sal, temperatura ambiente">
+							</div>
+
+							<div data-only-root="true">
+								<div class="col-xs-12 form-group">
+									<label class="control-label" for="ordemExibicaoEdit">Ordem de Exibição no Menu: </label>
+									<input class="form-control" required id="ordemExibicaoEdit" type="number" min="0">
+								</div>
+							</div>
+
+							<div class="col-xs-6 form-group">
+								<label for="checkFazEntregaEdit">Realiza Entrega? </label><br>
+
+								<label class="custom-check">
+									<input type="checkbox" name="onOff" id="checkFazEntregaEdit">
+									<i></i>
+									<span></span>
+								</label>
+							</div>
+
+							<div data-only-root="true">
+								<div class="col-xs-6 form-group">
+									<label for="checkRegrasVisibilidadeEdit">Regras de Visibilidade? </label><br>
+
+									<label class="custom-check">
+										<input type="checkbox" name="onOff" id="checkRegrasVisibilidadeEdit">
+										<i></i>
+										<span></span>
+									</label>
+								</div>
+							</div>
+
+						</div>
+
+						<div data-only-root="true">
+							<div class="row">
+								<div class="col-xs-6">
+									<div id="regrasEntregaCadastroEdit" style="display: none;">
+										<div class="row">
+											<div class="col-xs-12">
+												<h3>Regras de Entrega: </h3>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-4 form-group">
+												<label for="checkQuatidadeEdit">Por quantidade: </label><br>
+
+												<label class="custom-check">
+													<input type="checkbox" name="onOff" id="checkQuatidadeEdit">
+													<i></i>
+													<span></span>
+												</label>
+											</div>
+
+											<div class="col-xs-8 form-group">
+												<label class="control-label" for="qtdMinimaEdit">Quantidade mínima para entrega:</label>
+												<input class="form-control" type="number" required disabled min="1" step="1" id="qtdMinimaEdit">
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-xs-4 form-group">
+												<label for="checkOutrasCategoriasEdit">Precisa Pedir de outras Categorias: </label><br>
+
+												<label class="custom-check">
+													<input type="checkbox" name="onOff" id="checkOutrasCategoriasEdit">
+													<i></i>
+													<span></span>
+												</label>
+											</div>
+
+											<div class="col-xs-8 form-group">
+												<label for="outrasCategoriasEdit">Categorias: </label>
+												<select class="form-control" disabled multiple id="outrasCategoriasEdit">
+													<option value="1">Pizzas</option>
+													<option value="2">Lanches</option>
+													<option value="3">Porções</option>
+													<option value="4">Bebidas</option>
+												</select>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+								<div class="col-xs-6">
+									<div id="regrasVisibilidadeEdit" style="display: none;">
+										<h3>Restrição de Visibilidade</h3>
+
+										<div class="row">
+											<div class="col-xs-4 form-group">
+												<label for="checkVisibilidadeHorarioEdit">Por Horário: </label>
+
+												<label class="custom-check">
+													<input type="checkbox" name="onOff" id="checkVisibilidadeHorarioEdit">
+													<i></i>
+													<span></span>
+												</label>
+											</div>
+
+											<div class="col-xs-4 form-group">
+												<label for="horarioDeEdit">De:</label>
+												<input type="time" disabled required class="form-control" id="horarioDeEdit" name="horarioDe">
+											</div>
+
+											<div class="col-xs-4 form-group">
+												<label for="horarioAteEdit">Até:</label>
+												<input type="time" disabled required class="form-control" id="horarioAteEdit" name="horarioAte">
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-xs-4 form-group">
+												<label for="checkVisibilidadeDiaEdit">Dia(s) da Semana:</label>
+
+												<label class="custom-check">
+													<input type="checkbox" name="onOff" id="checkVisibilidadeDiaEdit">
+													<i></i>
+													<span></span>
+												</label>
+											</div>
+
+											<div class="col-xs-8 form-group">
+												<label for="diasDaSemanaEdit">Dias: </label>
+												<select class="form-control" disabled required multiple id="diasDaSemanaEdit">
+													<option value="0">Domingo</option>
+													<option value="1">Segunda</option>
+													<option value="2">Terça</option>
+													<option value="3">Quarta</option>
+													<option value="4">Quinta</option>
+													<option value="5">Sexta</option>
+													<option value="6">Sábado</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="cancelarEdicao" onclick="java.atual.cancelarAlteracao();" data-dismiss="modal" class="btn btn-danger">Cancelar Edição</button>
+
+						<button type="reset" class="btn btn-primary">Limpar Campos</button>
+
+						<button type="submit" class="btn btn-success">Atualizar Categoria</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal Proxima Categoria -->
+	<div class="modal fade" id="modalProximaCategoria" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<form id="formProximaCategoria">
+				<div class="modal-content">
+					<div class="modal-header text-center bg-gradient">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h1 class="modal-title" id="myModalLabel2">Proxima Categoria</h1>
+					</div>
+
+					<div class="modal-body">
+						<p style="color:red;">
+							*Ao selecionar "Para a Categoria", o usuário receberá este menu depois de fazer o pedido na categoria <span id="categoria">Lanche</span>.
+						</p>
+
+						<div class="row">
+							<div class="col-xs-6 form-group">
+								<label class="control-label" for="deCategoria">Da Categoria: </label>
+								<input class="form-control" disabled id="deCategoria" value="Lanche">
+							</div>
+
+							<div class="col-xs-6 form-group">
+								<label class="control-label" for="praCategoria">Para a Categoria: </label>
+								<select class="form-control" name="" id="praCategoria">
+									<option value="1">Bebida</option>
+									<option value="2">Pizza</option>
+									<option value="3">Porções</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success">Salvar</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- LISTA -->
+	<div class="panel">
+		<div class="panel-heading text-center">
+			<h1>Lista de Categorias</h1>
+		</div>
+
+		<div class="panel-body">
+			<div class="form-group">
+				<!-- BOTÃO MODAL NOVA CATEGORIA -->
+				<button type="button" class="btn btn-primary" onclick="java.atual.cancelarAlteracao();" data-toggle="modal" data-target="#modalCadastroCategoria">
+					Nova Categoria
+				</button>
+			</div>
+
+			<div id="categorias">
+				<ul class="list-group">
+					<li class="list-group-item cat">
+						<div class="dropdown">
+							<!-- btn drop -->
+							<span class="btn" id="drop-bebidas" data-toggle="dropdown">
+								Bebidas
+								<span class="caret"></span>
+							</span>
+
+							<span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
+
+							<!-- Drop Menu -->
+							<ul class="dropdown-menu" aria-labelledby="drop-bebidas">
+								<li class="list-group-item list-group-item-success">Produtos</li>
+								<li class="list-group-item list-group-item-info">Adicionais</li>
+								<li class="list-group-item list-group-item-primary" data-toggle="modal" data-target="#modalCadastroSubCategoria">Nova Subcategoria</li>
+								<li class="list-group-item list-group-item-info" data-toggle="modal" data-target="#modalProximaCategoria" title="Escolha para qual categoria o sistema mandará o usuario depois de fazer o pedido nesta">Proxima Categoria</li>
+								<li class="list-group-item list-group-item-success">Entrega Grátis</li>
+								<li class="list-group-item list-group-item-warning" onclick="abrirFormEdit()">Editar</li>
+								<li class="list-group-item list-group-item-danger">Remover</li>
+							</ul>
+						</div>
+
+						<ul class="list-group">
+							<li class="list-group-item">
+								<div class="dropdown">
+									<!-- btn drop -->
+									<span class="btn" id="drop-sucos" data-toggle="dropdown">
+										Sucos
+										<span class="caret"></span>
+									</span>
+
+									<span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
+
+									<label class="badge badge-entrega">
+										<span>Entrega Grátis</span>
+									</label>
+									<!-- Drop Menu -->
+									<ul class="dropdown-menu" aria-labelledby="drop-sucos">
+										<li class="list-group-item list-group-item-success">Produtos</li>
+										<li class="list-group-item list-group-item-info">Adicionais</li>
+										<li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
+										<li class="list-group-item list-group-item-danger">Remover Entrega Grátis</li>
+										<li class="list-group-item list-group-item-warning">Editar</li>
+										<li class="list-group-item list-group-item-danger">Remover</li>
+									</ul>
+								</div>
+
+								<ul class="list-group">
+									<li class="list-group-item">
+										<div class="dropdown">
+											<!-- btn drop -->
+											<span class="btn" id="drop-Naturais" data-toggle="dropdown">
+												Naturais
+												<span class="caret"></span>
+											</span>
+
+											<span class="glyphicon glyphicon-eye-close" onclick="" title="Tornar Visivel"></span>
+
+											<!-- Drop Menu -->
+											<ul class="dropdown-menu" aria-labelledby="drop-Naturais">
+												<li class="list-group-item list-group-item-success">Produtos</li>
+												<li class="list-group-item list-group-item-info">Adicionais</li>
+												<li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
+												<li class="list-group-item list-group-item-success">Entrega Grátis</li>
+												<li class="list-group-item list-group-item-warning">Editar</li>
+												<li class="list-group-item list-group-item-danger">Remover</li>
+											</ul>
+										</div>
+									</li>
+
+									<li class="list-group-item">
+										<div class="dropdown">
+											<!-- btn drop -->
+											<span class="btn" id="drop-Naturais" data-toggle="dropdown">
+												Ao Leite
+												<span class="caret"></span>
+											</span>
+
+											<span class="glyphicon glyphicon-eye-close" onclick="" title="Tornar Visivel"></span>
+
+											<!-- Drop Menu -->
+											<ul class="dropdown-menu" aria-labelledby="drop-Naturais">
+												<li class="list-group-item list-group-item-success">Produtos</li>
+												<li class="list-group-item list-group-item-info">Adicionais</li>
+												<li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
+												<li class="list-group-item list-group-item-success">Entrega Grátis</li>
+												<li class="list-group-item list-group-item-warning">Editar</li>
+												<li class="list-group-item list-group-item-danger">Remover</li>
+											</ul>
+										</div>
+									</li>
+								</ul>
+							</li>
+
+							<li class="list-group-item">
+								<div class="dropdown">
+									<!-- btn drop -->
+									<span class="btn" id="drop-Refrigerante" data-toggle="dropdown">
+										Refrigerante
+										<span class="caret"></span>
+									</span>
+
+									<span class="glyphicon glyphicon-eye-open" onclick="" title="Tornar Invisivel"></span>
+
+									<!-- Drop Menu -->
+									<ul class="dropdown-menu" aria-labelledby="drop-Refrigerante">
+										<li class="list-group-item list-group-item-success">Produtos</li>
+										<li class="list-group-item list-group-item-info">Adicionais</li>
+										<li class="list-group-item list-group-item-primary">Nova Subcategoria</li>
+										<li class="list-group-item list-group-item-success">Entrega Grátis</li>
+										<li class="list-group-item list-group-item-warning">Editar</li>
+										<li class="list-group-item list-group-item-danger">Remover</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+	<script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		//Cadastrar Categoria
+		$("#cadastrarCategoria").submit(function(event) {
+			event.preventDefault();
+			var categoria = {
+				nome: $("#nome").val(),
+				exemplosComentario: $("#exemplosComentario").val(),
+				fazEntrega: $("#checkFazEntrega").is(":checked"),
+				qtdMinEntrega: $('#checkQuatidade').is(":checked") ? parseInt($("#qtdMinima").val()) : 1,
+				ordemExibicao: parseInt($("#ordemExibicao").val()),
+				outrasCategorias: $("#checkOutrasCategorias").is(":checked") ? $("#outrasCategorias").val() : [],
+				precisaPedirOutraCategoria: $("#checkOutrasCategorias").is(":checked"),
+				temRegrasVisibilidade: $("#checkRegrasVisibilidade").is(":checked"),
+				temRegraVisibilidadeHorario: $("#checkVisibilidadeHorario").is(":checked"),
+				temRegraVisibilidadeDia: $("#checkVisibilidadeDia").is(":checked"),
+				horariosRegraVisibilidade: $("#checkRegrasVisibilidade").is(":checked") ? {
+					horarioDe: $("#horarioDe").val(),
+					horarioAte: $("#horarioAte").val()
+				} : {},
+				diasRegraVisibilidade: $("#checkVisibilidadeDia").is(":checked") ? $("#diasDaSemana").val() : []
+			};
+			var resultado = java.atual.realizarCadastro(categoria);
+			if (resultado === true) {
+				$(this)[0].reset();
+			}
+		});
+
+		$('#cadastrarCategoria').on('reset', function(e) {
+			$("#nome").focus();
+			$("#cadastrarCategoria").find("input").trigger('change');
+		});
+
+		//Editar Categoria
+		$("#form-editar-cat").submit(function(event) {
+			event.preventDefault();
+			var categoria = {
+				nome: $("#nomeAlterarCategoria").val(),
+				exemplosComentario: $("#exemplosComentarioAlterar").val(),
+				fazEntrega: $("#checkFazEntregaEdit").is(":checked"),
+				qtdMinEntrega: $('#checkQuatidadeEdit').is(":checked") ? parseInt($("#qtdMinimaEdit").val()) : 1,
+				ordemExibicao: parseInt($("#ordemExibicaoEdit").val()),
+				outrasCategorias: $("#checkOutrasCategoriasEdit").is(":checked") ? $("#outrasCategoriasEdit").val() : [],
+				precisaPedirOutraCategoria: $("#checkOutrasCategoriasEdit").is(":checked"),
+				temRegrasVisibilidade: $("#checkRegrasVisibilidadeEdit").is(":checked"),
+				temRegraVisibilidadeHorario: $("#checkVisibilidadeHorarioEdit").is(":checked"),
+				temRegraVisibilidadeDia: $("#checkVisibilidadeDiaEdit").is(":checked"),
+				horariosRegraVisibilidade: $("#checkRegrasVisibilidadeEdit").is(":checked") ? {
+					horarioDe: $("#horarioDeEdit").val(),
+					horarioAte: $("#horarioAteEdit").val()
+				} : {},
+				diasRegraVisibilidade: $("#checkVisibilidadeDiaEdit").is(":checked") ? $("#diasDaSemanaEdit").val() : []
+			};
+			var resultado = java.atual.realizarCadastro(categoria);
+			if (resultado === true) {
+				$(this)[0].reset();
+			}
+		});
+
+		$('#form-editar-cat').on('reset', function(e) {
+			$("#nomeAlterarCategoria").focus();
+			$("#form-editar-cat").find("input").trigger('change');
+		});
+
+		//Cadastrar Subcategoria
+		$("#cadastrarSubcategoria").submit(function(event) {
+			event.preventDefault();
+			var categoria = {
+				nome: $("#nomeSubCat").val(),
+				exemplosComentario: $("#exemplosComentarioSubCat").val(),
+				fazEntrega: $("#checkFazEntregaSubCat").is(":checked")
+			};
+			var resultado = java.atual.realizarCadastroSub(categoria);
+			if (resultado === true) {
+				$(this)[0].reset();
+			}
+		});
+
+		$('#cadastrarSubcategoria').on('reset', function(e) {
+			$("#nomeAlterarCategoria").focus();
+		});
+
+		//-----------------//
+		//(Regra de Entrega) (Cadastro)
+
+		//Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Cadastro)
+		$("#checkFazEntrega").change(e => {
+			if ($("#checkFazEntrega").is(":checked")) {
+				$("#regrasEntregaCadastro").slideDown();
+			} else {
+				$("#regrasEntregaCadastro").slideUp();
+			}
+		});
+
+		//Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Cadastro)
+		$('#checkQuatidade').change(function(event) {
+			$('#qtdMinima').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//Habilita/Desabilita campo de outras categorias (Regra de Entrega) (Cadastro)
+		$('#checkOutrasCategorias').change(function(event) {
+			$('#outrasCategorias').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//-----------------//
+		//(Regra de Visibilidade) (Cadastro)
+
+		//Mostra/Esconde campos de regras de visibilidade (Regra de Visibilidade) (Cadastro)
+		$("#checkRegrasVisibilidade").change(e => {
+			if ($("#checkRegrasVisibilidade").is(":checked")) {
+				$("#regrasVisibilidade").slideDown();
+			} else {
+				$("#regrasVisibilidade").slideUp();
+			}
+		});
+
+		//Habilida/Desabilita campos de horario (Regra de Visibilidade) (Cadastro)
+		$('#checkVisibilidadeHorario').change(function(event) {
+			$('#horarioDe').prop("disabled", !$(this).is(":checked"));
+			$('#horarioAte').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//Habilida/Desabilita campo de dias (Regra de Visibilidade) (Cadastro)
+		$('#checkVisibilidadeDia').change(function(event) {
+			$('#diasDaSemana').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//-----------------//
+		//(Regra de Entrega) (Edit)
+
+		//Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Edit)
+		$("#checkFazEntregaEdit").change(e => {
+			if ($("#checkFazEntregaEdit").is(":checked")) {
+				$("#regrasEntregaCadastroEdit").slideDown();
+			} else {
+				$("#regrasEntregaCadastroEdit").slideUp();
+			}
+		});
+
+		//Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Edit)
+		$('#checkQuatidadeEdit').change(function(event) {
+			$('#qtdMinimaEdit').prop("disabled", !$(this).is(":checked"));
+		});
+
+
+
+		//Habilita/Desabilita campo de outras categorias (Regra de Entrega) (Edit)
+		$('#checkOutrasCategoriasEdit').change(function(event) {
+			$('#outrasCategoriasEdit').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//-----------------//
+		//(Regra de Visibilidade) (Edit)
+
+		//Mostra/Esconde campos de regras de visibilidade (Regra de Visibilidade) (Edit)
+		$("#checkRegrasVisibilidadeEdit").change(e => {
+			if ($("#checkRegrasVisibilidadeEdit").is(":checked")) {
+				$("#regrasVisibilidadeEdit").slideDown();
+			} else {
+				$("#regrasVisibilidadeEdit").slideUp();
+			}
+		});
+
+		//Habilida/Desabilita campos de horario (Regra de Visibilidade) (Edit)
+		$('#checkVisibilidadeHorarioEdit').change(function(event) {
+			$('#horarioDeEdit').prop("disabled", !$(this).is(":checked"));
+			$('#horarioAteEdit').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//Habilida/Desabilita campo de dias (Regra de Visibilidade) (Edit)
+		$('#checkVisibilidadeDiaEdit').change(function(event) {
+			$('#diasDaSemanaEdit').prop("disabled", !$(this).is(":checked"));
+		});
+
+		//-----------------//
+
+		//Mostra/Esconde campos de regras de entrega (Regra de Entrega) (Subcategoria)
+		$("#checkFazEntregaSubCat").change(e => {
+			if ($("#checkFazEntregaSubCat").is(":checked")) {
+				$("#regrasEntregaCadastroSubCat").slideDown();
+			} else {
+				$("#regrasEntregaCadastroSubCat").slideUp();
+			}
+		});
+
+
+		//Habilida/Desabilita campo do quantiadade minima (Regra de Entrega) (Subcategoria)
+		$('#checkQuatidadeSubCat').change(function(event) {
+			$('#qtdMinimaSubCat').prop("disabled", !$(this).is(":checked"));
+		});
+
+	</script>
+
+	<script type="text/javascript">
+		function drop() {
+			$(document).on("shown.bs.dropdown", ".dropdown", function() {
+				// calculate the required sizes, spaces
+				var $ul = $(this).children(".dropdown-menu");
+				var $button = $(this).children(".dropdown-toggle");
+				var ulOffset = $ul.offset();
+				// how much space would be left on the top if the dropdown opened that direction
+				var spaceUp = (ulOffset.top - $button.height() - $ul.height()) - $(window).scrollTop();
+				// how much space is left at the bottom
+				var spaceDown = $(window).scrollTop() + $(window).height() - (ulOffset.top + $ul.height());
+				// switch to dropup only if there is no space at the bottom AND there is space at the top, or there isn't either but it would be still better fit
+				if (spaceDown < 0 && (spaceUp >= 0 || spaceUp > spaceDown))
+					$(this).addClass("dropup");
+			}).on("hidden.bs.dropdown", ".dropdown", function() {
+				// always reset after close
+				$(this).removeClass("dropup");
+			});
+		}
+
+		var callback = function(mutationsList) {
+			drop();
+		};
+		var config = {
+			attributes: true,
+			childList: true,
+			subtree: true
+		};
+		var targetNode = document.getElementById('categorias');
+		var observer = new MutationObserver(callback);
+		observer.observe(targetNode, config);
+
+	</script>
+</body>
 
 </html>
