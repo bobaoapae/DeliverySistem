@@ -37,16 +37,12 @@ public class CheckForUpdate {
                 return;
             }
             File versionCheck = new File("update.txt");
-            File fileUpdate = new File("update.zip");
-            if (fileUpdate.exists()) {
-                fileUpdate.delete();
-            }
             if (!versionCheck.exists()) {
                 doUpdate(url);
                 return;
             }
             String hashLocal = new String(Files.readAllBytes(Paths.get("update.txt")));
-            String hashExterna = getText(url + "index.php");
+            String hashExterna = getText(url + "hash.php");
             if (hashExterna.isEmpty()) {
                 return;
             }

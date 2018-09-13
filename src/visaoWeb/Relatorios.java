@@ -337,7 +337,7 @@ public class Relatorios extends JDialog {
                 double valor = 0;
                 for (Pedido p : pedidosPorMes.get(meses.get(x).getAsString())) {
                     if (p.isEntrega()) {
-                        valor += p.getTotal();
+                        valor += p.getTotal()+p.getPgCreditos();
                     }
                 }
                 valores.add(new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).floatValue());
@@ -353,7 +353,7 @@ public class Relatorios extends JDialog {
                 double valor = 0;
                 for (Pedido p : pedidosPorMes.get(meses.get(x).getAsString())) {
                     if (!p.isEntrega()) {
-                        valor += p.getTotal();
+                        valor += p.getTotal()+p.getPgCreditos();
                     }
                 }
                 valores.add(new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).floatValue());
@@ -368,7 +368,7 @@ public class Relatorios extends JDialog {
             for (int x = 0; x < meses.size(); x++) {
                 double valor = 0;
                 for (Pedido p : pedidosPorMes.get(meses.get(x).getAsString())) {
-                    valor += p.getTotal();
+                        valor += p.getTotal()+p.getPgCreditos();
                 }
                 valores.add(new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).floatValue());
             }

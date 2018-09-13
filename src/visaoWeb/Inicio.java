@@ -381,6 +381,7 @@ public class Inicio extends JFrame {
         browser.executeJavaScript("window.java = {};");
         JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
         window.asObject().setProperty("atual", this);
+        window.asObject().setProperty("Configuracoes", new Configuracoes(this));
         window.asObject().setProperty("Relatorios", new Relatorios());
         window.asObject().setProperty("Combos", new GerenciadorCombos());
         window.asObject().setProperty("Rodizios", new Rodizios());
@@ -1165,6 +1166,7 @@ public class Inicio extends JFrame {
                 driver.getBrowser().dispose();
                 this.dispose();
                 Inicio.main(null);
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1174,7 +1176,7 @@ public class Inicio extends JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Carregar Configuração">
-    private void loadConfig() {
+    public void loadConfig() {
         Configuracao.setInstance(ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).pesquisarPorCodigo(1));
         this.setTitle(Configuracao.getInstance().getNomeEstabelecimento());
         if (Configuracao.getInstance().getImg() != null && !Configuracao.getInstance().getImg().isEmpty()) {

@@ -164,12 +164,13 @@ public class GerenciadorProdutosCategoria extends JDialog {
         }
         browser.executeJavaScript("$(\"#nome\").focus()");
         browser.executeJavaScript("$(\"#cadastroProduto\").find(\"input\").trigger('change');");
+        botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class") + "hide");
     }
 
     public void cancelarAlteracao() {
         this.produtoAlterando = null;
         DOMElement botaoCancelar = browser.getDocument().findElement(By.id("cancelarEdicao"));
-        botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class") + "hide");
+        botaoCancelar.setAttribute("class", botaoCancelar.getAttribute("class").replaceAll("hide", ""));
     }
 
     private void addProduto(DOMElement table, Produto p) {
@@ -316,7 +317,7 @@ public class GerenciadorProdutosCategoria extends JDialog {
             Produto l = new Produto();
             if (produtoAlterando != null) {
                 l = produtoAlterando;
-                if(l.getValor()!=object.getProperty("valor").asNumber().getDouble()){
+                if (l.getValor() != object.getProperty("valor").asNumber().getDouble()) {
                     categoriaAtual.getProdutosCategoria().remove(l);
                     l = new Produto();
                     l.setAdicionaisDisponiveis(produtoAlterando.getAdicionaisDisponiveis());
