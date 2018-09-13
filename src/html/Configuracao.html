@@ -1,342 +1,378 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
-
-        <!-- Bootstrap -->
-        <link rel="stylesheet" href="assets/bootstrap-3.3.7/css/bootstrap.min.css">
-
-        <link rel="stylesheet" href="assets/css/estilo.css">
-        <link rel="stylesheet" href="assets/css/toggle.css">
-
-        <link rel="stylesheet" href="assets/css/bootstrap-multiselect.css">
-
-        <link rel="stylesheet" href="assets/css/style-conf.css">
-
-        <style>
-            h4 {
-                border-bottom: 1px solid #f3f3f3;
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="panel">
-            <div class="panel-heading text-center">
-                <h1>Configurações do Sistema</h1>
-            </div>
-
-            <div class="panel-body" id="content">
-
-                <form id="cadastroConfig" class="registration-form">
-
-                    <!-- Configurações Iniciais -->
-                    <fieldset>
-                        <div class="row">
-                            <div class="col-xs-12 form-group">
-                                <h2>Passo 1 / 4</h2>
-                                <h4>Configurações Iniciais</h4>
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="nomeEstabelecimento">Nome do estabelecimento:</label>
-                                <input class="form-control" autofocus required id="nomeEstabelecimento" type="text">
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="nomeBot">Nome do Bot:</label>
-                                <input class="form-control" required id="nomeBot" type="text">
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label for="checkNumSuporte">Deseja adicionar um número para suporte?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkNumSuporte" id="checkNumSuporte"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="numSuporte">Número para suporte:</label>
-                                <input class="form-control" data-mask="(00) 0 0000-0000" required id="numSuporte" type="text" disabled>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-xs-6 form-group">
-                                <label for="checkImpressora">Impressão de pedidos?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkImpressora" id="checkImpressora"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="nomeImpressora">Nome da Impressora:</label>
-                                <input class="form-control" type="text" value=" " required disabled id="nomeImpressora">
-                            </div>
-
-                            <div class="col-xs-12 form-group">
-                                <label for="inputFile">Selecione uma logo para o sistema:</label>
-                                <input class="btn btn-primary" type="file" id="inputFile">
-                            </div>
-
-                            <div class="col-xs-12 form-group text-center">
-                                <button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
-                            </div>
-                        </div>
-                    </fieldset>
-
-
-                    <!-- Pedidos -->
-                    <fieldset>
-                        <div class="row" id="tabs-2">
-                            <div class="col-xs-12 form-group">
-                                <h2>Passo 2 / 4</h2>
-                                <h4>Configurações de Pedidos</h4>
-                            </div>
-
-
-                            <div class="col-xs-3 form-group">
-                                <label for="checkAgendamento">Permitir agendamento de pedidos?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkAgendamento" id="checkAgendamento"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-3 form-group">
-                                <label for="checkAbrirPedidos">Abrir e Fechar os pedidos automaticamente?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkAbrirPedidos" id="checkAbrirPedidos"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-3 form-group">
-                                <label class="control-label" for="horarioInicioPedidos">Em qual horário os pedidos devem abrir?</label>
-                                <input class="form-control" required disabled type="time" id="horarioInicioPedidos">
-                            </div>
-
-                            <div class="col-xs-3 form-group">
-                                <label class="control-label" for="horarioFimPedidos">Em qual horário os pedidos devem fechar?</label>
-                                <input class="form-control" required disabled type="time" id="horarioFimPedidos">
-                            </div>
-
-
-
-                            <div class="col-xs-12 form-group text-center">
-                                <button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
-                                <button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
-                            </div>
-
-                        </div>
-                    </fieldset>
-
-
-
-                    <!-- Selos de Fidelidade -->
-                    <fieldset>
-                        <div class="row" id="tabs-2">
-                            <div class="col-xs-12 form-group">
-                                <h2>Passo 3 / 4</h2>
-                                <h4>Configurações de Selos de Fidelidade</h4>
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="valorSelo">Valor mínimo para ganhar os selos de fidelidade (R$):</label>
-                                <input class="form-control" value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valorSelo">
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="selosCompra">Quantidade máxima de selos por pedido:</label>
-                                <input class="form-control" required type="number" min="0" id="selosCompra">
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label for="checkExpirarSelos">Os selos expiram com o tempo?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkExpirarSelos" id="checkExpirarSelos"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-6 form-group">
-                                <label class="control-label" for="validadeSelo">Em quantos dias os selos devem expirar?:</label>
-                                <input class="form-control" required disabled type="number" min="1" id="validadeSelo">
-                            </div>
-
-                            <div class="col-xs-12 form-group text-center">
-                                <button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
-                                <button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
-                            </div>
-
-                        </div>
-                    </fieldset>
-
-                    <!-- Reservas -->
-                    <fieldset>
-                        <div class="row" id="tabs-3">
-                            <div class="col-xs-12 form-group">
-                                <h2>Passo 4 / 4</h2>
-                                <h4>Configurações de Reservas</h4>
-                            </div>
-
-                            <div class="col-xs-4 form-group">
-                                <label for="checkAceitaReservas">Aceita reservas?</label><br>
-
-                                <label class="custom-check">
-                                    <input type="checkbox" name="checkAceitaReservas" id="checkAceitaReservas"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-4 form-group">
-                                <label for="checkReservasComPedidoFechados">Aceitar reservas com os pedidos fechados?</label><br>
-                                <label class="custom-check">
-                                    <input type="checkbox" disabled name="checkReservasComPedidoFechados" id="checkReservasComPedidoFechados"/>
-                                    <i></i> 
-                                    <span></span>
-                                </label>
-                            </div>
-
-                            <div class="col-xs-4 form-group">
-                                <label class="control-label" for="horarioInicioReservas">Qual o horário de início das reservas?</label>
-                                <input class="form-control" required disabled type="time" id="horarioInicioReservas">
-                            </div>
-                        </div>
-
-                        <div class="col-xs-12 form-group text-center">
-                            <button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
-                            <button type="submit" class="btn btn-success btn-lg">Concluir</button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
-        </div>
-
-        <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
-        <script src="assets/js/jquery-3.3.1.min.js"></script>
-        <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
-        <script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-
-        <script src="assets/js/bootstrap-multiselect.js"></script>
-
-        <!-- Initialize the plugin: -->
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#dias-rodizio').multiselect();
-            });
-        </script>
-
-        <script src="assets/js/scripts-conf.js"></script>
-
-        <script src="assets/js/jquery.mask.js"></script>
-        <script src="assets/js/jquery.maskMoney.js"></script>
-
-
-        <script type="text/javascript">
-            $('#valorSelo').maskMoney();
-            $('#valorSelo').maskMoney('mask', 0);
-
-
-            $('#checkAceitaReservas').change(function (event) {
-                $('#checkReservasComPedidoFechados').prop("disabled", !$(this).is(":checked"));
-                $('#horarioInicioReservas').prop("disabled", !$(this).is(":checked"));
-                $('#checkReservasComPedidoFechados').prop("checked", false);
-            });
-
-
-            $('#checkExpirarSelos').change(function (event) {
-                $('#validadeSelo').prop("disabled", !$(this).is(":checked"));
-            });
-
-            $('#checkNumSuporte').change(function (event) {
-                $('#numSuporte').prop("disabled", !$(this).is(":checked"));
-            });
-
-
-            $('#checkAbrirPedidos').change(function (event) {
-                $('#horarioInicioPedidos').prop("disabled", !$(this).is(":checked"));
-                $('#horarioFimPedidos').prop("disabled", !$(this).is(":checked"));
-            });
-
-            $('#checkRodizio').change(function (event) {
-                $('.multiselect').prop("disabled", !$(this).is(":checked")); //$( "p" ).removeClass( "myClass yourClass" )
-                $('.multiselect').toggleClass("disabled", !$(this).is(":checked"));
-                $('#dias-rodizio').prop("disabled", !$(this).is(":checked")); //$( "p" ).removeClass( "myClass yourClass" )
-
-
-            });
-
-
-            $('#checkImpressora').change(function (event) {
-                $('#nomeImpressora').prop("disabled", !$(this).is(":checked"));
-                $('#nomeImpressora').attr("value", "");
-            });
-
-
-            $("#cadastroConfig").submit(function (event) {
-                event.preventDefault();
-                var next = true;
-                $(this).find('input[type="text"], input[type="password"], input[type="number"],input[type="time"], select, textarea').each(function () {
-                    if ($(this).val() == "" && !$(this).is(":disabled")) {
-                        console.log($(this));
-                        $(this).addClass('input-error');
-                        next = false;
-                    } else {
-                        $(this).removeClass('input-error');
-                    }
-                });
-                if (!next) {
-                    return;
-                }
-                var config = {
-                    nomeEstabelecimento: $("#nomeEstabelecimento").val(),
-                    nomeBot: $("#nomeBot").val(),
-                    valorSelo: $("#valorSelo").maskMoney('unmasked')[0],
-                    selosCompra: parseInt($('#selosCompra').val()),
-                    impressao: $("#checkImpressora").is(":checked"),
-                    nomeImpressora: $("#nomeImpressora").val(),
-                    validadeSelo: $("#checkExpirarSelos").is(":checked") ? parseInt($('#validadeSelo').val()) : -1,
-                    aceitaReservas: $("#checkAceitaReservas").is(":checked"),
-                    aceitaReservasComPedidosFechados: $("#checkReservasComPedidoFechados").is(":checked"),
-                    numSuporte: $("#numSuporte").val(),
-                    horarioInicioReservas: $("#horarioInicioReservas").val(),
-                    horarioInicioPedidos: $("#horarioInicioPedidos").val(),
-                    horarioFimPedidos: $("#horarioFimPedidos").val(),
-                    checkAbrirPedidos: $("#checkAbrirPedidos").is(":checked"),
-                    checkAgendamento: $("#checkAgendamento").is(":checked")
-                };
-                var resultado = java.atual.saveConfig(config);
-                if (resultado === true) {
-                    $(this)[0].reset();
-                }
-            });
-
-
-            $('#cadastroConfig').on('reset', function (e) {
-                $("#nomeEstabelecimento").focus();
-            });
-        </script>
-    </body>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- As 3 meta tags acima *devem* vir em primeiro lugar dentro do `head`; qualquer outro conteúdo deve vir *após* essas tags -->
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="assets/bootstrap-3.3.7/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="assets/css/estilo.css">
+	<link rel="stylesheet" href="assets/css/toggle.css">
+
+	<link rel="stylesheet" href="assets/css/bootstrap-multiselect.css">
+
+	<link rel="stylesheet" href="assets/css/style-conf.css">
+
+	<style>
+		body {
+			background-color: #FFF;
+		}
+
+		h4 {
+			border-bottom: 1px solid #f3f3f3;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="panel">
+		<div class="panel-heading text-center">
+			<h1>Configurações do Sistema</h1>
+		</div>
+
+		<div class="panel-body" id="content">
+
+			<form id="cadastroConfig" class="registration-form">
+
+				<!-- Configurações Iniciais -->
+				<fieldset>
+					<div class="row">
+						<div class="col-xs-12 form-group">
+							<h2>Passo 1 / 4</h2>
+							<h4>Configurações Iniciais</h4>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="nomeEstabelecimento">Nome do estabelecimento:</label>
+							<input class="form-control" autofocus required id="nomeEstabelecimento" type="text" />
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="nomeBot">Nome do Bot:</label>
+							<input class="form-control" required id="nomeBot" type="text" />
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label for="checkNumSuporte">Deseja adicionar um número para suporte?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkNumSuporte" id="checkNumSuporte" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="numSuporte">Número para suporte:</label>
+							<input class="form-control" data-mask="(00) 0 0000-0000" required id="numSuporte" type="text" disabled />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-6 form-group">
+							<label for="checkImpressora">Impressão de pedidos?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkImpressora" id="checkImpressora" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="nomeImpressora">Nome da Impressora:</label>
+							<input class="form-control" type="text" value=" " required disabled id="nomeImpressora" />
+						</div>
+
+						<div class="col-xs-12 form-group">
+							<label for="inputFile">Selecione uma logo para o sistema:</label>
+							<input class="btn btn-primary" type="file" id="inputFile" />
+						</div>
+
+						<div class="col-xs-12 form-group text-center">
+							<button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
+						</div>
+					</div>
+				</fieldset>
+
+
+				<!-- Pedidos -->
+				<fieldset>
+					<div class="row">
+						<div class="col-xs-12 form-group">
+							<h2>Passo 2 / 4</h2>
+							<h4>Configurações de Pedidos</h4>
+						</div>
+
+						<div class="col-xs-3 form-group">
+							<label for="checkAgendamento">Permitir agendamento de pedidos?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkAgendamento" id="checkAgendamento" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-3 form-group">
+							<label for="checkAbrirPedidos">Abrir e Fechar os pedidos automaticamente?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkAbrirPedidos" id="checkAbrirPedidos" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-3 form-group">
+							<label class="control-label" for="horarioInicioPedidos">Em qual horário os pedidos devem abrir?</label>
+							<input class="form-control" required disabled type="time" id="horarioInicioPedidos" />
+						</div>
+
+						<div class="col-xs-3 form-group">
+							<label class="control-label" for="horarioFimPedidos">Em qual horário os pedidos devem fechar?</label>
+							<input class="form-control" required disabled type="time" id="horarioFimPedidos" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-3 form-group">
+							<label for="checkEntegaFixa">Taxa de entrega fixa?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkEntegaFixa" id="checkEntegaFixa" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-3 form-group">
+							<label for="checkEntregaKM">Taxa de entrega por distância (Km)?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkEntregaKM" id="checkEntregaKM" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="valorTaxaEntrega">Valor da taxa de entrega (R$):</label>
+							<input class="form-control" disabled value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valorTaxaEntrega" />
+						</div>
+					</div>
+
+					<div class="col-xs-12 form-group text-center">
+						<button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
+						<button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
+					</div>
+				</fieldset>
+
+
+
+				<!-- Selos de Fidelidade -->
+				<fieldset>
+					<div class="row">
+						<div class="col-xs-12 form-group">
+							<h2>Passo 3 / 4</h2>
+							<h4>Configurações de Selos de Fidelidade</h4>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="valorSelo">Valor mínimo para ganhar os selos de fidelidade (R$):</label>
+							<input class="form-control" value="0,00" data-allow-zero="true" data-allow-empty="false" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," required type="text" id="valorSelo" />
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="selosCompra">Quantidade máxima de selos por pedido:</label>
+							<input class="form-control" required type="number" min="0" id="selosCompra" />
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label for="checkExpirarSelos">Os selos expiram com o tempo?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkExpirarSelos" id="checkExpirarSelos" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-6 form-group">
+							<label class="control-label" for="validadeSelo">Em quantos dias os selos devem expirar?:</label>
+							<input class="form-control" required disabled type="number" min="1" id="validadeSelo" />
+						</div>
+
+						<div class="col-xs-12 form-group text-center">
+							<button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
+							<button type="button" class="btn btn-success btn-lg btn-next">Proximo</button>
+						</div>
+
+					</div>
+				</fieldset>
+
+				<!-- Reservas -->
+				<fieldset>
+					<div class="row" id="tabs-3">
+						<div class="col-xs-12 form-group">
+							<h2>Passo 4 / 4</h2>
+							<h4>Configurações de Reservas</h4>
+						</div>
+
+						<div class="col-xs-4 form-group">
+							<label for="checkAceitaReservas">Aceita reservas?</label><br>
+
+							<label class="custom-check">
+								<input type="checkbox" name="checkAceitaReservas" id="checkAceitaReservas" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-4 form-group">
+							<label for="checkReservasComPedidoFechados">Aceitar reservas com os pedidos fechados?</label><br>
+							<label class="custom-check">
+								<input type="checkbox" disabled name="checkReservasComPedidoFechados" id="checkReservasComPedidoFechados" />
+								<i></i>
+								<span></span>
+							</label>
+						</div>
+
+						<div class="col-xs-4 form-group">
+							<label class="control-label" for="horarioInicioReservas">Qual o horário de início das reservas?</label>
+							<input class="form-control" required disabled type="time" id="horarioInicioReservas" />
+						</div>
+					</div>
+
+					<div class="col-xs-12 form-group text-center">
+						<button type="button" class="btn btn-info btn-lg btn-previous">Voltar</button>
+						<button type="submit" class="btn btn-success btn-lg">Concluir</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+
+	</div>
+
+	<!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
+	<script src="assets/js/jquery-3.3.1.min.js"></script>
+	<!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
+	<script src="assets/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+	<script src="assets/js/bootstrap-multiselect.js"></script>
+
+	<!-- Initialize the plugin: -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#dias-rodizio').multiselect();
+		});
+
+	</script>
+
+	<script src="assets/js/scripts-conf.js"></script>
+
+	<script src="assets/js/jquery.mask.js"></script>
+	<script src="assets/js/jquery.maskMoney.js"></script>
+
+
+	<script type="text/javascript">
+		/* Configurações Iniciais */
+
+		$('#checkNumSuporte').change(function(event) {
+			$('#numSuporte').prop("disabled", !$(this).is(":checked"));
+		});
+
+		$('#checkImpressora').change(function(event) {
+			$('#nomeImpressora').prop("disabled", !$(this).is(":checked"));
+			$('#nomeImpressora').attr("value", "");
+		});
+
+		$('#cadastroConfig').on('reset', function(e) {
+			$("#nomeEstabelecimento").focus();
+		});
+
+		/* Configurações de Pedidos */
+
+		$('#checkAbrirPedidos').change(function(event) {
+			$('#horarioInicioPedidos').prop("disabled", !$(this).is(":checked"));
+			$('#horarioFimPedidos').prop("disabled", !$(this).is(":checked"));
+		});
+
+		$('#checkEntegaFixa').change(function(event) {
+			$('#valorTaxaEntrega').prop("disabled", !$(this).is(":checked"));
+			$('#checkEntregaKM').prop("checked", false);
+		});
+
+		$('#checkEntregaKM').change(function(event) {
+			$('#valorTaxaEntrega').prop("disabled", !$(this).is(":checked"));
+			$('#checkEntegaFixa').prop("checked", false);
+		});
+
+		$('#valorTaxaEntrega').maskMoney();
+		$('#valorTaxaEntrega').maskMoney('mask', 0);
+
+		/* Configurações de Selos de Fidelidade */
+
+		$('#valorSelo').maskMoney();
+		$('#valorSelo').maskMoney('mask', 0);
+
+		$('#checkExpirarSelos').change(function(event) {
+			$('#validadeSelo').prop("disabled", !$(this).is(":checked"));
+		});
+
+		/* Configurações de Reservas */
+
+		$('#checkAceitaReservas').change(function(event) {
+			$('#checkReservasComPedidoFechados').prop("disabled", !$(this).is(":checked"));
+			$('#horarioInicioReservas').prop("disabled", !$(this).is(":checked"));
+			$('#checkReservasComPedidoFechados').prop("checked", false);
+		});
+
+		/* Envio dos dados */
+
+		$("#cadastroConfig").submit(function(event) {
+			event.preventDefault();
+			var next = true;
+			$(this).find('input[type="text"], input[type="password"], input[type="number"],input[type="time"], select, textarea').each(function() {
+				if ($(this).val() == "" && !$(this).is(":disabled")) {
+					console.log($(this));
+					$(this).addClass('input-error');
+					next = false;
+				} else {
+					$(this).removeClass('input-error');
+				}
+			});
+			if (!next) {
+				return;
+			}
+			var config = {
+				nomeEstabelecimento: $("#nomeEstabelecimento").val(),
+				nomeBot: $("#nomeBot").val(),
+				valorSelo: $("#valorSelo").maskMoney('unmasked')[0],
+				selosCompra: parseInt($('#selosCompra').val()),
+				impressao: $("#checkImpressora").is(":checked"),
+				nomeImpressora: $("#nomeImpressora").val(),
+				validadeSelo: $("#checkExpirarSelos").is(":checked") ? parseInt($('#validadeSelo').val()) : -1,
+				aceitaReservas: $("#checkAceitaReservas").is(":checked"),
+				aceitaReservasComPedidosFechados: $("#checkReservasComPedidoFechados").is(":checked"),
+				numSuporte: $("#numSuporte").val(),
+				horarioInicioReservas: $("#horarioInicioReservas").val(),
+				horarioInicioPedidos: $("#horarioInicioPedidos").val(),
+				horarioFimPedidos: $("#horarioFimPedidos").val(),
+				checkAbrirPedidos: $("#checkAbrirPedidos").is(":checked"),
+				checkAgendamento: $("#checkAgendamento").is(":checked")
+			};
+			var resultado = java.atual.saveConfig(config);
+			if (resultado === true) {
+				$(this)[0].reset();
+			}
+		});
+
+	</script>
+</body>
 
 </html>

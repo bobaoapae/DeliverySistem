@@ -16,6 +16,7 @@ span.btn {
     font-size: 20px;
     cursor: pointer;
     vertical-align: middle;
+	margin-right: 15px;
 }
 
 .glyphicon-eye-close {
@@ -34,7 +35,10 @@ span.btn {
     color: black;
 }
 
-
+label.badge-entrega {
+	margin: 0;
+	background-color: #5cb85c;
+}
 
 /*DROPMENU*/
 
