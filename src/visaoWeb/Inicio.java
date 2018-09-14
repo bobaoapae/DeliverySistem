@@ -182,8 +182,8 @@ public class Inicio extends JFrame {
 //</editor-fold>
         initWpp();
         criarConfiguracoesBanco();
-        if(!ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).isEmpty() && ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).pesquisarPorCodigo(1) == null){
-            for(Configuracao c :ControleConfiguracao.getInstance(Db4oGenerico.getInstance("banco")).carregarTodos()){
+        if (!ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).isEmpty() && ControleConfiguracao.getInstance(Db4oGenerico.getInstance("config")).pesquisarPorCodigo(1) == null) {
+            for (Configuracao c : ControleConfiguracao.getInstance(Db4oGenerico.getInstance("banco")).carregarTodos()) {
                 try {
                     ControleConfiguracao.getInstance(Db4oGenerico.getInstance("banco")).excluir(c);
                 } catch (Exception ex) {
@@ -466,6 +466,14 @@ public class Inicio extends JFrame {
         browser.executeJavaScript("window.java = {};");
         JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
         window.asObject().setProperty("atual", this);
+        DOMElement impressorasSelect = browser.getDocument().findElement(By.id("nomeImpressora"));
+        impressorasSelect.setInnerText("");
+        for (String impressora : ControleImpressao.getInstance().getImpressoras()) {
+            DOMElement option = browser.getDocument().createElement("option");
+            option.setAttribute("value", impressora);
+            option.setTextContent(impressora);
+            impressorasSelect.appendChild(option);
+        }
     }
 //</editor-fold>
 

@@ -11,9 +11,11 @@ import com.teamdev.jxbrowser.chromium.Callback;
 import com.teamdev.jxbrowser.chromium.JSObject;
 import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.dom.By;
+import com.teamdev.jxbrowser.chromium.dom.DOMElement;
 import com.teamdev.jxbrowser.chromium.dom.DOMInputElement;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import controle.ControleConfiguracao;
+import controle.ControleImpressao;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -87,6 +89,14 @@ public class Configuracoes extends JDialog {
         browser.executeJavaScript("window.java = {};");
         JSValue window = browser.executeJavaScriptAndReturnValue("window.java");
         window.asObject().setProperty("atual", this);
+        DOMElement impressorasSelect = browser.getDocument().findElement(By.id("nomeImpressora"));
+        impressorasSelect.setInnerText("");
+        for(String impressora:ControleImpressao.getInstance().getImpressoras()){
+            DOMElement option = browser.getDocument().createElement("option");
+            option.setAttribute("value", impressora);
+            option.setTextContent(impressora);
+            impressorasSelect.appendChild(option);
+        }
         this.setVisible(true);
     }
 

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
 import javax.print.PrintService;
@@ -436,6 +437,16 @@ public class ControleImpressao {
             }
         }
         return null;
+    }
+
+    public List<String> getImpressoras() {
+        List<String> impressoras = new ArrayList<>();
+        PrintService[] ps = PrintServiceLookup.lookupPrintServices(
+                DocFlavor.INPUT_STREAM.AUTOSENSE, null);
+        for (PrintService p : ps) {
+            impressoras.add(p.getName());
+        }
+        return impressoras;
     }
 
     private String getStringWithSpacer(String string1, String string2, int width, String spacer) {
